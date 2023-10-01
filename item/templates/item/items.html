@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Items{% endblock %}
+
+{% block content %}
+Phonees...
+<!-- <div class="container mt-5">
+    <div class="row"> -->
+        {% if phoness %}
+            {% for phone in phoness %}
+                <h3>{{ phone.model }}</h3>
+                <p>{{ phone.description }}</p>
+                <!-- <div class="col-md-4 mb-4">
+                    <div class="card bg-light rounded">
+                        <img src="{{ phone.image_url }}" alt="Phone Image">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ phone.model }}</h5>
+                            <p class="card-text">{{ phone.description }}</p>
+                        </div>
+                    </div>
+                </div> -->
+            {% endfor %}
+        {% else %}
+            Nothing here
+        {% endif %}
+    <!-- </div>
+</div> -->
+
+
+{% endblock %}
