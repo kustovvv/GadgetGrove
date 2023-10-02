@@ -9,13 +9,29 @@
             <div class="text-center">
                 <h3>Categories</h3>
             </div>
-            <div class="list-group">
-                {% for category in categories %}
-                    <div>
-                        <a href="#" class="list-group-item list-group-item-action">{{ category.name }}</a>
-                    </div>
-                {% endfor %}            
+            <div id="list-example" class="list-group">
+                {% for category in categories %}                  
+                    <a href="{% url 'frontpage' %}? query={{ query }}&category={{ category.id }}" class="list-group-item list-group-item-action" href="#list-item-1">{{ category.name }}</a>
+                {% endfor %}
             </div>
+            <div class="text-center">
+                <h3>Additional filters</h3>
+            </div>
+            <div class="text-left">
+                <h5>Brands</h5>
+            </div>
+            {% for brand in brands %}
+            <div class="form-check">
+                <label class="form-check-label" for="flexCheck{{ brand.id }}">
+                    <a href="{% url 'frontpage' %}? query={{ query }}&brand={{ brand.id }}&{% if category_id %}category={{ category_id }}{% endif %}">    
+                        <input class="form-check-input" type="checkbox" value="" id="flexChec{{ brand.id }}">
+                        {{ brand.name }}
+                    </a>
+                </label>
+            </div>
+            {% endfor %}
+            
+            <a href="{% url 'frontpage' %}" class="mt-3 btn btn-success">Clear filter</a>
         </div>
         <div class="col-md-10">
             <div class="row">
@@ -29,6 +45,9 @@
                                 <div class="text-align: left;">
                                     <h5 class="card-title">{{ item.model }}</h5>
                                     <p class="card-text">{{ item.description }}</p>
+                                </div>
+                                <div class="text-align: left;">
+                                    <h6 class="card-title">{{ item.price }}$</h6>
                                 </div>
                             </div>
                         </div>

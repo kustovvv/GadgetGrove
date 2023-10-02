@@ -39,3 +39,9 @@
 </div>
     
 {% endblock %}
+
+{% block include_main_navbar %}
+    {% with include_main_navbar=False %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}

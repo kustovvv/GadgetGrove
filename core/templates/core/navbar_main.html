@@ -4,8 +4,8 @@
       <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <form class="d-flex mt-1" role="search">
-                    <input class="form-control me-2" type="search" placeholder="I'm looking for..." aria-label="Search">
+                <form method="GET" class="d-flex mt-1" role="search" action=".">
+                    <input name='query' value="{{ query }}" class="form-control me-2" type="search" placeholder="I'm looking for..." aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                   </form>
             </div>
