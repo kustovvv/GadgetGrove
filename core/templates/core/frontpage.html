@@ -3,9 +3,15 @@
 {% block title %}Items{% endblock %}
 
 {% block content %}
-<div class="container-fluid mt-3">
+<div class="d-flex">
+    {% if path %}
+        <a href="{% url 'frontpage' %}" class="mr-0 text-decoration-none">GadgetGrove/</a>
+        <p class="mb-0">{{ path }}</p>
+    {% endif %}
+</div>
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-2 mt-3">
             <div class="text-center">
                 <h3>Categories</h3>
             </div>
@@ -23,7 +29,7 @@
             {% for brand in brands %}
             <div class="form-check">
                 <label class="form-check-label" for="flexCheck{{ brand.id }}">
-                    <a href="{% url 'frontpage' %}? query={{ query }}&brand={{ brand.id }}&{% if category_id %}category={{ category_id }}{% endif %}">    
+                    <a href="{% url 'frontpage' %}? query={{ query }}&brand={{ brand.id }}&{% if category_id %}category={{ category_id }}{% endif %}" class="text-decoration-none">    
                         <input class="form-check-input" type="checkbox" value="" id="flexChec{{ brand.id }}">
                         {{ brand.name }}
                     </a>
@@ -37,19 +43,22 @@
             <div class="row">
                 {% if items %}
                     {% for item in items %}
-                        <div class="col-md-2">
-                            <div class="card bg-light rounded">
-                                <div class="text-center">
-                                    <img src="{{ item.image_url }}" alt="Phone Image" style="width: 100px; height: 150px;">
+                        <div class="col-md-2 mt-3">
+                            <a href="{% url 'item:details' item.id %}">
+                                <div class="card bg-light rounded mt-3" style="width: 200px; height: 300px;">
+                                    <div class="text-center mt-3">
+                                        <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                                            <img src="{{ item.image_url }}" alt="Phone Image" style="max-width: 90%; max-height: 90%;">
+                                        </div>
+                                    </div>
+                                    <div class="text-align: left;">
+                                        <h5 class="card-title">{{ item.model }}</h5>
+                                    </div>
+                                    <div class="text-align: left;">
+                                        <h6 class="card-title">{{ item.price }}$</h6>
+                                    </div>
                                 </div>
-                                <div class="text-align: left;">
-                                    <h5 class="card-title">{{ item.model }}</h5>
-                                    <p class="card-text">{{ item.description }}</p>
-                                </div>
-                                <div class="text-align: left;">
-                                    <h6 class="card-title">{{ item.price }}$</h6>
-                                </div>
-                            </div>
+                            </a>
                         </div>
                     {% endfor %}
                 {% else %}

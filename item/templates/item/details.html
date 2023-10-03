@@ -1,0 +1,70 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Items{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex">
+                <a href="{% url 'frontpage' %}" class="mr-0 text-decoration-none">GadgetGrove/</a>
+                <p class="mb-0">{{ path }}</p>
+            </div>
+            <div>
+                <h3>{{ item.model }}</h3>
+            </div>
+            <div class="card bg-light">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div >
+                            <div class="text-center">
+                                <img src="{{ item.image_url }}" width="200" style="object-fit: scale-down">
+                            </div>
+                            <div class="text-center">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 text-left">
+                        <h5 class="mt-3">Description</h5>
+                            <div class="card-text">
+                                {{ item.description }}
+                            </div>
+                    </div>
+                    <div class="card col-md-3 text-center">
+                        <div class="mt-3">
+                            <h3>{{ item.price }}$</h3>
+                        </div>
+                        <a href="#" class="btn btn-outline-warning" type="button">Buy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="mt-3 text-center">
+                <h3>Related items</h3>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    {% for item in related_items %}
+                        <div class="col-md-2">
+                            <a href="{% url 'item:details' item.id %}" class="d-inline-block">
+                                <div class="card bg-light mb-3" style="width: 200px; height: 300px;">
+                                    <div class="mt-3 text-center">
+                                        <img src="{{ item.image_url }}" class="scale-down" style="max-width: 90%; max-height: 90%;">
+                                    </div>
+                                    <div class="card-title text-left">
+                                        <h5>{{ item.model }}</h5>
+                                        <p>{{ item.price }}$</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}
