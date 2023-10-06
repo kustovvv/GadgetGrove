@@ -3,24 +3,47 @@
 {% block title %}Items{% endblock %}
 
 {% block content %}
-
-<div class="d-flex">
-    {% if path %}
-        <a href="{% url 'frontpage' %}" class="mr-0 text-decoration-none">GadgetGrove/</a>
-        <p class="mb-0">{{ path }}</p>
-    {% endif %}
-</div>
 <div class="container-fluid">
+    <div class="d-flex">
+        {% if path %}
+            <a href="{% url 'frontpage' %}" class="mr-0 text-decoration-none">GadgetGrove/</a>
+            <p class="mb-0">{{ path }}</p>
+        {% endif %}
+    </div>
+    
+    <div class="d-flex">
+        {% if query %}
+            <h5>By searching for "{{ query }}" we found {{ items.count }} items:</h5>
+        {% endif %}
+    </div>
     <div class="row">
         <div class="col-md-2 mt-3">
             <div class="text-center">
-                <h3>Categories</h3>
+                {{ category_id }}
+                <h3>Filters</h3>
             </div>
-            <div id="list-example" class="list-group">
-                {% for category in categories %}                  
-                    <a href="{% url 'item:items' %}? query={{ query }}&category={{ category.id }}&action=link" class="list-group-item list-group-item-action" href="#list-item-1">{{ category.name }}</a>
+            <div class="text-left">
+                <h5>Brands</h5>
+            </div>
+            <form methon="GET" action=".">
+                {% for brand in brands %}
+                    <div class="form-check">
+                        <label class="form-check-label" for="flexCheck{{ brand.id }}">
+                            <input class="form-check-input" type="checkbox" name="selected_brands" value="{{ brand.id }}" id="flexCheck{{ brand.id }}">
+                            {{ brand.name }}
+                        </label>
+                    </div>
+
+                    <input type="hidden" name="category" value="{{ category_id }}">
+                    <input type="hidden" name="action" value="form">
+
                 {% endfor %}
-            </div>            
+                <div class="mt-3">
+                    <button class="btn btn-warning" type="submit">Find</button>
+                    <a href="{% url 'frontpage' %}" class="btn btn-success">Clear filter</a>
+                </div>
+            </form>
+                    
         </div>
         <div class="col-md-10">
             <div class="row">
