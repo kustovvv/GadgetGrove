@@ -12,6 +12,7 @@ def details(request, pk):
     if query:
         return search_results(request, query)
 
+
     return render(request, 'item/details.html', {'item': item,
                                                  'path': path,
                                                  'related_items': related_items,})
@@ -40,6 +41,8 @@ def items(request):
             path_brands = (Brand.objects.get(id=brand) for brand in selected_brands)
             path += ', '.join(brand.name for brand in path_brands)
 
+    request.session['navbar_state'] = 'hidden'
+
 
     return render(request, 'item/items.html', {'items': items,
                                                 'brands': brands,
@@ -51,6 +54,10 @@ def search_results(request, query):
     items = Item.objects.filter(Q(model__icontains=query) | Q(description__icontains=query))
     brands = set(item.brand_id for item in items)
     category_id = items[0].category_id.id
+
+    request.session['navbar_state'] = 'hidden'
+
+    
     return render(request, 'item/items.html', {'items': items, 
                                             'brands': brands,
                                             'query': query,

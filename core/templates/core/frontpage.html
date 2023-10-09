@@ -20,13 +20,13 @@
                 {% for category in categories %}                  
                     <a href="{% url 'item:items' %}? query={{ query }}&category={{ category.id }}&action=link" class="list-group-item list-group-item-action" href="#list-item-1">{{ category.name }}</a>
                 {% endfor %}
-            </div>            
+            </div>  
         </div>
         <div class="col-md-10">
             <div class="row">
                 {% if items %}
                     {% for item in items %}
-                        <div class="col-md-2 mt-3">
+                        <div class="col-md-2 mb-3">
                             <a href="{% url 'item:details' item.id %}">
                                 <div class="card bg-light rounded mt-3" style="width: 200px; height: 300px;">
                                     <div class="text-center mt-3">
@@ -37,8 +37,10 @@
                                     <div class="text-align: left;">
                                         <h5 class="card-title">{{ item.model }}</h5>
                                     </div>
-                                    <div class="text-align: left;">
-                                        <h6 class="card-title">{{ item.price }}$</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <h6>{{ item.price }}$</h6>
+                                        <a href='{% url "order:add_to_cart" pk=item.id amount=1 %}' class="btn btn-outline-warning" type="button">Add to cart</a>   
+                                        </form>                                        
                                     </div>
                                 </div>
                             </a>

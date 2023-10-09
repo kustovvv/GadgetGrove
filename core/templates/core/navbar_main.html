@@ -11,37 +11,56 @@
             </div>
         </div>
       </div>
-      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+        <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>  
     
-      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas offcanvas-end {% if request.session.navbar_state == 'visible' %}show{% endif %}" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
         <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Cart</h5>
           <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Dropdown
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-              </ul>
-            </li>
-          </ul>
+          <div class="container-fluid">
+            {% if user_cart_items %}
+              {% for item in user_cart_items %}
+                <div class="card" style="max-width: 350px; max-height: 170px;">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-4 mt-3">
+                        <img src="{% if item.item.image_url %}{{ item.item.image_url }}{% else %}no image{% endif %}" width="80">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="d-flex justify-content-between">
+                          <h7>{{ item.item.model }}</h7>
+                          <a href="{% url 'order:delete_from_cart' pk=item.id %}" class="btn btn-danger" type="submit">del</a>
+                        </div>
+                        <h7>{% if item.item.availability %}Available{% else %}Not available{% endif %}</h7>
+                        <p>{{ item.item.price }} $/ per item </p>
+                        <div class="d-flex justify-content-between">
+                          <p>{{ item.amount}} </p>
+                          <h4>{{ item.total_item_price }} $</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <h7>Total price will be:</h7>
+                    <h4>{{ total_price }} $</h4>
+                  </div>
+                <div class="row">
+                  <a href="#" class="btn btn-warning" type="button">Purchase</a>
+                  <a href="#" class="btn btn-outline-warning" type="button">Add another items</a>
+                </div>
+              </div>
+              {% else %}
+                <h3>Ooops, it seems you haven't added any items in your cart yet! Take your first!</h3>
+              {% endif %}
+          </div>
           
         </div>
       </div>

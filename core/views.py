@@ -14,7 +14,7 @@ def frontpage(request):
 
     if query:
         return search_results(request, query)
-    
+        
     return render(request, 'core/frontpage.html', {'items': items,
                                                    'categories': categories,
                                                    })
@@ -30,4 +30,7 @@ def signup(request):
             return redirect('item:items')
     else:
         form = SignUpForm()
+
+    request.session['navbar_state'] = 'hidden'
+
     return render(request, 'core/signup.html', {'form': form})
