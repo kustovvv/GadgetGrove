@@ -7,5 +7,6 @@ app_name = 'order'
 urlpatterns = [
     path('<int:pk>/<int:amount>/', views.add_to_cart, name='add_to_cart'),
     path('<int:pk>/', views.delete_from_cart, name='delete_from_cart'),
-    # path('toggle_navbar/', views.toggle_navbar, name='toggle_navbar'),
+    path('change/<int:pk>/', views.change_amount_items, name='change_amount_items'),
+    path('order/', views.order, name='order'),
 ]

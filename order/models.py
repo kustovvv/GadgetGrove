@@ -4,10 +4,10 @@ from django.contrib.auth.models import User
 from item.models import Item
 
 class Order(models.Model):
-    user_id = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=255)
-    total_amount = models.FloatField(null=True)
+    total_price = models.FloatField(null=True)
 
     class Meta:
         ordering = ('order_date',)
@@ -16,8 +16,8 @@ class Order(models.Model):
         return f'Order by {self.user_id.username} at {self.order_date} with status "{self.status}";'
 
 class OrderItem(models.Model):
-    order_id = models.ForeignKey(Order, related_name='orderItems', on_delete=models.CASCADE)
-    item_id = models.ForeignKey(Item, related_name='orderItems', on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, related_name='orderItems', on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name='orderItems', on_delete=models.CASCADE)
     quantity = models.IntegerField()
     item_price = models.FloatField()
 

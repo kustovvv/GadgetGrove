@@ -1,0 +1,143 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Placing an order{% endblock %}
+
+{% block navbar %}
+{% endblock %}
+
+{% block navbar_main %}
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block content %}
+<nav class="navbar">
+    <div class="container-fluid">
+        <a href="{% url 'frontpage' %}" class="navbar-brand h1">&lt;</a>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <p class="text-center h5">Placing an order</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<form class="row g-3 needs-validation" novalidate>
+    <div class="container mb-3 mt-3">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="container">
+                    <div class="text-left">
+                        <h6>Contact details*</h6>
+                    </div>
+                    <div class="card-body bg-light mt-3">
+                        <div class="container">
+                                <div>
+                                    <label for="validationTooltip01" class="form-label">Phone number*</label>
+                                    <input type="text" class="form-control" id="validationTooltip01" value="" required>
+                                </div>
+                                <div>
+                                    <label for="validationTooltip02" class="form-label">Your first name*</label>
+                                    <input type="text" class="form-control" id="validationTooltip02" value="" required>
+                                </div>
+                                <div>
+                                    <label for="validationTooltip03" class="form-label">Your last name*</label>
+                                    <input type="text" class="form-control" id="validationTooltip03" value="" required>
+                                </div>
+                                <div>
+                                    <label for="validationTooltipEmail" class="form-label">Email</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text" id="validationTooltipUsernamePrepend">@</span>
+                                        <input type="text" class="form-control" id="validationTooltipEmail" aria-describedby="validationTooltipEmailPrepend" required>
+                                        <div class="invalid-tooltip">
+                                            Please provide a valid email.
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container mt-3">
+                    <div class="text-left">
+                        <h6>Delivery*</h6>
+                    </div>
+                    <div class="card-body bg-light mt-3">
+                        <div class="container">
+                                <div class="col-md-6 position-relative">
+                                    <label for="validationTooltip04" class="form-label">Street address</label>
+                                    <input type="text" class="form-control" id="validationTooltip04" required>
+                                </div>
+                                <div class="col-md-6 position-relative">
+                                    <label for="validationTooltip05" class="form-label">City</label>
+                                    <input type="text" class="form-control" id="validationTooltip05" required>
+                                    <div class="invalid-tooltip">
+                                        Please provide a valid city.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 position-relative">
+                                    <label for="validationTooltip06" class="form-label">State</label>
+                                    <input type="text" class="form-control" id="validationTooltip06" required>
+                                    <div class="invalid-tooltip">
+                                        Please provide a valid state.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 position-relative">
+                                    <label for="validationTooltip07" class="form-label">zip</label>
+                                    <input type="text" class="form-control" id="validationTooltip07" required>
+                                    <div class="invalid-tooltip">
+                                        Please provide a valid zip.
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>                     
+            </div>
+            
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="d-flex justify-content-between">
+                        <h6>Your order</h6>
+                        <h7>{{user_cart_items.count}} items</h7>
+                    </div>
+    
+                </div>
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h7>Order cost:</h7>
+                            <h4>{{ total_price }} $</h4>
+                        </div>
+                        <div class="row p-1">
+                            <button class="btn btn-outline-warning" type="submit">Checkout</button>       
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body bg-light rounded">
+                    {% for item in user_cart_items %}
+                        <div class="card mb-2">
+                            <div class="row">
+                                <div class="col-md-4 mt-2 mb-2 text-center">
+                                    <img src="{% if item.item.image_url %}{{ item.item.image_url }}{% else %}no image{% endif %}" width="80">
+                                </div>    
+                                <div class="col-md-8">
+                                    <div class="col-md-8">
+                                        <h7>{{ item.item.model }}</h7>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h7>{{ item.amount }} items.</h7>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p>{{ item.item.price }} $/ per item </p>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}               
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -32,9 +32,9 @@
                     </div>
                     <div class="card col-md-3 text-center">
                         <div class="mt-3">
-                            <h3>{{ item.price }}$</h3>
+                            <h3>{{ item.price }} $</h3>
                         </div>
-                        <a href="#" class="btn btn-outline-warning" type="button">Buy</a>
+                        <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-outline-warning" type="button">Add to cart</a>
                     </div>
                 </div>
             </div>
