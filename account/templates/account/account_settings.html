@@ -1,0 +1,149 @@
+{% extends 'account/account_base.html' %}
+
+{% block extra_content %}
+<div class="card-body bg-white rounded">
+    <div class="container py-3">
+        <h5>Settings</h5>
+        <div class="d-inline-flex gap-3 mt-2">
+            <a href="#" class="h6 btn btn-outline-warning rounded-l active" type="button">Personal information</a>
+            <a href="#" class="h6 btn btn-outline-warning rounded-l" type="button">Login and password</a>
+        </div>
+    </div>
+</div>
+<form method="POST" action=".">
+    <div class="card-body bg-white rounded mt-3">
+        <div class="container">
+            <div class="py-3">
+                <h5>Personal information</h5>
+            </div>
+            <div class="row py-3">
+                <div class="col-md-4">
+                    {{ full_name_form.nickname.label_tag }}*
+                    {{ full_name_form.nickname }}                
+                </div>
+                <div class="col-md-4">
+                    {{ full_name_form.first_name.label_tag }}*
+                    {{ full_name_form.first_name }}
+                </div>
+                <div class="col-md-4">
+                    {{ full_name_form.last_name.label_tag }}*
+                    {{ full_name_form.last_name }}
+                </div>
+            </div>
+            <div class="mt-3">
+                <h5>Avatar</h5>
+            </div>
+            <div class="py-3">
+                {{ avatar_form.avatar }}
+            </div>
+            <div class="mt-3">
+                <h5>Gender and family</h5>
+            </div>
+            <div class="mt-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="selected_gender" value="male" id="RadioMale" checked>
+                    <label class="form-check-label" for="RadioMale">
+                        Male
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="selected_gender" value="female" id="RadioFemale">
+                    <label class="form-check-label" for="RadioFemale">
+                        Female
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="is_married" value="married" id="CheckMeried">
+                    <label class="form-check-label" for="CheckMeried">
+                      Married
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="have_children" value="have_children" id="CheckHaveChildren">
+                    <label class="form-check-label" for="CheckHaveChildren">
+                        Have children
+                    </label>
+                </div>              
+            </div>
+            <div class="mt-3">
+                <h5>Date of Birth</h5>
+            </div>
+            <div class="mt-3 d-inline-flex gap-2">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Day
+                    </button>
+                    <ul class="dropdown-menu" style="max-height: 345px; overflow-y: auto;">
+                        {% for day in date_of_birth_forms.selected_day %}
+                            <li class="dropdown-item" data-value="{{ day.value }}">{{ day }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Month
+                    </button>
+                    <ul class="dropdown-menu" style="max-height: 345px; overflow-y: auto;">
+                        {% for month in date_of_birth_forms.selected_month %}
+                            <li class="dropdown-item" data-value="{{ month.value }}">{{ month }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Year
+                    </button>
+                    <ul class="dropdown-menu" style="max-height: 345px; overflow-y: auto;">
+                        {% for year in date_of_birth_forms.selected_year %}
+                            <li class="dropdown-item" data-value="{{ year.value }}">{{ year }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h5>Contact information</h5>
+            </div>
+            <div class="mt-3">
+                <h6>{{ phone_form.phone_number.label_tag }}</h6>
+            </div>
+            <div class="mt-1">
+                {{ phone_form.phone_number }}
+            </div>
+            <div class="mt-3">
+                <h5>Social profiles</h5>
+            </div>
+            <div class="row">
+                <div class="container">
+                    <h6 class="mt-2">{{ social_profiles_form.facebook.label_tag }}</h6>
+                    {{ social_profiles_form.facebook }}
+                    <h6 class="mt-2">{{ social_profiles_form.instagram.label_tag }}</h6>
+                    {{ social_profiles_form.instagram }}
+                    <h6 class="mt-2">{{ social_profiles_form.twitter.label_tag }}</h6>
+                    {{ social_profiles_form.twitter }}
+                    <h6 class="mt-2">{{ social_profiles_form.google.label_tag }}</h6>
+                    {{ social_profiles_form.google }}
+                    <h6 class="mt-2">{{ social_profiles_form.pinterest.label_tag }}</h6>
+                    {{ social_profiles_form.pinterest }}    
+                </div>
+            </div>
+            <div class="mt-4">
+                <h5>Additional information</h5>
+            </div>
+            <div >
+                <h6 class="mt-2">{{ additional_info_form.about.label_tag }}</h6>
+                {{ additional_info_form.about }}
+                <h6 class="mt-2">{{ additional_info_form.hobby.label_tag }}</h6>
+                {{ additional_info_form.hobby }}
+                <h6 class="mt-2">{{ additional_info_form.interests.label_tag }}</h6>
+                {{ additional_info_form.interests }}
+            </div>
+            <div class="d-inline-flex gap-2 py-3">
+                <button class="btn btn-warning" type="submit">Save profile</button>
+                <a href="#" class="btn btn-outline-secondary" type="button">Delete profile</a>
+            </div>
+        </div>
+    </div><br/><br/><br/>
+    
+</form>
+
+{% endblock %}

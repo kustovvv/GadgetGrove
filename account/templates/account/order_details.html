@@ -1,0 +1,103 @@
+{% extends 'account/account_base.html' %}
+
+{% block extra_content %}
+<div class="card-body bg-white rounded">
+    <div class="row">
+        <div class="col-md-1">
+            <a href="{% url 'account:history' %}" class="h3" style="text-decoration: none; color: inherit;">&lt;</a>
+        </div>
+        <div class="col-md-5">
+            <h4>Order № {{ order.id }}</h4>
+        </div>
+    </div>    
+</div>
+<div class="row mt-3">
+    <div class="col-md-7">
+        <div class="card-body bg-white rounded">
+            <ul class="list-group list-group-flush rounded">
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between mt-3 mb-3">
+                        <h5>To pay: </h5>
+                        <h5>{{ order.total_price }}$</h5>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="container">
+                        <ul class="list-group list-group-flush">
+                            {% for item in order.orderItems.all %}
+                                <li class="list-group-item">
+                                    <div class="row mt-3 mb-3">
+                                        <div class="col-md-3">
+                                            <img src="{{ item.item.image_url }}" width="80">
+                                        </div>
+                                        <div class="col-md-9">
+                                            <h6>{{ item.item.model }}</h6>
+                                            <p>{{ item.amount }}</p>
+                                            <h6>{{ item.item.price }} $/per item</h6>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="container">
+                        <div class="row mt-3">
+                            <div class="col-md-4 mb-3">
+                                <div class="row">
+                                    <a href="#" class="btn btn-outline-warning" type="button">Owner's number</a>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="text-center">
+                                    <a href="#" class="btn btn-outline-warning" type="button">additional</a>
+                                </div>
+                            </div>
+                            <div class="col-md-5 mb-3">
+                                <div class="row">
+                                    <a href="#" class="btn btn-warning" type="button">Add a review</a>
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mt-3">
+            <h3>Delivery</h3>
+            <div class="card-body bg-white mt-3 rounded">
+                <div class="container">
+                    <p>{{ order.shipping_address.country }}</p>
+                    <p>{{ order.shipping_address.state }}</p>
+                    <p>{{ order.shipping_address.city }}</p>
+                    <p>{{ order.shipping_address.street_address }}</p>    
+                </div>
+            </div>    
+        </div>
+    </div>
+    <div class="col-md-5">
+        <h5>Order status</h5>
+        <div class="card-body bg-white rounded">
+            <div class="container">
+                <p>1. {{ order.status }}</p>
+            </div>
+        </div>
+
+        <h5 class="mt-3">Seller</h5>
+        <div class="card-body bg-white rounded">
+            <p>Some information about the seller...</p>
+        </div>
+        
+        <h5 class="mt-3">Recipient contacts</h5>
+        <div class="card-body bg-white rounded">
+            <div class="container">
+                <p class="mt-3">{{ order.contact_info.first_name }} {{ order.contact_info.last_name }}</p>
+                <p>{{ order.contact_info.phone_number }}</p>
+                <p class="mb-3">{{ order.contact_info.email }}</p>    
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

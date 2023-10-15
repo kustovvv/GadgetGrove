@@ -1,78 +1,75 @@
 <nav class="navbar " style="background-color: rgb(196, 111, 0);">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'frontpage' %}">Catalog</a>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <form method="GET" class="d-flex mt-1" role="search" action=".">
-                      <input name='query' value="{{ query }}" class="form-control me-2" type="search" placeholder="I'm looking for..." aria-label="Search">
-                      <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+  <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'frontpage' %}">Catalog</a>
+      <form method="GET" class="d-flex mt-1" role="search" action=".">
+        <input name='query' value="{{ query }}" class="form-control me-2" type="search" placeholder="I'm looking for..." aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+      <div> 
+        <a href="{% url 'account:history' %}" class="btn" type="btn" style="background-color: rgb(255, 164, 46);">Account</a>
         <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
-        </button>  
-    
-        <div class="offcanvas offcanvas-end {% if request.session.navbar_state == 'visible' %}show{% endif %}" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-          <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Cart</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body">
-            <div class="container-fluid">
-              {% if request.user.is_authenticated %}
-                {% if user_cart_items %}
-                    {% for item in user_cart_items %}
-                      <div class="card" style="max-width: 350px; max-height: 170px;">
-                        <div class="card-body">
-                          <div class="row">
-                            <div class="col-md-4 mt-3">
-                              <img src="{% if item.item.image_url %}{{ item.item.image_url }}{% else %}no image{% endif %}" width="80">
-                            </div>
-                            <div class="col-md-8">
-                              <div class="d-flex justify-content-between">
-                                <h7>{{ item.item.model }}</h7>
-                                <a href="{% url 'order:delete_from_cart' pk=item.id %}" class="btn btn-danger" type="submit">del</a>
-                              </div>
-                              <h7>{% if item.item.availability %}Available{% else %}Not available{% endif %}</h7>
-                              <p>{{ item.item.price }} $/ per item </p>
-                              <div class="d-flex justify-content-between">
-                                <form method="POST" action="{% url 'order:change_amount_items' pk=item.id %}">
-                                  {% csrf_token %}
-                                  <div class="d-flex justify-content-between">
-                                    <button class="btn btn-sm btn-outline-warning p-1" type="submit" name="action" value="decrease">-</button>
-                                    <p>{{ item.amount}} </p>
-                                    <button class="btn btn-sm btn-outline-warning p-1" type="submit" name="action" value="increase">+</button>    
-                                  </div>
-                                </form>
-                                <h4>{{ item.total_item_price }} $</h4>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+        </button>    
+      </div>
+  </div>
+  <div class="offcanvas offcanvas-end {% if request.session.navbar_state == 'visible' %}show{% endif %}" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Cart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="container-fluid">
+        {% if request.user.is_authenticated %}
+          {% if user_cart_items %}
+              {% for item in user_cart_items %}
+                <div class="card" style="max-width: 350px; max-height: 170px;">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-4 mt-3">
+                        <img src="{% if item.item.image_url %}{{ item.item.image_url }}{% else %}no image{% endif %}" width="80">
                       </div>
-                    {% endfor %}
-                    <div class="card">
-                      <div class="card-body">
+                      <div class="col-md-8">
                         <div class="d-flex justify-content-between">
-                          <h7>Total price will be:</h7>
-                          <h4>{{ total_price }} $</h4>
+                          <h7>{{ item.item.model }}</h7>
+                          <a href="{% url 'order:delete_from_cart' pk=item.id %}" class="btn btn-danger" type="submit">del</a>
                         </div>
-                      <div class="row">
-                        <a href="{% url 'order:order' %}" class="btn btn-warning" type="button">Purchase</a>
-                        <a href="#" class="btn btn-outline-warning" type="button">Add another items</a>
+                        <h7>{% if item.item.availability %}Available{% else %}Not available{% endif %}</h7>
+                        <p>{{ item.item.price }} $/ per item </p>
+                        <div class="d-flex justify-content-between">
+                          <form method="POST" action="{% url 'order:change_amount_items' pk=item.id %}">
+                            {% csrf_token %}
+                            <div class="d-flex justify-content-between">
+                              <button class="btn btn-sm btn-outline-warning p-1" type="submit" name="action" value="decrease">-</button>
+                              <p>{{ item.amount}} </p>
+                              <button class="btn btn-sm btn-outline-warning p-1" type="submit" name="action" value="increase">+</button>    
+                            </div>
+                          </form>
+                          <h4>{{ item.total_item_price }} $</h4>
+                        </div>
                       </div>
                     </div>
-                {% else %}
-                  <h3>Ooops, it seems you haven't added any items in your cart yet! Take your first!</h3>
-                {% endif %}
-              {% else %}
-                <h3>You need to be authenticated in order to make a purchase.</h3>
-              {% endif %}
-            </div>
-          </div>
-        </div>
+                  </div>
+                </div>
+              {% endfor %}
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <h7>Total price will be:</h7>
+                    <h4>{{ total_price }} $</h4>
+                  </div>
+                  <div class="row">
+                    <a href="{% url 'order:order' %}" class="btn btn-warning" type="button">Purchase</a>
+                    <a href="#" class="btn btn-outline-warning" type="button">Add another items</a>
+                  </div>
+                </div>
+              </div>
+          {% else %}
+            <h3>Ooops, it seems you haven't added any items in your cart yet! Take your first!</h3>
+          {% endif %}
+        {% else %}
+          <h3>You need to be authenticated in order to make a purchase.</h3>
+        {% endif %}
+      </div>
     </div>
+  </div>
 </nav>

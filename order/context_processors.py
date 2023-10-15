@@ -1,7 +1,5 @@
 from .models import ShoppingCartItem
 
-from django.shortcuts import render
-
 def navbar_data(request):
     if request.user.is_authenticated:
         user_cart_items = ShoppingCartItem.objects.filter(user=request.user)

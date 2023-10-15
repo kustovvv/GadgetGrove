@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Buyer's account{% endblock %}
+
+{% block navbar %}
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid mt-3">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card-body bg-white rounded">
+                <div class="container">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <h3>{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+                            <p>{{ orders.count }} orders</p>
+                        </li>
+                        <li class="list-group-item py-3">
+                            <a href='{% url "account:history" %}' style="{% if option == 'history' %}font-weight: bold;{% else %}text-decoration: none;{% endif %} color: inherit;">History of orders</a> 
+                        </li>
+                        <li class="list-group-item py-3">
+                            <a href='{% url "account:favorites" %}' style="{% if option == 'favorites' %}font-weight: bold;{% else %}text-decoration: none;{% endif %} color: inherit;">Favorites</a>
+                        </li>
+                        <li class="list-group-item py-3">
+                            <a href='#' style='text-decoration: none; color: inherit;'>My reviews</a>
+                        </li>
+                        <li class="list-group-item py-3">
+                            <a href='#' style='text-decoration: none; color: inherit;'>My card</a>
+                        </li>
+                        <li class="list-group-item py-3">
+                            <a href='#' style='text-decoration: none; color: inherit;'>Discounts and bonuses</a>
+                        </li>
+                        <li class="list-group-item py-3">
+                            <a href='{% url "account:settings" %}' style="{% if option == 'settings' %}font-weight: bold;{% else %}text-decoration: none;{% endif %} color: inherit;">Settings</a>
+                        </li>
+                        <li class="list-group-item py-3">
+                            <a href='{% url "account:logout_user" %}' style='text-decoration: none; color: inherit;'>Log out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            {% block extra_content %}{% endblock %}
+        </div>
+    </div>
+</div>    
+
+{% endblock %}

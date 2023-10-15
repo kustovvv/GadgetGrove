@@ -47,7 +47,7 @@
                 <div class="row">
                     {% for item in related_items %}
                         <div class="col-md-2">
-                            <a href="{% url 'item:details' item.id %}" class="d-inline-block">
+                            <a href="{% url 'item:details' item.id %}" class="d-inline-block" style="text-decoration: none; color: inherit;">
                                 <div class="card bg-light mb-3" style="width: 200px; height: 300px;">
                                     <div class="mt-3 text-center">
                                         <img src="{{ item.image_url }}" class="scale-down" style="max-width: 90%; max-height: 90%;">
