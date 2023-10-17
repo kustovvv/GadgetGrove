@@ -6,7 +6,13 @@
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
       <div> 
-        <a href="{% url 'account:history' %}" class="btn" type="btn" style="background-color: rgb(255, 164, 46);">Account</a>
+        <a href="{% url 'account:history' %}" style="text-decoration: none; color: inherit;">
+          {% if profile_image.url %}
+            <img src="{{ profile_image.url }}" style="width: 45px; height: 45px;" alt="User Avatar" class="avatar-image">
+          {% else %}
+            <button class="btn rounded" type="button" style="background-color: rgb(254,146,23 );">Account</button>
+          {% endif %}        
+        </a>
         <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>    
