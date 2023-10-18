@@ -1,10 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 from item.models import Item
+from authentication.models import User as CustomUser
 
 class ShippingAddress(models.Model):
-    user = models.ForeignKey(User, related_name='shippingAddresses', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='shippingAddresses', on_delete=models.CASCADE)
     street_address = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
@@ -20,7 +21,7 @@ class ShippingAddress(models.Model):
 
 
 class ContactInfo(models.Model):
-    user = models.ForeignKey(User, related_name='contactInfos', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='contactInfos', on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -34,7 +35,7 @@ class ContactInfo(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='orders', on_delete=models.CASCADE)
     contact_info = models.ForeignKey(ContactInfo, related_name='orders', on_delete=models.CASCADE)
     shipping_address = models.ForeignKey(ShippingAddress, related_name='orders', on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
@@ -62,6 +63,6 @@ class OrderItem(models.Model):
     
 
 class ShoppingCartItem(models.Model):
-    user = models.ForeignKey(User, related_name='cartItems', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='cartItems', on_delete=models.CASCADE)
     item = models.ForeignKey(Item, related_name='cartItems', on_delete=models.CASCADE)
     amount = models.IntegerField()

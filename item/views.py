@@ -3,6 +3,7 @@ from django.db.models import Q
 
 from .models import Item, Brand, Category
 
+
 def details(request, pk):
     item = Item.objects.get(id=pk)
     path = f'Category {item.category.name}/Brand {item.brand.name}/Model {item.model}'
@@ -39,6 +40,8 @@ def items(request):
             path_brands = (Brand.objects.get(id=brand) for brand in selected_brands)
             path += ', '.join(brand.name for brand in path_brands)
     
+    items = shorten_string(items)
+
     brands = set(item.brand for item in items)
     
 
@@ -70,3 +73,10 @@ def search_results(request, query):
                                             'brands': brands,
                                             'query': query,
                                             'category_id': int(category_id)})   
+
+
+def shorten_string(items, max_length=33, min_length=21):
+    for item in items:
+        item.model = item.model[:max_length]+'...' if len(item.model) > max_length else f'{item.model}<br/>\u200E' if len(item.model) < min_length else item.model
+
+    return items

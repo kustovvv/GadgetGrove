@@ -1,8 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from authentication.models import User as CustomUser
+
 
 class PersonalInformation(models.Model):
-    user = models.ForeignKey(User, related_name='personal_information', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='personal_information', on_delete=models.CASCADE)
     nickname = models.CharField(max_length=255, null=True, blank=True)
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)

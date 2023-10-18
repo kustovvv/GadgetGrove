@@ -2,9 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}{% endblock %}|GadgetGrove</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">   
   </head>
   <body style="background-color: rgb(243, 243, 243);">
   {% block navbar %}
@@ -19,13 +21,7 @@
   {% endblock %}
   
   {% block footer %}
-    <div class="container">
-      <div class="footer mt-5 fixed-bottom bg-dark text-white">
-          <div class="container text-center">
-              <p>&copy; 2023 Your Website Name</p>
-          </div>
-      </div>
-    </div>
+    {% include 'core/footer.html' %}
   {% endblock %}
 
   <style>

@@ -5,6 +5,7 @@ from django.contrib.auth import logout
 from order.models import Order
 from .models import PersonalInformation
 from .forms import FullInfoForm, SettingsDateOfBirthForms
+from item.views import search_results
 
 from datetime import date, datetime
 
@@ -12,6 +13,9 @@ from datetime import date, datetime
 def history(request):
     orders = Order.objects.filter(user=request.user)
     option = 'history'
+    query = request.GET.get('query', '')
+    if query:
+        return search_results(request, query)
 
     return render(request, 'account/history_orders.html', {'orders': orders,
                                                            'option': option})
@@ -19,6 +23,9 @@ def history(request):
 @login_required
 def order_details(request, pk):
     order = Order.objects.get(id=pk)
+    query = request.GET.get('query', '')
+    if query:
+        return search_results(request, query)
 
     return render(request, 'account/order_details.html', {'order': order,
                                                           })
@@ -33,6 +40,9 @@ def logout_user(request):
 @login_required
 def favorites(request):
     option = 'favorites'
+    query = request.GET.get('query', '')
+    if query:
+        return search_results(request, query)
 
     return render(request, 'account/account_favorites.html', {'option': option})
 
@@ -147,13 +157,18 @@ def settings(request):
 
         full_info_form = FullInfoForm(initial=initial)
         date_of_birth_forms = SettingsDateOfBirthForms(initial=initial_birhday)
-
+    
+    query = request.GET.get('query', '')
+    if query:
+        return search_results(request, query)
+    
     return render(request, 'account/account_settings.html', {'option': option,
                                                              'full_info_form': full_info_form,
                                                              'date_of_birth_forms': date_of_birth_forms,
                                                              'gender': gender,
                                                              'married':married,
                                                              'have_children':have_children,})
+
 
 def delete_profile(request):
     pass

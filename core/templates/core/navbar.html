@@ -9,12 +9,12 @@
         </ul>
         {% if request.user.is_authenticated %}
         <div>
-            <a href="/logout/" class="btn btn-secondary" type="button">Logout</a>
+            <a href="{% url 'authentication:logout' %}" class="btn btn-secondary" type="button">Logout</a>
         </div>
         {% else %}
         <div>
-            <a href="/signup" class="btn btn-success" type="button">Sign up</a>
-            <a href="/login/" class="btn btn-secondary" type="button">Login</a>
+            <a href="{% url 'authentication:signup' %}" class="btn btn-success" type="button">Sign up</a>
+            <a href="{% url 'authentication:login' %}" class="btn btn-secondary" type="button">Login</a>
         </div>
         {% endif %}
       </div>

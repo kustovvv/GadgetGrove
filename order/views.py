@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 
-from .models import ShoppingCartItem, OrderItem, Order, ShippingAddress, ContactInfo
+from .models import ShoppingCartItem,  ShippingAddress, ContactInfo, OrderItem, Order
 from item.models import Item
 from .forms import ShippingAddressForm, ContactInfoForm
 
