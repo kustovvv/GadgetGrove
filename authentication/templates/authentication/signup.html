@@ -7,9 +7,17 @@
 
 
 {% block content %}
-<div class="col-md-6 offset-md-3">
+<div class="col-md-6 offset-md-3 py-5">
     <form method="POST" action=".">
         {% csrf_token %}
+        {% if messages %}
+            {% for message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>    
+            {% endfor %}
+        {% endif %}
         {% if form.errors %}
                 {% for field in form %}
                     {% for error in field.errors %}
