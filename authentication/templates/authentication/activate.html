@@ -6,7 +6,7 @@ Hi {{user.username}}
 Please use the link below to verify your account.
 
 
-http://{{domain}}{% url 'authentication:activate' uidb64=uid token=token %}
+http://{{domain}}{% url 'activate' uidb64=uid token=token %}
 
 
 {% endautoescape %}

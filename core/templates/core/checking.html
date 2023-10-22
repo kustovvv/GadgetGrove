@@ -1,10 +1,6 @@
 Something wrong...
 
-username: {{ username }}
-password: {{ password }}
-is_email_verified: {{ is_email_verified }}
-
-uidb64: {{ uidb64 }}
-token: {{ token }}
-domain: {{ domain }}
-user: {{ user.username }}
+{% if user_personal_info %}
+    Phone number: {{ user_personal_info.phone_number }}
+    Avatar: {{ user_personal_info.avatar }}
+{% endif %}

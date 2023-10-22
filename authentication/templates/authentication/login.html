@@ -5,7 +5,6 @@
 {% block navbar_main %}
 {% endblock %}
 
-
 {% block content %}
 
 <div class="col-md-6 offset-md-3 py-5">
@@ -45,10 +44,20 @@
                 <input type="password" class="form-control" name="password" id="password">
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
-        
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{% url 'reset_password' %}">Forget password?</a>
+            </div>
+
+            <div class="mt-3">
+                <p>Don't have an Account?</p>
+                <a href="{% url 'signup' %}" class="h5" style="text-decoration: none; color: cornflowerblue;">Sign up</a>
+            </div>
         </div>
     </form>
 </div>
     
+{% endblock %}
+
+{% block footer %}
 {% endblock %}

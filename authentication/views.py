@@ -43,6 +43,7 @@ def send_activation_email(user, request):
                  )
     
     EmailThread(email).start()
+        
 
 def signup(request):
     if request.method == 'POST':
@@ -52,7 +53,7 @@ def signup(request):
             send_activation_email(user, request)
 
             messages.info(request, 'We sent you an email to verify your account')
-            return render(request, 'authentication/login.html')
+            return redirect('login')
 
     else:
         form = SignUpForm()
@@ -76,12 +77,12 @@ def user_login(request):
             else:
                 messages.error(request, "You haven't verified your email, please check your email inbox.")
 
-            return redirect('authentication:login')
+            return redirect('login')
         
         except Exception as e:
             messages.error(request, 'Something went wrong. Please enter correct email or password')
             
-            return redirect('authentication:login')
+            return redirect('login')
         
     else:
         form = LoginForm()
@@ -103,6 +104,6 @@ def activate_user(request, uidb64, token):
         user.save()
 
         messages.success(request, 'Email verified, you can now log in.')
-        return redirect(reverse('authentication:login'))
+        return redirect(reverse('login'))
     
     return render(request, 'authentication/activate-failed.html', {'user': user})

@@ -57,11 +57,19 @@
             </div>
             
             
-
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <div class="d-inline-flex gap-3 mt-2">
+                    <p>Already have an account?</p>
+                    <a href="{% url 'login' %}">Login</a>    
+                </div>
+            </div>
         
         </div>
     </form>
 </div>
     
+{% endblock %}
+
+{% block footer %}
 {% endblock %}

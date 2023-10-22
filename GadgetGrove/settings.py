@@ -1,6 +1,7 @@
 from pathlib import Path
 from decouple import config
 import mimetypes
+import sys
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -16,6 +17,8 @@ SECRET_KEY = 'django-insecure-14q30)j=8s-nzr&pg4xkv1t5cwdd(@74xp5*n+=2jf4x!@55wa
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+
 ALLOWED_HOSTS = []
 
 LOGIN_URL = '/login/'
@@ -26,6 +29,7 @@ LOGOUT_REDIRECT_URL = '/'
 # Application definition
 
 INSTALLED_APPS = [
+    'authentication',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -36,7 +40,6 @@ INSTALLED_APPS = [
     'item',
     'order',
     'account',
-    'authentication',
 ]
 
 MIDDLEWARE = [

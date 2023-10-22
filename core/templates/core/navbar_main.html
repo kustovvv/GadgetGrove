@@ -7,7 +7,7 @@
       </form>
       <div> 
         <a href="{% url 'account:history' %}" style="text-decoration: none; color: inherit;">
-          {% if profile_image.url %}
+          {% if profile_image %}
             <img src="{{ profile_image.url }}" style="width: 45px; height: 45px;" alt="User Avatar" class="avatar-image">
           {% else %}
             <button class="btn rounded" type="button" style="background-color: rgb(254,146,23 );">Account</button>

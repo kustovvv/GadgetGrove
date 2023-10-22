@@ -21,6 +21,7 @@ def frontpage(request):
 
 
 def checking(request):
-    return render(request, 'core/index.html')
+    user_personal_info = request.POST.get('user_personal_info')
+    return render(request, 'core/checking.html', {'user_personal_info': user_personal_info})
 
 

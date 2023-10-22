@@ -68,6 +68,8 @@ def settings(request):
                 except:
                     user_personal_info.gender = ''
 
+                setattr(user_personal_info, 'avatar', full_info_form.cleaned_data['avatar'])
+                
                 user_personal_info.married = request.POST.get('is_married', '')
                 
                 user_personal_info.have_children = request.POST.get('have_children', '')
@@ -167,7 +169,8 @@ def settings(request):
                                                              'date_of_birth_forms': date_of_birth_forms,
                                                              'gender': gender,
                                                              'married':married,
-                                                             'have_children':have_children,})
+                                                             'have_children':have_children,
+                                                             })
 
 
 def delete_profile(request):
