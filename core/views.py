@@ -12,9 +12,7 @@ def frontpage(request):
 
     if query:
         return search_results(request, query)
-    
-    request.session['navbar_state'] = 'hidden'
-        
+            
     return render(request, 'core/frontpage.html', {'items': items,
                                             'categories': categories,
                                             })

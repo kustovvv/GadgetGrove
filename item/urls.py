@@ -7,4 +7,5 @@ app_name = 'item'
 urlpatterns = [
     path('<int:pk>/', views.details, name='details'),
     path('', views.items, name='items'),
+    path('comments/<int:pk>/', views.comments, name='comments'),
 ]

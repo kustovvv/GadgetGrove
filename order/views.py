@@ -21,8 +21,6 @@ def add_to_cart(request, pk, amount):
 
         cart_item.save()
     
-    request.session['navbar_state'] = 'hidden'
-
     return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
 
 
@@ -33,8 +31,6 @@ def delete_from_cart(request, pk):
 
         delete_it.delete()
     
-    request.session['navbar_state'] = 'visible'
-
     return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
 
 

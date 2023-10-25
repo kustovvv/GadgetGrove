@@ -4,44 +4,116 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="d-flex">
-                <a href="{% url 'frontpage' %}" class="mr-0 text-decoration-none">GadgetGrove/</a>
-                <p class="mb-0">{{ path }}</p>
-            </div>
-            <div>
-                <h3>{{ item.model }}</h3>
-            </div>
-            <div class="card bg-light">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div >
-                            <div class="text-center">
-                                <img src="{{ item.image_url }}" width="200" style="object-fit: scale-down">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'frontpage' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'item:items' %}? query={{ query }}&category={{ item.category.id }}">{{ item.category }}</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'item:items' %}? query={{ query }}&category={{ item.category.id }}&brand={{ item.brand.id }}">{{ item.brand }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ item.model }}</li>
+        </ol>
+    </nav>
+            <div class="card-body bg-white">
+                <div class="container-fluid py-3">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item">
+                            <h3 id="review-section">{{ item.model }}</h3>
+                            <div class="d-flex justify-content-between">
+                                {% if comments %}
+                                    {{ comments.count }} comments
+                                {% else %}
+                                    <p>No comments</p>
+                                {% endif %}
+                                <p>Item code: {{ item.id }}</p>
                             </div>
-                            <div class="text-center">
+                            <div class="d-inline-flex gap-3">
+                                <a href="#review-section" class="h6">Review</a>
+                                <a href="#features-section" class="h6">Features</a>
+                                <h6>Availability</h6>
+                                <a href="#comments-section" class="h6">Comments</a>
+                                <h6>Product photo</h6>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-5 text-left">
-                        <h5 class="mt-3">Description</h5>
-                            <div class="card-text">
-                                {{ item.description }}
+                        <div class="list-group-item">
+                            <div class="row py-3">
+                                <div class="col-md-7">
+                                    <div >
+                                        <div class="text-center">
+                                            <img src="{{ item.image_url }}" style="max-width: 300px; max-height: 100%;">
+                                        </div>
+                                        <div class="text-center">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="card-body bg-light rounded">
+                                        <div class="container">
+                                            <div class="d-flex justify-content-between py-3">
+                                                <h3>{{ item.price }} $</h3>
+                                                <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-outline-warning" type="button">Add to cart</a>
+                                            </div>        
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                    </div>
-                    <div class="card col-md-3 text-center">
-                        <div class="mt-3">
-                            <h3>{{ item.price }} $</h3>
                         </div>
-                        <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-outline-warning" type="button">Add to cart</a>
                     </div>
                 </div>
             </div>
+            <h3 id="features-section" class="py-3">Features and description</h3>
+
+            <div class="card-body bg-white py-3">
+                <div class="container-fluid">
+                    {{ item.description }}
+                </div>
+            </div>
+
+            <h3 id="comments-section" class="py-3">Comments</h3>
+
+            <div class="card-body bg-white">
+                <div class="container-fluid py-3">
+                    <div style="overflow-y: auto; max-height: 400px;">
+                        <div class="list-group list-group-flush">
+                            {% if comments %}
+                                {% for comment in comments %}
+                                    <div class="list-group-item">
+                                        <div class="py-3">
+                                            <h6>{{ comment.first_name }} {{ comment.last_name }}</h6>
+            
+                                            <div class="d-inline-flex gap-3">
+                                                {% if comment.rating %}
+                                                    <p>{{ comment.rating }} stars</p>
+                                                {% endif %}
+                                                    <p>{{ comment.comment_date.date }}</p>
+                                            </div>   
+            
+                                            <p>{{ comment.comment }}</p>
+            
+                                            {% if comment.advantages %}
+                                                <p>Advantages: {{ comment.advantages }}</p>
+                                            {% endif %}
+            
+                                            {% if comment.disadvantages %}
+                                                <P>Disadvantages: {{ comment.disadvantages }}</P>
+                                            {% endif %}
+            
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                No comments yet...
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2">
+                        <a href="{% url 'item:comments' item.id %}">All comments</a>
+                        <a href="{% url 'item:comments' item.id %}#comment-form">Leave a comment</a>    
+                    </div>    
+                </div>
+            </div>
         </div>
-        <div class="mt-3 text-center">
-            <h3>Related items</h3>
-        </div>
+            
+        <h3 class="mt-3">Related items</h3>
+
         <div class="container-fluid mb-5">
             <div class="col-md-12">
                 <div class="row">

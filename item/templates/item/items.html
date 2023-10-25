@@ -5,12 +5,19 @@
 {% block content %}
 {% if items %}
 <div class="container-fluid">
-    <div class="d-flex">
-        {% if path %}
-            <a href="{% url 'frontpage' %}" class="mr-0 text-decoration-none">GadgetGrove/</a>
-            <p class="mb-0">{{ path }}</p>
-        {% endif %}
-    </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'frontpage' %}">Home</a></li>
+            {% if category %}
+                <li class="breadcrumb-item"><a href="{% url 'item:items' %}? query={{ query }}&category={{ category.id }}">{{ category }}</a></li>
+            {% endif %}
+            {% if path %}
+                <li class="breadcrumb-item active" aria-current="page">
+                    {{ path }}
+                </li>
+            {% endif %}
+        </ol>
+    </nav>
     
     
     <div class="d-flex">
