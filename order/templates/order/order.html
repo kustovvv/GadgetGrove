@@ -11,6 +11,8 @@
 {% block footer %}
 {% endblock %}
 
+{% load custom_filters %}
+
 {% block content %}
 <nav class="navbar">
     <div class="container-fluid">
@@ -89,7 +91,7 @@
                                 </div>    
                                 <div class="col-md-8">
                                     <div class="col-md-8">
-                                        <h7>{{ item.item.model }}</h7>
+                                        <h7>{{ item.item.model|format_string|safe }}</h7>
                                     </div>
                                     <div class="col-md-8">
                                         <h7>{{ item.amount }} items.</h7>

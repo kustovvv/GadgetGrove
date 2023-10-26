@@ -2,6 +2,7 @@
 
 {% block title %}Items{% endblock %}
 
+{% load custom_filters %}
 
 {% block content %}
 {% if messages %}
@@ -44,7 +45,7 @@
                                     </div>
                                     <div class="card-body">
                                         <p class="card-title">
-                                            <p class="card-title">{{ item.model|safe }}</p>
+                                            <p class="card-title">{{ item.model|format_string|safe }}</p>
                                         </p>
                                         <div class="card-text">
                                             <div class="d-flex justify-content-between">

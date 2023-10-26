@@ -1,10 +1,11 @@
 {% extends 'account/account_base.html' %}
 
+{% load custom_filters %}
 
 {% block extra_content %}
-<div class="card-body bg-white rounded">
+<div class="card-body bg-white rounded py-2">
     <div class="container">    
-        <h3>Orders</h3>
+        <h4>Orders</h4>
     </div>
 </div>
 <div>
@@ -22,7 +23,8 @@
                         <div class="col-12">
                             <div class="gallery-container overflow-auto">
                                 <div class="d-flex">
-                                    {% for order_item in order.orderItems.all %}
+                                    {% if orders %}
+                                        {% for order_item in order.orderItems.all %}
                                             <div class="card" style="min-width: 300px; margin-right: 10px;">
                                                 <a href="{% url 'account:order_details' order.id %}" style="text-decoration: none; color: inherit;">
                                                     <div class="row mt-3 mb-3">
@@ -32,14 +34,17 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-7">
-                                                            <h6>{{ order_item.item.model }}</h6>
+                                                            <h6>{{ order_item.item.model|format_string|safe }}</h6>
                                                             <p>{{ order_item.amount }} items</p>
                                                             <h6>{{ order_item.item.price }} $/per item</h6>
                                                         </div>
                                                     </div>
                                                 </a>
                                             </div>
-                                    {% endfor %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <h5>Nothing here...</h5>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

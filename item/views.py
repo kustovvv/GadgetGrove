@@ -1,16 +1,14 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import Item, Brand, Category, Comments
+from .models import Item, Comments, CategoryBrand, Category, Brand
 from .forms import CommentForm
 
 
 def details(request, pk):
     item = Item.objects.get(id=pk)
-    path = f'Category {item.category.name}/Brand {item.brand.name}/Model {item.model}'
-    related_items = Item.objects.filter(category=item.category).exclude(id=pk)[0:6]
+    related_items = Item.objects.filter(category_brand=item.category_brand).exclude(id=pk)[0:6]
     query = request.GET.get('query', '')
     comments = Comments.objects.filter(item_id=pk)
 
@@ -18,12 +16,12 @@ def details(request, pk):
         return search_results(request, query)
 
     context = {'item': item,
-                'path': path,
                 'related_items': related_items,
                 'comments': comments
                 }
 
     return render(request, 'item/details.html', context)
+
 
 def items(request):
     query = request.GET.get('query', '')
@@ -37,35 +35,31 @@ def items(request):
     category_id = request.GET.get('category', 0)
 
     if category_id:
-        items = Item.objects.filter(category=category_id, availability=True)
+        items = Item.objects.filter(category_brand__category=category_id, availability=True)
         category = Category.objects.get(id=category_id)
 
-    brand = request.GET.get('brand')
-    if brand:
-        items = items.filter(brand = brand)
+    brand_id = request.GET.get('brand')
+    if brand_id:
+        items = items.filter(category_brand__brand = brand_id)
 
     if request.method == 'GET':
         action = request.GET.get('action')
         if action == 'form':
             selected_brands = request.GET.getlist('selected_brands')
-            items = items.filter(brand__in=selected_brands)
-    
-    items = shorten_string(items)
+            items = items.filter(category_brand__brand__in=selected_brands)
 
-    brands = set(item.brand for item in items)
+    brands = Brand.objects.filter(category_brands__category=category_id)
 
     path_brands = list(brands)
+
     if len(path_brands) > 3:
         path_brands = path_brands[:3]
 
     for brand in path_brands:
-        path+=f'{brand.name}, '
+        path += f'{brand.name}, '
     
     path = path[:-2] + '...'
     
-
-    request.session['navbar_state'] = 'hidden'
-
     context = {'items': items,
                 'brands': brands,
                 'path': path,
@@ -76,40 +70,29 @@ def items(request):
 
     return render(request, 'item/items.html', context)
 
+
 def search_results(request, query):
-    items = Item.objects.filter(Q(model__icontains=query) | Q(description__icontains=query) | Q(brand__name__icontains=query))
+    items = Item.objects.filter(Q(model__icontains=query) | Q(description__icontains=query) | Q(category_brand__brand__name__icontains=query))
 
     if items:
-        brands = set(item.brand for item in items)
-        category_id = items[0].category.id
+        category_id = items[0].category_brand.category.id
+        brands = Brand.objects.filter(category_brands__category=category_id)
     
     else:
         brands = ''
         category_id = '0'   
     
-
-    request.session['navbar_state'] = 'hidden'
-
+    context = {'items': items, 
+                'brands': brands,
+                'query': query,
+                'category_id': int(category_id)}
     
-    return render(request, 'item/items.html', {'items': items, 
-                                            'brands': brands,
-                                            'query': query,
-                                            'category_id': int(category_id)})   
-
-
-def shorten_string(items, max_length=33, min_length=21):
-    for item in items:
-        item.model = item.model[:max_length]+'...' if len(item.model) > max_length else f'{item.model}<br/>\u200E' if len(item.model) < min_length else item.model
-
-    return items
+    return render(request, 'item/items.html', context)   
 
 
 def comments(request, pk):
     comments = Comments.objects.filter(item_id=pk)
-    if comments:
-        item = comments[0].item
-    else:
-        item = ''
+    item = Item.objects.get(id=pk)
     if request.method == 'POST':
         form = CommentForm(request.POST)
 
@@ -138,6 +121,9 @@ def comments(request, pk):
         else:
             form = CommentForm()
 
-    return render(request, 'item/comments.html', {'form': form,
-                                                  'comments': comments,
-                                                  'item': item})
+    context = {'form': form,
+                'comments': comments,
+                'item': item,
+                }
+
+    return render(request, 'item/comments.html', context)

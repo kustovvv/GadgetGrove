@@ -3,14 +3,16 @@
 {% block navbar %}
 {% endblock %}
 
+{% load custom_filters %}
+
 {% block content %}
 <div class="container-fluid mt-3">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'frontpage' %}">Home</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'item:items' %}? query={{ query }}&category={{ item.category.id }}">{{ item.category }}</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'item:items' %}? query={{ query }}&category={{ item.category.id }}&brand={{ item.brand.id }}">{{ item.brand }}</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'item:details' item.id %}">{{ item.model }}</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'item:items' %}? query={{ query }}&category={{ item.category_brand.category.id }}">{{ item.category_brand.category }}</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'item:items' %}? query={{ query }}&category={{ item.category_brand.category.id }}&brand={{ item.category_brand.brand.id }}">{{ item.category_brand.brand }}</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'item:details' item.id %}">{{ item.model|format_string|safe }}</a></li>
           <li class="breadcrumb-item active" aria-current="page">Comments</li>
         </ol>
       </nav>

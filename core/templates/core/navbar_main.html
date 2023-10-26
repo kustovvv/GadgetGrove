@@ -1,3 +1,5 @@
+{% load custom_filters %}
+
 <nav class="navbar " style="background-color: rgb(196, 111, 0);">
   <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'frontpage' %}">Catalog</a>
@@ -28,15 +30,15 @@
         {% if request.user.is_authenticated %}
           {% if user_cart_items %}
               {% for item in user_cart_items %}
-                <div class="card" style="max-width: 350px; max-height: 170px;">
+                <div class="card">
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-md-4 mt-3">
-                        <img src="{% if item.item.image_url %}{{ item.item.image_url }}{% else %}no image{% endif %}" width="80">
+                      <div class="col-md-3 mt-3">
+                        <img src="{% if item.item.image_url %}{{ item.item.image_url }}{% else %}no image{% endif %}" style="max-width: 80px; max-height: 100%;">
                       </div>
-                      <div class="col-md-8">
+                      <div class="col-md-9">
                         <div class="d-flex justify-content-between">
-                          <h7>{{ item.item.model }}</h7>
+                          <h7>{{ item.item.model|format_string|safe }}</h7>
                           <a href="{% url 'order:delete_from_cart' pk=item.id %}" class="btn btn-danger" type="submit">del</a>
                         </div>
                         <h7>{% if item.item.availability %}Available{% else %}Not available{% endif %}</h7>

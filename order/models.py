@@ -1,5 +1,4 @@
 from django.db import models
-# from django.contrib.auth.models import User
 
 from item.models import Item
 from authentication.models import User as CustomUser
@@ -43,7 +42,7 @@ class Order(models.Model):
     total_price = models.FloatField(null=True)
 
     class Meta:
-        ordering = ('order_date',)
+        ordering = ('-order_date',)
     
     def __str__(self):
         return f'Order by {self.user.username} at {self.order_date} with status "{self.status}";'

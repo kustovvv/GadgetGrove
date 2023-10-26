@@ -1,5 +1,13 @@
 Something wrong...
 
+<p>{{ order_iteming }}</p>
+
+{% for order in orders %}
+    {% for order_item in order.orderItems.all %}
+        <p>{{ order_item.item.model }}</p>
+    {% endfor %}
+{% endfor %}
+
 {% if user_personal_info %}
     Phone number: {{ user_personal_info.phone_number }}
     Avatar: {{ user_personal_info.avatar }}

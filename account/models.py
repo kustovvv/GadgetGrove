@@ -1,5 +1,4 @@
 from django.db import models
-# from django.contrib.auth.models import User
 from authentication.models import User as CustomUser
 
 
@@ -25,10 +24,3 @@ class PersonalInformation(models.Model):
 
     def __str__(self):
         return self.user.username
-    
-    def clean_avatar(self):
-        new_avatar = self.cleaned_data.get('avatar')
-        if not new_avatar:
-            return self.instance.avatar
-        return new_avatar
-

@@ -1,12 +1,10 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.decorators import login_required
 
 from .models import ShoppingCartItem,  ShippingAddress, ContactInfo, OrderItem, Order
 from item.models import Item
 from .forms import ShippingAddressForm, ContactInfoForm
 
 
-@login_required
 def add_to_cart(request, pk, amount):
     if request.user.is_authenticated:
         try:
@@ -21,20 +19,22 @@ def add_to_cart(request, pk, amount):
 
         cart_item.save()
     
-    return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
+        return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
+
+    return redirect('login')
 
 
-@login_required
 def delete_from_cart(request, pk):
     if request.user.is_authenticated:
         delete_it = ShoppingCartItem.objects.get(id=pk)
 
         delete_it.delete()
     
-    return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
+        return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
+    
+    return redirect('login')
 
 
-@login_required
 def change_amount_items(request, pk):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -50,10 +50,11 @@ def change_amount_items(request, pk):
                 
                 cart_item.save()
     
-    return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
+        return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
+    
+    return redirect('login')
 
 
-@login_required
 def order(request):
     if request.user.is_authenticated:
         post_check = False
@@ -116,7 +117,11 @@ def order(request):
         else:
             shipping_form = ShippingAddressForm()
             contact_form = ContactInfoForm()
+        
+        context = {'shipping_form': shipping_form,
+                    'contact_form': contact_form,
+                    'post_check': post_check}
 
-        return render(request, 'order/order.html', {'shipping_form': shipping_form,
-                                                    'contact_form': contact_form,
-                                                    'post_check': post_check})
+        return render(request, 'order/order.html', context)
+
+    return redirect('login')
