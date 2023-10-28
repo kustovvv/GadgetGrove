@@ -1,45 +1,22 @@
 {% extends 'account/account_base.html' %}
 
-{% block extra_content %}
-<div class="card-body bg-white rounded py-2">
-    <div class="container">
-        <h4>Your Comments</h4>
-    </div>
-</div>
-<div class="card-body bg-white rounded mt-3">
-    <div class="container-fluid">
-        <div class="list-group list-group-flush">
-            {% if comments %}
-                {% for comment in comments %}
-                    <div class="list-group-item">
-                        <div class="py-3">
-                            <a href="{% url 'item:details' comment.item.id %}#comments-section" style="text-decoration: none; color: inherit;">
-                                <h6>Comment about {{ comment.item.model }}</h6>
+{% load custom_filters %}
 
-                                <div class="d-inline-flex gap-3">
-                                    {% if comment.rating %}
-                                        <p>{{ comment.rating }} stars</p>
-                                    {% endif %}
-                                        <p>{{ comment.comment_date.date }}</p>
-                                </div>   
-    
-                                <p>{{ comment.comment }}</p>
-    
-                                {% if comment.advantages %}
-                                    <p>Advantages: {{ comment.advantages }}</p>
-                                {% endif %}
-    
-                                {% if comment.disadvantages %}
-                                    <P>Disadvantages: {{ comment.disadvantages }}</P>
-                                {% endif %}    
-                            </a>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                No comments yet...
-            {% endif %}
+{% block extra_content %}
+    <div class="card-body bg-white rounded py-2">
+        <div class="container">
+            <h4>My Comments</h4>
         </div>
     </div>
-</div>
+    <div class="card-body bg-white rounded mt-3">
+        <div class="container-fluid">
+            <div class="list-group list-group-flush">
+                {% if comments %}
+                    {% render_comments comments 'my_comments' %}
+                {% else %}
+                    No comments yet...
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

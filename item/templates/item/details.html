@@ -76,31 +76,7 @@
             <div style="overflow-y: auto; max-height: 400px;">
                 <div class="list-group list-group-flush">
                     {% if comments %}
-                        {% for comment in comments %}
-                            <div class="list-group-item">
-                                <div class="py-3">
-                                    <h6>{{ comment.first_name }} {{ comment.last_name }}</h6>
-    
-                                    <div class="d-inline-flex gap-3">
-                                        {% if comment.rating %}
-                                            <p>{{ comment.rating }} stars</p>
-                                        {% endif %}
-                                            <p>{{ comment.comment_date.date }}</p>
-                                    </div>   
-    
-                                    <p>{{ comment.comment }}</p>
-    
-                                    {% if comment.advantages %}
-                                        <p>Advantages: {{ comment.advantages }}</p>
-                                    {% endif %}
-    
-                                    {% if comment.disadvantages %}
-                                        <P>Disadvantages: {{ comment.disadvantages }}</P>
-                                    {% endif %}
-    
-                                </div>
-                            </div>
-                        {% endfor %}
+                        {% render_comments comments %}
                     {% else %}
                         No comments yet...
                     {% endif %}
@@ -117,34 +93,7 @@
 
     <div class="container-fluid mb-5">
         <div class="col-md-12">
-            <div class="row">
-                {% if related_items %}
-                    {% for item in related_items %}
-                        <div class="col-xl-2 col-md-4 col-lg-3 col-sm-6 mt-3">
-                            <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit;">
-                                <div class="card" style="border: none;">
-                                    <div class="text-center mt-3">
-                                        <img src="{{ item.image_url }}" alt="Phone Image" style="max-height: 120px; max-width: 100%;">
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="card-title">
-                                            <p class="card-title">{{ item.model|format_string|safe }}</p>
-                                        </p>
-                                        <div class="card-text">
-                                            <div class="d-flex justify-content-between">
-                                                <h6>{{ item.price }}$</h6>
-                                                <a href='{% url "order:add_to_cart" pk=item.id amount=1 %}' class="shadow-sm btn btn-outline-warning btn-sm" type="button">Add to cart</a>       
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    Nothing here
-                {% endif %}
-            </div>
+            {% render_items related_items request %}
         </div>
     </div>
 </div>

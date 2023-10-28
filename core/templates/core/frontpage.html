@@ -7,10 +7,12 @@
 {% block content %}
 {% if messages %}
     {% for message in messages %}
+        <div class="container-fluid mt-2">
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>    
+        </div>
     {% endfor %}
 {% endif %}
 <div class="d-flex">
@@ -34,34 +36,7 @@
             
         </div>
         <div class="col-md-10">
-            <div class="row">
-                {% if items %}
-                    {% for item in items %}
-                        <div class="col-xl-2 col-md-4 col-lg-3 col-sm-6 mt-3">
-                            <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit;">
-                                <div class="card" style="border: none;">
-                                    <div class="text-center mt-3">
-                                        <img src="{{ item.image_url }}" alt="Phone Image" style="max-height: 120px; max-width: 100%;">
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="card-title">
-                                            <p class="card-title">{{ item.model|format_string|safe }}</p>
-                                        </p>
-                                        <div class="card-text">
-                                            <div class="d-flex justify-content-between">
-                                                <h6>{{ item.price }}$</h6>
-                                                <a href='{% url "order:add_to_cart" pk=item.id amount=1 %}' class="shadow-sm btn btn-outline-warning btn-sm" type="button">Add to cart</a>       
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    Nothing here
-                {% endif %}
-            </div>
+            {% render_items items request %}
         </div>
     </div>
 </div>

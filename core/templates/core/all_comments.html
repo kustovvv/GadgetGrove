@@ -1,0 +1,31 @@
+{% load custom_filters %}
+
+{% for comment in comments %}
+    <div class="list-group-item">
+        <div class="py-3">
+            {% if your_comments %}
+                <h6>Comment about {{ comment.item.model }}</h6>
+            {% else %}
+                <h6>{{ comment.first_name }} {{ comment.last_name }}</h6>
+            {% endif %}
+
+            <div class="d-inline-flex gap-3">
+                {% if comment.rating %}
+                    <p>{{ comment.rating }} stars</p>
+                {% endif %}
+                    <p>{{ comment.comment_date.date }}</p>
+            </div>   
+
+            <p>{{ comment.comment }}</p>
+
+            {% if comment.advantages %}
+                <p>Advantages: {{ comment.advantages }}</p>
+            {% endif %}
+
+            {% if comment.disadvantages %}
+                <P>Disadvantages: {{ comment.disadvantages }}</P>
+            {% endif %}
+
+        </div>
+    </div>
+{% endfor %}

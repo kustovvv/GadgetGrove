@@ -1,0 +1,38 @@
+{% load custom_filters %}
+
+<div class="row">
+    {% if items %}
+        {% for item in items %}
+            <div class="col-xl-2 col-md-4 col-lg-3 col-sm-6 mt-4">
+                <div class="card-body bg-white py-3 px-2" style="margin: -10px;">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
+                                <div class="text-center">
+                                    <img src="{{ item.image_url }}" alt="Phone Image" style="max-height: 140px; max-width: 100%; margin-left: 25px;">
+                                </div> 
+                            </a>
+                        </div> 
+                        <div class="col-md-2">
+                            <a href="{% url 'order:add_delete_favorites' item.id %}" class="p" style="color: #ff9414"><p class="{% if item|is_in_favorites:request.user %}fa{% else %}far{% endif %} fa-heart"></p></a>
+                            <a href="#" class="p">С</a>
+                        </div>
+                    </div> 
+
+                    <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
+                        <small>Code: {{ item.id }}</small>
+                        <h6 class="card-title">{{ item.model|format_string|safe }}</h6>
+                        <small>{{ item.comments.count }} comments</small>
+                    </a>
+
+                    <div class="d-flex justify-content-between mt-2">
+                        <h6>{{ item.price }}$</h6>
+                        <a href='{% url "order:add_to_cart" pk=item.id amount=1 %}' class="shadow-sm btn btn-outline-warning btn-sm" type="button">Add to cart</a>       
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        Nothing here
+    {% endif %}
+</div>

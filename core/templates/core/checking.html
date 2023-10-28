@@ -1,8 +1,16 @@
 Something wrong...
 
-<p>{{ order_iteming }}</p>
+<p>{{ items.count }}</p>
 
-{% for order in orders %}
+{% for item in items.items.all %}
+    <p>{{ item.model }}</p>
+{% endfor %}
+
+<!-- {% for category in categories %}
+    <p>{{ category.id }}</p>
+{% endfor %} -->
+
+<!-- {% for order in orders %}
     {% for order_item in order.orderItems.all %}
         <p>{{ order_item.item.model }}</p>
     {% endfor %}
@@ -11,4 +19,4 @@ Something wrong...
 {% if user_personal_info %}
     Phone number: {{ user_personal_info.phone_number }}
     Avatar: {{ user_personal_info.avatar }}
-{% endif %}
+{% endif %} -->

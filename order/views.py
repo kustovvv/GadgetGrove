@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
+from django.contrib import messages
 
-from .models import ShoppingCartItem,  ShippingAddress, ContactInfo, OrderItem, Order
+from .models import ShoppingCartItem,  ShippingAddress, ContactInfo, OrderItem, Order, Favorite
 from item.models import Item
 from .forms import ShippingAddressForm, ContactInfoForm
 
@@ -125,3 +126,30 @@ def order(request):
         return render(request, 'order/order.html', context)
 
     return redirect('login')
+
+
+def add_delete_favorites(request, pk):
+    if request.user.is_authenticated:
+        item = Item.objects.get(id=pk)
+        try:
+            favorites = Favorite.objects.get(user=request.user)
+            
+            if favorites.items.filter(id=pk).exists():
+                favorites.items.remove(item)
+                
+            else:
+                favorites.items.add(item)
+                favorites.save()
+            
+        except:
+            new_favorite = Favorite(user=request.user)
+            new_favorite.save()
+            new_favorite.items.add(item)
+            new_favorite.save()
+
+        return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
+    
+    else:
+        messages.error(request, 'To add an item to favorites ,you should be logged in to.')
+        return redirect('login')
+    

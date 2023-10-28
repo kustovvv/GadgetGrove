@@ -65,3 +65,11 @@ class ShoppingCartItem(models.Model):
     user = models.ForeignKey(CustomUser, related_name='cartItems', on_delete=models.CASCADE)
     item = models.ForeignKey(Item, related_name='cartItems', on_delete=models.CASCADE)
     amount = models.IntegerField()
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(CustomUser, related_name='favorites', on_delete=models.CASCADE)
+    items = models.ManyToManyField(Item)
+
+    def __str__(self):
+        return self.user.username

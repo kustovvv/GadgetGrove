@@ -14,15 +14,19 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                             <div class="row">
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     {% if profile_image %}
+                                    <div class="text-center">
                                         <img src="{{ profile_image.url }}" style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
+                                    </div>
                                     {% endif %}
                                 </div>
-                                <div class="col-md-9">
-                                    <h3>{{ request.user.first_name }} {{ request.user.last_name }}</h3>
-                                    <p>{% if user_phone %}{{ user_phone }}{% else %}{{ request.user.email }}{% endif %}</p>
-                                    <p>{{ orders.count }} orders</p>        
+                                <div class="col-md-8">
+                                    <div class="text-left">
+                                        <h3>{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+                                        <p>{% if user_phone %}{{ user_phone }}{% else %}{{ request.user.email }}{% endif %}</p>
+                                        <p>{{ orders.count }} orders</p>            
+                                    </div>
                                 </div>
                             </div>
                         </li>

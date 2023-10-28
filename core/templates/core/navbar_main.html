@@ -7,7 +7,7 @@
         <input name='query' value="{{ query }}" class="form-control me-2" type="search" placeholder="I'm looking for..." aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
-      <div> 
+      <div class="d-inline-flex gap-3">
         <a href="{% url 'account:history' %}" style="text-decoration: none; color: inherit;">
           {% if profile_image %}
             <img src="{{ profile_image.url }}" style="width: 45px; height: 45px;" alt="User Avatar" class="avatar-image">
@@ -15,9 +15,10 @@
             <button class="btn rounded" type="button" style="background-color: rgb(254,146,23 );">Account</button>
           {% endif %}        
         </a>
-        <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>    
+        <a href="{% url 'account:favorites' %}" class="far fa-heart" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px;"></a>
+        <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation"  style="border: none;">
+          <span class="fas fa-shopping-cart fa-lg"></span>
+        </button>      
       </div>
   </div>
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">

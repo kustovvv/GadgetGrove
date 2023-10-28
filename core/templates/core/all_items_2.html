@@ -1,0 +1,20 @@
+{% load custom_filters %}
+
+{% for item in items %}
+    <div class="{% if order_id %}card{% else %}card-body py-1{% endif %} bg-white mt-1" style="min-width: 300px; margin-right: 10px;">
+        <a href="{% if order_id %}{% url 'account:order_details' order_id %}{% else %}#{% endif %}" style="text-decoration: none; color: inherit;">
+            <div class="row mt-3 mb-3">
+                <div class="col-md-5">
+                    <div class="text-center ">
+                        <img src="{{ item.item.image_url }}" width="80">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <h6>{{ item.item.model|format_string|safe }}</h6>
+                    <p>{{ item.amount }} items</p>
+                    <h6>{{ item.item.price }} $/per item</h6>
+                </div>
+            </div>
+        </a>
+    </div>
+{% endfor %}

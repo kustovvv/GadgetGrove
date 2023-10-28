@@ -1,9 +1,97 @@
 {% extends 'account/account_base.html' %}
 
+{% load custom_filters %}
+
 {% block extra_content %}
-<div class="card-body bg-white rounded mt-3">
+<div class="card-body bg-white rounded py-2">
     <div class="container">
-        <h5>Your Favorites</h5>
+        <h4>Favorites</h4>
     </div>
+</div>
+<div class="card-body bg-white rounded py-2 mt-3">
+    <li class="list-group-item">
+        <div class="container">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <h5>Item category</h5>
+                            <select class="form-select" id="category-select" aria-label="Default select example">
+                                <option value="-1">All categories</option>
+                                {% if all_categories %}
+                                    {% for category in all_categories %}
+                                        <option value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>{{ category.name }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h5>Seller</h5>
+                            <select class="form-select" id="category-select" aria-label="Default select example">
+                                <option value="-1">All sellers</option>
+                                {% if all_sellers %}
+                                    {% for category in all_categories %}
+                                        <option value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>{{ category.name }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="d-inline-flex gap-1" style="margin-top: 30px;">
+                                <a class="btn btn-outline-secondary" type="button">Discount</a>
+                                <a class="btn btn-outline-secondary" type="button">Availability</a>        
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <input type="text" class="form-control" id="favorites-input-field" placeholder="Search by item name">
+                        </div>
+                    </div>
+                </li>
+                {% if items.all %}
+                    {% for item in items.all %}
+                        <li class="list-group-item">
+                            <div class="row py-3">
+                                <div class="col-md-3 text-center">
+                                    <a href="{% url 'item:details' item.id %}" style="text-decoration: none; color: inherit;">
+                                        <img src="{{ item.image_url }}" width="80">
+                                    </a>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <a href="{% url 'item:details' item.id %}" style="text-decoration: none; color: inherit;">
+                                        <h6>{{ item.model }}</h6>
+                                        <p>{% if item.availability %}Available{% else %}Not available{% endif %}</p>
+                                        <h6>{{ item.price }} $/per item</h6>
+                                    </a>
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <h6>Seller</h6>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <div class="d-inline-flex gap-3">
+                                        <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-warning btn-sm">Add to cart</a>
+                                        <a href="#" class="btn btn-outline-warning btn-sm" type="button"><h3>...</h3></a>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 text-center">
+                                    <a href="{% url 'order:add_delete_favorites' item.id %}" type="button" class="btn-close"></a>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <div class="card-body bg-white mt-3 py-5">
+                        <div class="container">
+                            <h5>It looks like you haven't added anything to your favorites. Click on the icon to add the product to your favorites.</h5>
+                            <div class="text-center">
+                                <a href="{% url 'frontpage' %}" class="btn btn-warning" type="button">Return to shopping</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </ul>
+        </div>
+    </li>
 </div>
 {% endblock %}
