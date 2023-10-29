@@ -35,12 +35,12 @@
   <script>
     document.getElementById('category-select').addEventListener('change', function () {
         var selectedCategory = this.value;
-        window.location.href = `/account/favorites/?category=${selectedCategory}`;
+        window.location.href = `/items/favorites/?category=${selectedCategory}`;
     });
 
     document.getElementById('favorites-input-field').addEventListener('change', function () {
         var inputValue = this.value;
-        window.location.href = `/account/favorites/?input=${inputValue}`;
+        window.location.href = `/items/favorites/?input=${inputValue}`;
     });
 
   </script>

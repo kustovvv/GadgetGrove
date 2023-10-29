@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.contrib import messages
 
-from .models import Item, Comments, CategoryBrand, Category, Brand
+from .models import Item, Comments, Category, Brand, FavoriteCompare
 from .forms import CommentForm
 
 
@@ -91,6 +91,10 @@ def search_results(request, query):
 
 
 def comments(request, pk):
+    query = request.GET.get('query', '')
+    if query:
+        return search_results(request, query)
+    
     comments = Comments.objects.filter(item_id=pk)
     item = Item.objects.get(id=pk)
     if request.method == 'POST':
@@ -127,3 +131,84 @@ def comments(request, pk):
                 }
 
     return render(request, 'item/comments.html', context)
+
+
+def favorites(request):
+    if request.user.is_authenticated:
+        option = 'favorites'
+        query = request.GET.get('query', '')
+        if query:
+            return search_results(request, query)
+        
+        user_items = FavoriteCompare.objects.get_or_create(user=request.user)[0]
+        items = user_items.favorite_items.all()
+        all_categories = set(item.category_brand.category for item in items)
+        selected_category = request.GET.get('category', '-1')
+        input = request.GET.get('input', '')
+
+        if input:
+            items = items.filter(model__icontains=input)
+        
+        if selected_category:
+            if selected_category != '-1':
+                items = items.filter(category_brand__category = selected_category)
+
+        context = {'option': option,
+                   'items': items,
+                   'all_categories': all_categories,
+                   'selected_category': int(selected_category),
+                   }
+
+        return render(request, 'account/account_favorites.html', context)
+    
+    return redirect('login')
+
+
+def add_delete_favorites_compare(request, pk):
+    if request.user.is_authenticated:
+        item = Item.objects.get(id=pk)
+        model_instance = FavoriteCompare.objects.get_or_create(user=request.user)[0]
+        model_option = request.GET.get('model_option', '')
+        if model_option:
+            items = model_instance.favorite_items
+        else:
+            items = model_instance.compare_items
+
+        if items.filter(id=pk).exists():
+            items.remove(item)
+        else:  
+            items.add(item)
+            model_instance.save()
+
+        return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
+    
+    else:
+        messages.error(request, 'To add an item to favorites or compares, you should be logged in to.')
+        return redirect('login')
+    
+
+def compare(request):
+    if request.user.is_authenticated:
+        query = request.GET.get('query', '')
+        if query:
+            return search_results(request, query)
+        
+        all_items = FavoriteCompare.objects.get_or_create(user=request.user)[0]
+        user_items = all_items.compare_items.all()
+        categories = ''
+        selected_category = '0'
+        items = ''
+
+        if user_items:
+            categories = list(set(item.category_brand.category for item in user_items))
+            selected_category = request.GET.get('selected_category', categories[0].id)
+            items = user_items.filter(category_brand__category=selected_category)
+
+        context = {'items': items,
+                   'categories': categories,
+                   'selected_category': int(selected_category),
+                   }
+        
+        return render(request, 'item/compare.html', context)
+    else:
+        return redirect('login')

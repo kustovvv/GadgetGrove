@@ -1,0 +1,82 @@
+{% extends 'core/base.html' %}
+
+{% load custom_filters %}
+
+{% block content %}
+<div class="container-fluid">
+    <h3>Item comparison</h3>
+    {% if items %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 px-0">
+                <div class="card-body bg-white">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item" style="height: 283px;">
+                            <h5>Show category:</h5>
+                            {% if categories %}
+                                {% for category in categories %}
+                                    <a href="{% url 'item:compare' %}?selected_category={{ category.id }}" style="color: inherit;">{% if category.id == selected_category %}<strong>{{ category.name }}</strong>{% else %}{{ category.name }}{% endif %}</a>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="list-group-item">
+                            <h6>Description</h6>
+                        </div>
+                    </div>          
+                </div>
+            </div>
+            <div class="col-md-10 px-0">
+                <div class="gallery-container overflow-auto">
+                    <div class="d-flex">
+                        {% for item in items %}
+                            <div class="list-group list-group-flush">
+                                <div class="card-body bg-white" style="width: 250px;">
+                                    <div class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
+                                                    <div class="text-center">
+                                                        <img src="{{ item.image_url }}" alt="Phone Image" style="max-height: 140px; max-width: 100%; margin-left: 25px;">
+                                                    </div>
+                                                </a>
+                                            </div> 
+                                            <div class="col-md-2">
+                                                <a href="{% url 'item:add_delete_favorites_compare' item.id %}" type="button" class="btn-close" style="color: #ff9414;"></a>
+                                            </div>
+                                        </div> 
+                    
+                                        <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
+                                            <small>Code: {{ item.id }}</small>
+                                            <h6 class="card-title">{{ item.model|format_string|safe }}</h6>
+                                            <small>{{ item.comments.count }} comments</small>
+                                        </a>
+                    
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <h6>{{ item.price }}$</h6>
+                                            <a href='{% url "order:add_to_cart" pk=item.id amount=1 %}' class="shadow-sm btn btn-outline-warning btn-sm" type="button">Add to cart</a>       
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <div>
+                                            <small>{{ item.description }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div> 
+                </div>
+            </div>                      
+        </div>
+    </div>    
+    {% else %}
+    <div class="card-body bg-white py-5">
+        <div class="container text-center">
+            <h5>You haven't added any products to compare.</h5>
+            <h6>Do it now!</h6>  
+            <a href="{% url 'frontpage' %}" class="btn btn-warning mt-3" type="button">Add items</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

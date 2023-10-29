@@ -10,12 +10,12 @@
                             <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
                                 <div class="text-center">
                                     <img src="{{ item.image_url }}" alt="Phone Image" style="max-height: 140px; max-width: 100%; margin-left: 25px;">
-                                </div> 
+                                </div>
                             </a>
                         </div> 
                         <div class="col-md-2">
-                            <a href="{% url 'order:add_delete_favorites' item.id %}" class="p" style="color: #ff9414"><p class="{% if item|is_in_favorites:request.user %}fa{% else %}far{% endif %} fa-heart"></p></a>
-                            <a href="#" class="p">С</a>
+                            <a href="{% url 'item:add_delete_favorites_compare' pk=item.id %}?model_option='favorites'" style="color: #ff9414"><p class="{% if request.user.is_authenticated %}{% if item|is_in_favorites:request.user %}fa{% else %}far{% endif %}{% else %}far{% endif %} fa-heart"></p></a>
+                            <a href="{% url 'item:add_delete_favorites_compare' pk=item.id %}" style="{% if request.user.is_authenticated %}{% if item|is_in_compare:request.user %}color: #ff9414;{% else %}color: inherit;{% endif %}{% else %}color: inherit;{% endif %}"><p class="fas fa-balance-scale-right"></p></a>
                         </div>
                     </div> 
 

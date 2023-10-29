@@ -1,5 +1,5 @@
 from django import template
-from order.models import Favorite
+from item.models import FavoriteCompare
 
 register = template.Library()
 
@@ -38,4 +38,9 @@ def render_comments(comments, your_comments=''):
 
 @register.filter
 def is_in_favorites(item, user):
-    return Favorite.objects.filter(user=user, items=item).exists()
+    return FavoriteCompare.objects.filter(user=user, favorite_items=item).exists()
+
+
+@register.filter
+def is_in_compare(item, user):
+    return FavoriteCompare.objects.filter(user=user, compare_items=item).exists()

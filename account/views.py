@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout
 
-from order.models import Order, Favorite
+from order.models import Order
 from .models import PersonalInformation
 from .forms import FullInfoForm, SettingsDateOfBirthForms
 from item.views import search_results
@@ -56,40 +56,6 @@ def account_comments(request):
                    }
 
         return render(request, 'account/account_comments.html', context)
-    
-    return redirect('login')
-
-
-def favorites(request):
-    if request.user.is_authenticated:
-        option = 'favorites'
-        query = request.GET.get('query', '')
-        
-        user_items = Favorite.objects.get(user=request.user)
-        items = user_items.items.all()
-
-        all_categories = set(item.category_brand.category for item in user_items.items.all())
-
-        selected_category = request.GET.get('category', '-1')
-        
-        input = request.GET.get('input', '')
-        if input:
-            items = items.filter(model__icontains=input)
-        
-        if selected_category:
-            if selected_category != '-1':
-                items = items.filter(category_brand__category = selected_category)
-
-        if query:
-            return search_results(request, query)
-
-        context = {'option': option,
-                   'items': items,
-                   'all_categories': all_categories,
-                   'selected_category': int(selected_category),
-                   }
-
-        return render(request, 'account/account_favorites.html', context)
     
     return redirect('login')
 

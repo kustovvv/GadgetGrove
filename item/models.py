@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from account.models import CustomUser
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -65,3 +65,13 @@ class Comments(models.Model):
     
     def __str__(self):
         return f'{self.first_name} for {self.item.model}'
+    
+
+class FavoriteCompare(models.Model):
+    user = models.ForeignKey(CustomUser, related_name='favorite_compares', on_delete=models.CASCADE)
+    favorite_items = models.ManyToManyField(Item, related_name='favorites')
+    compare_items = models.ManyToManyField(Item, related_name='compares')
+
+    def __str__(self):
+        return self.user.username
+        

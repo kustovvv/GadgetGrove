@@ -2,24 +2,25 @@
 
 <nav class="navbar " style="background-color: rgb(196, 111, 0);">
   <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'frontpage' %}">Catalog</a>
-      <form method="GET" class="d-flex mt-1" role="search" action=".">
-        <input name='query' value="{{ query }}" class="form-control me-2" type="search" placeholder="I'm looking for..." aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-      <div class="d-inline-flex gap-3">
-        <a href="{% url 'account:history' %}" style="text-decoration: none; color: inherit;">
-          {% if profile_image %}
-            <img src="{{ profile_image.url }}" style="width: 45px; height: 45px;" alt="User Avatar" class="avatar-image">
-          {% else %}
-            <button class="btn rounded" type="button" style="background-color: rgb(254,146,23 );">Account</button>
-          {% endif %}        
-        </a>
-        <a href="{% url 'account:favorites' %}" class="far fa-heart" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px;"></a>
-        <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation"  style="border: none;">
-          <span class="fas fa-shopping-cart fa-lg"></span>
-        </button>      
-      </div>
+    <a class="navbar-brand" href="{% url 'frontpage' %}">Catalog</a>
+    <form method="GET" class="d-flex" role="search" action=".">
+      <input name='query' value="{{ query }}" class="form-control me-2" type="search" placeholder="I'm looking for..." aria-label="Search">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>  
+    <div class="d-inline-flex gap-3">
+      <a href="{% url 'account:history' %}" style="text-decoration: none; color: inherit;">
+        {% if profile_image %}
+          <img src="{{ profile_image.url }}" style="width: 45px; height: 45px;" alt="User Avatar" class="avatar-image">
+        {% else %}
+          <button class="btn rounded" type="button" style="background-color: rgb(254,146,23 );">Account</button>
+        {% endif %}        
+      </a>
+      <a href="{% url 'item:favorites' %}" class="far fa-heart" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
+      <a href="{% url 'item:compare' %}" class="fas fa-balance-scale-right" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
+      <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation"  style="border: none;">
+        <span class="fas fa-shopping-cart fa-lg"></span>
+      </button>      
+    </div>
   </div>
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
     <div class="offcanvas-header">
