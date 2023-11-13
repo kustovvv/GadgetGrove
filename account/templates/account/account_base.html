@@ -30,27 +30,15 @@
                                 </div>
                             </div>
                         </li>
+                        {% for link, names in menu.items %}
                         <li class="list-group-item py-3">
-                            <a href='{% url "account:history" %}' style="{% if option == 'history' %}font-weight: bold;{% else %}text-decoration: none;{% endif %} color: inherit;">History of orders</a> 
+                            <a {% if link %}href='{% url link %}'{% else %}href='#'{% endif %} 
+                                {% if names.0 == "ads" %}id="ads_link"{% endif %} 
+                                style="{% if option == names.0 %}font-weight: bold;{% else %}text-decoration: none;{% endif %} color: inherit;">
+                                {{ names.1 }}
+                            </a> 
                         </li>
-                        <li class="list-group-item py-3">
-                            <a href='{% url "item:favorites" %}' style="{% if option == 'favorites' %}font-weight: bold;{% else %}text-decoration: none;{% endif %} color: inherit;">Favorites</a>
-                        </li>
-                        <li class="list-group-item py-3">
-                            <a href='{% url "account:comments" %}' style="{% if option == 'comments' %}font-weight: bold;{% else %}text-decoration: none;{% endif %} color: inherit;">My comments</a>
-                        </li>
-                        <li class="list-group-item py-3">
-                            <a href='#' style='text-decoration: none; color: inherit;'>My card</a>
-                        </li>
-                        <li class="list-group-item py-3">
-                            <a href='#' style='text-decoration: none; color: inherit;'>Discounts and bonuses</a>
-                        </li>
-                        <li class="list-group-item py-3">
-                            <a href='{% url "account:settings" %}' style="{% if option == 'settings' %}font-weight: bold;{% else %}text-decoration: none;{% endif %} color: inherit;">Settings</a>
-                        </li>
-                        <li class="list-group-item py-3">
-                            <a href='{% url "account:logout_user" %}' style='text-decoration: none; color: inherit;'>Log out</a>
-                        </li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
@@ -61,4 +49,15 @@
     </div>
 </div>    
 
+{% endblock %}
+
+{% block script %}
+<script>
+    document.getElementById('ads_link').addEventListener('click', function() {
+        event.preventDefault();
+        localStorage.setItem('trigger', false);
+        window.location.href = `/account/ads/`;
+    })
+
+</script>
 {% endblock %}

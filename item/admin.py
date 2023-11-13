@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Item, Brand, Category, Comments, CategoryBrand, FavoriteCompare
+from .models import Brand, Category, CategoryBrand, FavoriteCompare, Comments, Item
 
 admin.site.register(Item)
 admin.site.register(Brand)

@@ -1,0 +1,24 @@
+{% extends 'order/order.html' %}
+
+{% block navbar_title %}Payment for the order{% endblock %}
+
+{% block content %}
+    {% if payment_check %}
+    <div class="container text-center">
+        <div class="card-body bg-white">
+            <h3>This is card form...</h3>
+        </div>
+    </div>
+    {% else %}
+    <div class="container">
+        <div class="card-body rounded">
+            <div class="container">
+                <h4>Thank you for the order! Soon it will be processed and you will receive a message or call from the owner of the goods.</h4>
+                <div class="row">
+                    <a href="{% url 'frontpage' %}" class="btn btn-outline-warning">Back shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

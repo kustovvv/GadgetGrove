@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import ShippingAddress, ContactInfo
+from .models import ContactInfo, ShippingAddress
 
 class ShippingAddressForm(forms.ModelForm):
     class Meta:

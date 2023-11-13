@@ -1,10 +1,117 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.contrib import messages
 
-from .models import Item, Comments, Category, Brand, FavoriteCompare
+from .models import CategoryBrand, Category, Brand, FavoriteCompare, Comments, Item
 from .forms import CommentForm
 
+def add_update_item(request):
+    if request.user.is_authenticated:
+        item_id = request.GET.get('item_id', '')
+        if request.method == 'POST':
+            item_id = request.POST.get('item_id', '')
+            
+            item = get_object_or_404(Item, id=int(item_id)) if item_id else Item()
+            fields = {
+                'model': request.POST.get('new_title_input'),
+                'price': request.POST.get('new_price_input')
+            }
+            for field, value in fields.items():
+                if not value:
+                    messages.error(request, f'The {field} field must be filled in!')
+                    return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
+            
+            selected_category = request.POST.get('category-select-item')
+            selected_brand = request.POST.get('brand-select')
+            # return render(request, 'core/checking.html', {'selected_category': selected_category,
+            #                                               'selected_brand': selected_brand,})           
+            if selected_category=='-1' or selected_brand=='-1':
+                messages.error(request, 'Category and brand should be selected.')
+                return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
+            
+            category_brand = CategoryBrand.objects.get(category=int(selected_category), brand=int(selected_brand))
+
+            availability = request.POST.get('is_available', False)
+            if availability:
+                availability = True
+
+            image = request.FILES.get('new_image')
+            
+            if not image:
+                if item_id:
+                    image = item.image
+
+            item.created_by = request.user
+            item.category_brand = category_brand
+            item.model = fields['model']
+            item.description = request.POST.get('new_description_input')
+            item.price = fields['price']
+            item.image = image
+            item.availability = availability
+
+            item.save()
+
+            if item_id:
+                messages.success(request, 'Your ad was updated successfully')
+                return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
+
+            messages.success(request, 'Your ad was added successfully')
+            return redirect('frontpage')
+        else:
+            selected_brand = ''
+            item = ''
+            all_categories = Category.objects.all()
+            selected_category = request.GET.get('category', '-1')
+
+            brands = Brand.objects.all()
+
+            if item_id:
+                item = Item.objects.get(id=item_id)
+                if selected_category == '-1':
+                    selected_category = str(item.category_brand.category.id)
+                selected_brand = item.category_brand.brand.id
+
+            if selected_category:
+                if selected_category != '-1':
+                    brands = Brand.objects.filter(category_brands__category_id=int(selected_category))                
+                    
+            context = {'all_categories': all_categories,
+                       'brands': brands,
+                       'selected_category': int(selected_category),
+                       'selected_brand': selected_brand,
+                       'item': item,
+                       'item_id': item_id
+                       }
+
+            return render(request, 'item/add_update_item.html', context)
+    
+    return redirect('login')
+
+
+def delete_item(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+    item.delete()
+
+    messages.success(request, 'The item was removed successfully')
+    return redirect('account:ads')
+
+
+def delete_items(request):
+    selected_items = request.GET.get('selectedValues')
+    selected_items = selected_items.split(',')
+    if selected_items:
+        for value in selected_items:
+            if value:
+                item = get_object_or_404(Item, pk=int(value))
+                item.delete()
+            else:
+                messages.success(request, 'No item selected')
+                return redirect('account:ads')
+        messages.success(request, 'The items was removed successfully')
+        return redirect('account:ads')
+    
+    
+               
 
 def details(request, pk):
     item = Item.objects.get(id=pk)
@@ -35,7 +142,7 @@ def items(request):
     category_id = request.GET.get('category', 0)
 
     if category_id:
-        items = Item.objects.filter(category_brand__category=category_id, availability=True)
+        items = Item.objects.filter(category_brand__category=category_id, availability=True).exclude(created_by=request.user)
         category = Category.objects.get(id=category_id)
 
     brand_id = request.GET.get('brand')
@@ -72,7 +179,7 @@ def items(request):
 
 
 def search_results(request, query):
-    items = Item.objects.filter(Q(model__icontains=query) | Q(description__icontains=query) | Q(category_brand__brand__name__icontains=query))
+    items = Item.objects.filter(Q(model__icontains=query) | Q(description__icontains=query) | Q(category_brand__brand__name__icontains=query)).exclude(created_by=request.user)
 
     if items:
         category_id = items[0].category_brand.category.id
@@ -183,7 +290,7 @@ def add_delete_favorites_compare(request, pk):
         return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
     
     else:
-        messages.error(request, 'To add an item to favorites or compares, you should be logged in to.')
+        messages.error(request, 'To add an item to favorites or compares, you should be logged in to')
         return redirect('login')
     
 

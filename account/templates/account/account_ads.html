@@ -1,0 +1,173 @@
+{% extends 'account/account_base.html' %}
+
+{% load custom_filters %}
+
+{% block extra_content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class=" mt-2">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>    
+        </div>
+    {% endfor %}
+{% endif %}
+    <div class="card-body bg-white rounded py-2">
+        <div class="container">
+            <h4>My ads</h4>
+        </div>
+    </div>
+    <div class="card-body bg-white rounded py-2 mt-3">
+        <div class="container">
+            <div class="list-group list-group-flush">
+                <div class="list-group-item">
+                    <div class="d-inline-flex gap-5">
+                        <p>Active</p>
+                        <p>Pending</p>
+                        <p>Unpaid</p>
+                        <p>Inactive</p>
+                        <p>Rejected</p>
+                    </div>
+                </div>
+                <div class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input class="form-control" placeholder="Search by title">
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" placeholder="Category">
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" placeholder="Sort">
+                        </div>
+                    </div>
+                    {% if items %}
+                        <p class="mt-3">Total ads: {{ items.count }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% if items %}
+            <div class="d-flex justify-content-between">
+                <div class="form-check mt-3" style="margin-left: -13px;">
+                    <input class="form-check-input" type="checkbox" value="-1" id="select_all">
+                    <label class="h5" for="check_1">
+                        Select all
+                    </label>
+                </div>
+                <div class="d-inline-flex" style="margin-top: 15px;">
+                    <a href="#" style="color: inherit;" id="delete_items_link">Delete</a>
+                </div>   
+            </div>
+            {% for item in items %}
+            <div class="form-check">
+                <div class="container" style="align-items: center; display: flex; margin-left: -12px;">
+                    <input class="form-check-input" type="checkbox" name="selected_my_item" value="{{ item.id }}" id="check_{{ item.id }}" style="margin-right: 15px;">
+                    <label class="form-check-label" for="check_1">
+                        <div class="card-body bg-white rounded py-3 mt-3" style="width: 960px;">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
+                                            <div class="text-center">
+                                                {% if item.image and item.image.url %}
+                                                    <img src="{{ item.image.url }}" alt="Phone Image" style="max-height: 140px; max-width: 100%;">
+                                                {% else %}
+                                                    <p>No image available</p>
+                                                {% endif %}
+                                            </div>
+                                        </a>    
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
+                                            <small>Code: {{ item.id }}</small>
+                                            <h6 class="card-title">{{ item.model }}</h6>
+                                            <small>{{ item.comments.count }} comments</small>
+                                        </a>    
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="d-inline-flex gap-3">
+                                            <button class="update-link btn btn-outline-secondary" type="button" data-item-id="{{ item.id }}">Update</button>
+                                            <a href="{% url 'item:delete_item' item.id %}" class="btn btn-outline-secondary" type="button" >Delete</a>    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+                <div class="card-body bg-white rounded py-5">
+                    <div class="container">
+                        <div class="text-center">
+                            <h4>It looks like you haven't put up a single item for sale. But you can do this at any time!</h4>
+                            <a href="{% url 'frontpage' %}" class="btn btn-warning" type="button">Go shopping</a>
+                        </div>        
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    document.getElementById('select_all').addEventListener('change', function () {
+        var trigger = document.getElementById('select_all').checked;
+        localStorage.setItem('trigger', JSON.stringify(trigger))
+        window.location.href = `/account/ads/`
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var savedTrigger = localStorage.getItem('trigger');
+        
+        var checkboxes = document.querySelectorAll('input[name="selected_my_item"]');
+
+        var savedScrollPosition = localStorage.getItem('scrollPosition');
+    
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = savedTrigger === 'true';
+        });
+
+        var trigger = document.getElementById('select_all');
+        trigger.checked = savedTrigger === 'true';
+        
+        if (savedScrollPosition) {
+            window.scrollTo(0, savedScrollPosition);
+            localStorage.removeItem('scrollPosition');
+        }
+    });
+
+    document.getElementById('select_all').addEventListener('change', function() {
+        localStorage.setItem('scrollPosition', window.scrollY)
+    });
+
+    document.getElementById('delete_items_link').addEventListener('click', function() {
+        event.preventDefault();
+        var checkboxes = document.querySelectorAll('input[name="selected_my_item"]:checked');
+
+        var selectedValues = [];
+
+        checkboxes.forEach(function(checkbox) {
+            selectedValues.push(checkbox.value);
+        })
+
+        window.location.href = `/items/delete_items/?selectedValues=${selectedValues}`
+    });
+
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('update-link')) {
+            var ItemId = event.target.getAttribute('data-item-id'); 
+            console.log(ItemId);
+            localStorage.removeItem('formData');
+            window.location.href = `/items/add_update_item/?item_id=${ ItemId }`;
+        }
+    });
+</script>
+{% endblock %}

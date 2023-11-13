@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 
-from .models import ShoppingCartItem,  ShippingAddress, ContactInfo, OrderItem, Order
+from .models import  ContactInfo,  PaymentMethod, OrderStatus, ShippingAddress, Order, ShoppingCartItem, OrderItem
 from item.models import Item
 from .forms import ShippingAddressForm, ContactInfoForm
 
@@ -57,29 +57,38 @@ def change_amount_items(request, pk):
 
 def order(request):
     if request.user.is_authenticated:
-        post_check = False
+        payment_methods = PaymentMethod.objects.all()
+        selected_payment_method = request.POST.get('selected_payment_method', 1)
+        payment_method = PaymentMethod.objects.get(id=int(selected_payment_method))
+        order_comment = request.POST.get('order_comment', '')
+        status = OrderStatus.objects.get(status='In progress')
+
+        if selected_payment_method == '1':
+            payment_check = True
+        else:
+            payment_check = False
 
         if request.method == 'POST':
             shipping_form = ShippingAddressForm(request.POST)
             contact_form = ContactInfoForm(request.POST)
 
             if shipping_form.is_valid() and contact_form.is_valid():
-                new_shipping_address = ShippingAddress(
+                new_shipping_address = ShippingAddress.objects.get_or_create(
                     user = request.user,
                     street_address = shipping_form.cleaned_data['street_address'],
                     city = shipping_form.cleaned_data['city'],
                     state = shipping_form.cleaned_data['state'],
                     postal_code = shipping_form.cleaned_data['postal_code'],
                     country = shipping_form.cleaned_data['country'],
-                )
+                )[0]
 
-                new_contact_info = ContactInfo(
+                new_contact_info = ContactInfo.objects.get_or_create(
                     user = request.user,
                     phone_number = contact_form.cleaned_data['phone_number'],
                     first_name = contact_form.cleaned_data['first_name'],
                     last_name = contact_form.cleaned_data['last_name'],
                     email = contact_form.cleaned_data['email'],
-                )
+                )[0]
 
                 new_contact_info.save()
                 new_shipping_address.save()
@@ -88,8 +97,10 @@ def order(request):
                     user = request.user,
                     contact_info = new_contact_info,
                     shipping_address = new_shipping_address,
-                    status = 'In processing',
+                    status = status,
+                    payment_method = payment_method,
                     total_price = request.POST.get('total_price', 0),
+                    comment = order_comment,
                 )
 
                 new_all_orders.save()
@@ -106,13 +117,11 @@ def order(request):
 
                     new_customer_order.save()
 
-                post_check = True
-
                 cart = ShoppingCartItem.objects.filter(user=request.user)
 
                 cart.delete()
 
-                return render(request, 'order/order.html', {'post_check': post_check})
+                return render(request, 'order/success.html', {'payment_check': payment_check})
 
         else:
             shipping_form = ShippingAddressForm()
@@ -120,7 +129,9 @@ def order(request):
         
         context = {'shipping_form': shipping_form,
                     'contact_form': contact_form,
-                    'post_check': post_check}
+                    'payment_methods': payment_methods,
+                    'payment_method': payment_method,
+                    }
 
         return render(request, 'order/order.html', context)
 

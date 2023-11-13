@@ -1,115 +1,122 @@
-{% extends 'core/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Placing an order{% endblock %}</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">   
+    </head>
+    <body style="background-color: rgb(243, 243, 243);">
+        {% load custom_filters %}
 
-{% block title %}Placing an order{% endblock %}
-
-{% block navbar %}
-{% endblock %}
-
-{% block navbar_main %}
-{% endblock %}
-
-{% block footer %}
-{% endblock %}
-
-{% load custom_filters %}
-
-{% block content %}
-<nav class="navbar">
-    <div class="container-fluid">
-        <a href="{% url 'frontpage' %}" class="navbar-brand h1">&lt;</a>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <p class="text-center h5">Placing an order</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
-{% if post_check %}
-    <div class="container">
-        <div class="card-body rounded">
-            <div class="container">
-                <h4>Thank you for the order! Soon it will be processed and you will receive a message or call from the owner of the goods.</h4>
-                <div class="row">
-                    <a href="{% url 'frontpage' %}" class="btn btn-outline-warning">Back for shopping</a>
-                </div>
-            </div>
-        </div>
-    </div>
-{% else %}
-<form method='POST' action='.' class="row g-3">
-    {% csrf_token %}
-    <div class="container mb-3 mt-3">
-        <div class="row">
-            <div class="col-md-8">
+        <nav class="navbar">
+            <div class="container-fluid">
+                <a href="{% url 'frontpage' %}" class="navbar-brand h1">&lt;</a>
                 <div class="container">
-                    <div class="text-left">
-                        <div class="card-body bg-white py-2 rounded">
-                            <div class="container">
-                                <h6>Contact details*</h6>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <p class="text-center h5">{% block navbar_title %}Placing an order{% endblock %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        {% block content %}
+        <form method='POST' action='.'>
+            {% csrf_token %}
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="text-left">
+                            <div class="card-body bg-white py-2 rounded">
+                                <div class="container">
+                                    <h6>Contact details*</h6>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-body bg-white py-2 mt-3 rounded">
-                        <div class="container">
-                            {{ contact_form.as_p }}
-                        </div>
-                    </div>
-                </div>
-                <div class="container mt-3">
-                    <div class="text-left">
                         <div class="card-body bg-white py-2 mt-3 rounded">
                             <div class="container">
-                                <h6>Delivery*</h6>
+                                {{ contact_form.as_p }}
                             </div>
                         </div>
-                    </div>
-                    <div class="card-body bg-white py-2 mt-3 rounded">
-                        <div class="container">
-                            {{ shipping_form.as_p }}
-                        </div>
-                    </div>
-                </div>                     
-            </div>
-            
-            <div class="col-md-4">
-                <div class="container">
-                    <div class="card-body bg-white rounded py-2">
-                        <div class="container">
-                            <div class="d-inline-flex gap-3">
-                                <h4>Your order:</h4>
-                                <h4>{{user_cart_items.count}} items</h4>
-                            </div>
-                            <div class="d-flex justify-content-between mt-3">
-                                <h7>Order cost:</h7>
-                                <h4>{{ total_price }} $</h4>
-                                <input type="hidden" name="total_price" value="{{ total_price }}">
-                            </div>
-                            <div class="container-fluid">
-                                <div class="row p-1 mt-3">
-                                    <button class="btn btn-outline-warning" type="submit">Checkout</button>       
+                        <div class="text-left">
+                            <div class="card-body bg-white py-2 mt-3 rounded">
+                                <div class="container">
+                                    <h6>Delivery*</h6>
                                 </div>
-                            </div>    
+                            </div>
+                        </div>
+                        <div class="card-body bg-white py-2 mt-3 rounded">
+                            <div class="container">
+                                {{ shipping_form.as_p }}
+                            </div>
+                        </div>
+                        <div class="text-left">
+                            <div class="card-body bg-white py-2 mt-3 rounded">
+                                <div class="container">
+                                    <h6>Payment</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check" id="payment-select">
+                            {% for method in payment_methods %}
+                                <div class="card-body bg-white rounded mt-2 py-2" style="margin-left: -24px;">
+                                    <div class="d-inline-flex gap-3">
+                                        <input class="form-check-input" style="margin-left: 15px" type="radio" value="{{ method.id }}" name="selected_payment_method" id="method_{{ method.id }}" {% if method.id == payment_method %}checked{% endif %}>
+                                        <label class="form-check-label" for="method_{{ method.id }}">
+                                        {{ method.method }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        <div class="card-body bg-white rounded py-3 mb-3 mt-3">
+                            <div class="container">
+                                <h6>Comment to order</h6>
+                                <input class="form-control py-4" name="order_comment" placeholder="Enter comment">
+                            </div>
                         </div>
                     </div>
-                    {% render_items_2 user_cart_items %}          
+                    
+                    <div class="col-md-4">
+                        <div class="card-body bg-white rounded py-2">
+                            <div class="container">
+                                <div class="d-inline-flex gap-3">
+                                    <h4>Your order:</h4>
+                                    <h4>{{user_cart_items.count}} items</h4>
+                                </div>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <h7>Order cost:</h7>
+                                    <h4>{{ total_price }} $</h4>
+                                    <input type="hidden" name="total_price" value="{{ total_price }}">
+                                </div>
+                                <div class="container-fluid">
+                                    <div class="row p-1 mt-3">
+                                        <button class="btn btn-outline-warning" type="submit">Checkout</button>       
+                                    </div>
+                                </div>    
+                            </div>
+                        </div>
+                        {% render_items_2 user_cart_items %}              
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+        
+            {% if form.errors or form.non_field_errors %}
+                {%for field in form%}
+                    {% for error in field.errors %}
+                        <h3>{{ error|escape }}</h3>
+                    {% endfor %}
+                {% endfor %}
+        
+                {{ form.non_field_errors }}
+            {% endif %}
+        
+        </form>
+        {% endblock %}
 
-    {% if form.errors or form.non_field_errors %}
-         {%for field in form%}
-            {% for error in field.errors %}
-                <h3>{{ error|escape }}</h3>
-            {% endfor %}
-        {% endfor %}
-
-        {{ form.non_field_errors }}
-    {% endif %}
-
-</form>
-{% endif %}
-
-{% endblock %}
+    </body>
+</html>

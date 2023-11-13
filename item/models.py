@@ -34,12 +34,14 @@ class CategoryBrand(models.Model):
     
 
 class Item(models.Model):
+    created_by = models.ForeignKey(CustomUser, related_name='items', on_delete=models.CASCADE)
     category_brand = models.ForeignKey(CategoryBrand, related_name='items', on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     price = models.FloatField()
-    availability = models.BooleanField(default=False)
-    image_url = models.URLField()
+    availability = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='item_images', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ('model',)
@@ -74,4 +76,3 @@ class FavoriteCompare(models.Model):
 
     def __str__(self):
         return self.user.username
-        

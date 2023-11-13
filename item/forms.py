@@ -1,4 +1,4 @@
-from item.models import Comments
+from item.models import Comments, Item, Category
 from django import forms
 
 class CommentForm(forms.ModelForm):
@@ -15,3 +15,12 @@ class CommentForm(forms.ModelForm):
             'disadvantages': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Disadvantages'}),
         }
 
+
+class NewItemForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = ('availability', 'image')
+
+        widgets = {
+            'image': forms.ClearableFileInput(),
+        }

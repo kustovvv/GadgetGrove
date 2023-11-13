@@ -11,7 +11,7 @@
           <li class="breadcrumb-item"><a href="{% url 'frontpage' %}">Home</a></li>
           <li class="breadcrumb-item"><a href="{% url 'item:items' %}? query={{ query }}&category={{ item.category_brand.category.id }}">{{ item.category_brand.category }}</a></li>
           <li class="breadcrumb-item"><a href="{% url 'item:items' %}? query={{ query }}&category={{ item.category_brand.category.id }}&brand={{ item.category_brand.brand.id }}">{{ item.category_brand.brand }}</a></li>
-          <li class="breadcrumb-item active" aria-current="page">{{ item.model|truncatechars:33 }}</li>
+          <li class="breadcrumb-item active" aria-current="page">{{ item.model }}</li>
         </ol>
     </nav>
     <div class="card-body bg-white">
@@ -40,14 +40,18 @@
                         <div class="col-md-7">
                             <div >
                                 <div class="text-center">
-                                    <img src="{{ item.image_url }}" style="max-width: 300px; max-height: 100%;">
+                                    {% if item.image and item.image.url %}
+                                    <img src="{{ item.image.url }}" style="max-width: 300px; max-height: 100%;">
+                                    {% else %}
+                                        <p>No image available</p>
+                                    {% endif %}
                                 </div>
                                 <div class="text-center">
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-5">
-                            <div class="card-body bg-light rounded">
+                            <div class="card-body rounded">
                                 <div class="container">
                                     <div class="d-flex justify-content-between py-3">
                                         <h3>{{ item.price }} $</h3>

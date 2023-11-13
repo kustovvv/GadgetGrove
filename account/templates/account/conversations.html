@@ -1,0 +1,21 @@
+{% extends 'account/account_base.html' %}
+
+{% load custom_filters %}
+
+{% block extra_content %}
+    <div class="card-body bg-white rounded py-2">
+        <div class="container">
+            <h4>Conversations</h4>
+        </div>
+    </div>
+    {% if conversations %}
+        {{ conversations }}
+    {% else %}
+    <div class="card-body bg-white rounded mt-3 py-3">
+        <div class="container-fluid text-center">
+            <h4>You do not have any conversations. Send someone a message!</h4>
+            <a href="{% url 'frontpage' %}" class="btn btn-warning" type="button">Go shopping</a>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

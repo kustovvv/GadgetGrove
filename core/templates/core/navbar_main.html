@@ -15,6 +15,7 @@
           <button class="btn rounded" type="button" style="background-color: rgb(254,146,23 );">Account</button>
         {% endif %}        
       </a>
+      <a href="{% url 'item:add_update_item' %}" class="fas fa-plus" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
       <a href="{% url 'item:favorites' %}" class="far fa-heart" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
       <a href="{% url 'item:compare' %}" class="fas fa-balance-scale-right" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
       <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation"  style="border: none;">
@@ -36,7 +37,11 @@
                   <div class="card-body">
                     <div class="row">
                       <div class="col-md-3 mt-3">
-                        <img src="{% if item.item.image_url %}{{ item.item.image_url }}{% else %}no image{% endif %}" style="max-width: 80px; max-height: 100%;">
+                        {% if item.item.image and item.item.image.url %}
+                        <img src="{{ item.item.image.url }}" style="max-width: 80px; max-height: 100%;">
+                        {% else %}
+                            <p>No image available</p>
+                        {% endif %}
                       </div>
                       <div class="col-md-9">
                         <div class="d-flex justify-content-between">

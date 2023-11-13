@@ -16,7 +16,7 @@ class ShippingAddress(models.Model):
         verbose_name_plural = 'Shipping addresses'
 
     def __str__(self):
-        return f'{self.user.username} {self.orders.first()}'
+        return f'{self.user.username}'
 
 
 class ContactInfo(models.Model):
@@ -30,16 +30,35 @@ class ContactInfo(models.Model):
         ordering = ('user', )
 
     def __str__(self):
-        return f'{self.user.username} {self.orders.first()}'
+        return f'{self.user.username}'
+
+
+class OrderStatus(models.Model):
+    status = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name_plural = 'Order Statuses'
+
+    def __str__(self):
+        return self.status
+    
+
+class PaymentMethod(models.Model):
+    method = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.method
 
 
 class Order(models.Model):
     user = models.ForeignKey(CustomUser, related_name='orders', on_delete=models.CASCADE)
     contact_info = models.ForeignKey(ContactInfo, related_name='orders', on_delete=models.CASCADE)
+    status = models.ForeignKey(OrderStatus, related_name='orders', on_delete=models.CASCADE)
+    payment_method = models.ForeignKey(PaymentMethod, related_name='orders', on_delete=models.CASCADE)
     shipping_address = models.ForeignKey(ShippingAddress, related_name='orders', on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=255)
     total_price = models.FloatField(null=True)
+    comment = models.TextField()
 
     class Meta:
         ordering = ('-order_date',)

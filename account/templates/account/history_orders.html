@@ -8,6 +8,7 @@
         <h4>Orders</h4>
     </div>
 </div>
+{% if orders %}
 <div>
     {% for order in orders %}
         <div class="card-body bg-white mt-3 rounded">
@@ -58,4 +59,14 @@
         </div>
     {% endfor %}
 </div>
+{% else %}
+<div class="card-body bg-white mt-3 py-5">
+    <div class="container">
+        <h4>You have no orders yet. We have lots of good stuff, maybe you like something.</h4>
+        <div class="text-center">
+            <a href="{% url 'frontpage' %}" class="btn btn-warning" type="button">Go shopping</a>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

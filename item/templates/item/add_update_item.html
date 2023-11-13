@@ -1,0 +1,182 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Add Item{% endblock %}
+
+{% block navbar %}
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="container-fluid mt-2">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>    
+        </div>
+    {% endfor %}
+{% endif %}
+<form method="POST" action="." enctype="multipart/form-data" id="new_item_form">
+    {% csrf_token %}
+    <input type="hidden" name="item_id" id="item_id" value="{{ item_id }}">
+    <div class="container-fluid">
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>Error!</strong> {{ error }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Error!</strong> {{ form.non_field_errors }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+        {% if item %}
+            <p class="h3 py-3">Update the advertisement</p>
+        {% else %}
+            <p class="h3 py-3">Create an advertisement</p>
+        {% endif %}
+        <div class="card-body bg-white rounded py-3 mt-3">
+            <div class="container-fluid">
+                <h5>Describe in detail</h5>
+                <div class="mt-3">
+                    <p>Enter the title*</p>
+                    <input type="text" class="form-control" name="new_title_input" value="{{ item }}" id="new_title_input" placeholder="Enter the product name, for example XIAOMI TV A2 43" required>
+                </div>
+                <div class="mt-3">
+                    <p>Select the category and brand*{{ selected_category }}</p>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <select class="form-select" name="category-select-item" id="category-select-item" aria-label="Default select example">
+                                <option value="-1">All categories</option>
+                                {% if all_categories %}
+                                    {% for category in all_categories %}
+                                        <option value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>{{ category.name }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" name="brand-select" id="brand-select" aria-label="Default select example">
+                                <option value="-1">All brands</option>
+                                {% if brands %}
+                                    {% for brand in brands %}
+                                        <option value="{{ brand.id }}" {% if selected_brand == brand.id %}selected{% endif %}>{{ brand.name }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="card-body bg-white rounded py-3 mt-3">
+            <div class="container-fluid">
+                <h5>Photo</h5>
+                <p>Select a photo for your product</p>
+                <input type="file" name="new_image" id="new_image">
+            </div>
+        </div>
+        <div class="card-body bg-white rounded py-3 mt-3">
+            <div class="container-fluid">
+                <h5>Description*</h5>
+                <textarea class="form-control" name="new_description_input" id="new_description_input" rows="3"  required>{{ item.description }}</textarea>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="is_available" id="is_available" {% if not item.availability %}{%else%}checked{% endif %}>
+                    <label class="form-check-label" for="is_available">
+                      Available
+                    </label>
+                </div>     
+            </div>
+        </div>
+        <div class="card-body bg-white rounded py-3 mt-3">
+            <div class="container-fluid">
+                <h5>Price*</h5>
+                <p>Price per item</p>
+                <div class="d-inline-flex gap-3">
+                    <input type="text" class="form-control" name="new_price_input" value="{{ item.price }}" id="new_price_input" style="height: 30px; width: 250px;">
+                    <h5>$</h5>
+                </div>
+
+            </div>
+        </div>
+        <div class="card-body bg-white rounded py-3 mt-3">
+            <div class="container-fluid">
+                <button class="btn btn-warning px-5" type="submit" id="submition_button">{% if item %}Save{% else %}Publish{% endif %}</button>
+                <a {% if item %}href="{% url 'account:ads' %}"{% else %}href="{% url 'frontpage' %}"{% endif %} class="btn btn-secondary px-5" type="button">Back</a>
+            </div>
+        </div>
+    </div>   
+</form>
+{% endblock %}
+
+{% block script %}
+<script>
+    function saveFormData() {
+        var formData = {
+            new_title_input: document.getElementById('new_title_input').value,
+            new_price_input: document.getElementById('new_price_input').value,
+            new_description_input: document.getElementById('new_description_input').value,
+        }
+
+        localStorage.setItem('formData', JSON.stringify(formData));
+    };
+
+    document.getElementById('category-select-item').addEventListener('change', function () {  
+        saveFormData();
+        var selectedCategory = this.value;
+        var ItemId = document.getElementById('item_id').value;
+        console.log(ItemId)
+        
+        if (ItemId) {
+            window.location.href = `/items/add_update_item/?category=${selectedCategory}&item_id=${ItemId}`;
+        } else {
+            window.location.href = `/items/add_update_item/?category=${selectedCategory}`;
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var savedFormData = localStorage.getItem('formData');
+        if (savedFormData) {
+            savedFormData = JSON.parse(savedFormData)
+
+            document.getElementById('new_title_input').value = savedFormData.new_title_input,
+            document.getElementById('new_price_input').value = savedFormData.new_price_input,
+            document.getElementById('new_description_input').value = savedFormData.new_description_input
+        };
+    });
+
+    document.getElementById('submition_button').addEventListener('click', function(event) {
+        event.preventDefault();
+        console.error('This is executed');
+        var form = document.getElementById('new_item_form');
+        if (isFormValid(form)) {
+            console.error('Form is submited');
+            localStorage.removeItem('formData');
+            form.submit();
+
+        } else {
+            saveFormData();
+            console.error('Form is NOT submited');
+            form.submit();        
+        }
+    })
+
+    function isFormValid(form) {
+        var fieldsIds = ['new_title_input', 'new_price_input', 'category-select-item', 'brand-select'];
+
+        return fieldsIds.every(function(fieldId) {
+            var field = form.querySelector('#' + fieldId);
+            var fieldValue = field.value.trim();
+            // return fieldValue !== '';
+            return fieldValue !== '' && fieldValue != '-1';
+        });
+    }
+
+</script>
+{% endblock %}

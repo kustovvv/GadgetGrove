@@ -36,7 +36,11 @@
                                             <div class="col-md-10">
                                                 <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
                                                     <div class="text-center">
-                                                        <img src="{{ item.image_url }}" alt="Phone Image" style="max-height: 140px; max-width: 100%; margin-left: 25px;">
+                                                        {% if item.image and item.image.url %}
+                                                        <img src="{{ item.image.url }}" alt="Phone Image" style="max-height: 140px; max-width: 100%; margin-left: 25px;">
+                                                        {% else %}
+                                                            <p>No image available</p>
+                                                        {% endif %}
                                                     </div>
                                                 </a>
                                             </div> 

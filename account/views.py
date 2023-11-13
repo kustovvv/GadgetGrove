@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 
 from order.models import Order
+from item.models import Item
 from .models import PersonalInformation
 from .forms import FullInfoForm, SettingsDateOfBirthForms
 from item.views import search_results
-from item.models import Comments, CategoryBrand, Category
+from item.models import CategoryBrand, Category, Comments
 
 from datetime import date, datetime
 
@@ -58,6 +59,31 @@ def account_comments(request):
         return render(request, 'account/account_comments.html', context)
     
     return redirect('login')
+
+
+def card(request):
+    option = 'card'
+    context = {'option': option}
+    return render(request, 'account/account_card.html', context)
+
+
+def conversations(request):
+    option = 'conversations'
+    context = {'option': option}
+    return render(request, 'account/conversations.html', context)
+
+
+def discounts(request):
+    option = 'discounts'
+    context = {'option': option}
+    return render(request, 'account/account_discounts.html', context)
+
+def ads(request):
+    option = 'ads'        
+    items = Item.objects.filter(created_by=request.user)
+    context = {'items': items,
+               'option': option,}
+    return render(request, 'account/account_ads.html', context)
 
 
 def settings(request):

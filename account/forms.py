@@ -45,6 +45,3 @@ class SettingsDateOfBirthForms(forms.Form):
     selected_day = forms.ChoiceField(choices=DAYS, widget=forms.Select(attrs={'class': 'form-control'}), required=False)
     selected_month = forms.ChoiceField(choices=MONTHS, widget=forms.Select(attrs={'class': 'form-control'}), required=False)
     selected_year = forms.ChoiceField(choices=YEARS, widget=forms.Select(attrs={'class': 'form-control'}), required=False)
-
-
-# class 
