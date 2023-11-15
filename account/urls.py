@@ -11,7 +11,6 @@ urlpatterns = [
     path('comments/', views.account_comments, name='comments'),
     path('settings', views.settings, name='settings'),
     path('card/', views.card, name='card'),
-    path('conversations/', views.conversations, name='conversations'),
     path('discounts/', views.discounts, name='discounts'),
     path('ads/', views.ads, name='ads'),
 ]

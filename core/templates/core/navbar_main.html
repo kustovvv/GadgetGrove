@@ -1,65 +1,74 @@
 {% load custom_filters %}
 
-<nav class="navbar " style="background-color: rgb(196, 111, 0);">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'frontpage' %}">Catalog</a>
-    <form method="GET" class="d-flex" role="search" action=".">
-      <input name='query' value="{{ query }}" class="form-control me-2" type="search" placeholder="I'm looking for..." aria-label="Search">
-      <button class="btn btn-outline-success" type="submit">Search</button>
-    </form>  
-    <div class="d-inline-flex gap-3">
-      <a href="{% url 'account:history' %}" style="text-decoration: none; color: inherit;">
-        {% if profile_image %}
-          <img src="{{ profile_image.url }}" style="width: 45px; height: 45px;" alt="User Avatar" class="avatar-image">
-        {% else %}
-          <button class="btn rounded" type="button" style="background-color: rgb(254,146,23 );">Account</button>
-        {% endif %}        
-      </a>
-      <a href="{% url 'item:add_update_item' %}" class="fas fa-plus" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
-      <a href="{% url 'item:favorites' %}" class="far fa-heart" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
-      <a href="{% url 'item:compare' %}" class="fas fa-balance-scale-right" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
-      <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation"  style="border: none;">
-        <span class="fas fa-shopping-cart fa-lg"></span>
-      </button>      
-    </div>
+<nav class="nav" style="background-color: rgb(196, 111, 0);">
+  <div class="container-fluid py-2">
+    <div class="row">
+      <div class="col-md-1" style="width: 200px;">
+        <a class="navbar-brand" href="{% url 'frontpage' %}"><h4 style="margin-top: 5px;">Catalog</h4></a>
+      </div>
+      <div class="col-md-8 content-end">
+        <form method="GET" class="mt-1" role="search" action="." style="display: flex;">
+          <input name='query' value="{{ query }}" class="form-control me-2" type="search" placeholder="I'm looking for..." aria-label="Search">
+          <button class="btn btn-warning" type="submit">Search</button>
+        </form>
+      </div>
+      <div class="col-md-2 justify-content-end">
+        <div class="d-inline-flex gap-3">
+          <a href="{% url 'account:history' %}" style="text-decoration: none; color: inherit;">
+            {% if profile_image %}
+              <img src="{{ profile_image.url }}" style="width: 45px; height: 45px;" alt="User Avatar" class="avatar-image">
+            {% else %}
+              <button class="btn rounded" type="button" style="background-color: rgb(254,146,23 );">Account</button>
+            {% endif %}        
+          </a>
+          <a href="{% url 'item:add_update_item' %}" class="fas fa-plus" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
+          <a href="{% url 'item:favorites' %}" class="far fa-heart" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
+          <a href="{% url 'item:compare' %}" class="fas fa-balance-scale-right" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
+          <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation"  style="border: none;">
+            <span class="fas fa-shopping-cart fa-lg"></span>
+          </button>      
+        </div>
+      </div>
+    </div>  
   </div>
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-    <div class="offcanvas-header">
+    <div class="offcanvas-header" style="background-color: rgba(255, 136, 0, 0.905);">
         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Cart</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-      <div class="container-fluid">
         {% if request.user.is_authenticated %}
           {% if user_cart_items %}
               {% for item in user_cart_items %}
-                <div class="card">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-md-3 mt-3">
-                        {% if item.item.image and item.item.image.url %}
-                        <img src="{{ item.item.image.url }}" style="max-width: 80px; max-height: 100%;">
-                        {% else %}
-                            <p>No image available</p>
-                        {% endif %}
-                      </div>
-                      <div class="col-md-9">
-                        <div class="d-flex justify-content-between">
-                          <h7>{{ item.item.model|format_string|safe }}</h7>
-                          <a href="{% url 'order:delete_from_cart' pk=item.id %}" class="btn btn-danger" type="submit">del</a>
+                <div style="align-items: center; display: flex;">
+                  <div class="card py-2" style="width: 400px;">
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col-md-3 mt-3">
+                          {% if item.item.image and item.item.image.url %}
+                          <img src="{{ item.item.image.url }}" style="max-width: 80px; max-height: 100%;">
+                          {% else %}
+                              <p>No image available</p>
+                          {% endif %}
                         </div>
-                        <h7>{% if item.item.availability %}Available{% else %}Not available{% endif %}</h7>
-                        <p>{{ item.item.price }} $/ per item </p>
-                        <div class="d-flex justify-content-between">
-                          <form method="POST" action="{% url 'order:change_amount_items' pk=item.id %}">
-                            {% csrf_token %}
-                            <div class="d-flex justify-content-between">
-                              <button class="btn btn-sm btn-outline-warning p-1" type="submit" name="action" value="decrease">-</button>
-                              <p>{{ item.amount}} </p>
-                              <button class="btn btn-sm btn-outline-warning p-1" type="submit" name="action" value="increase">+</button>    
-                            </div>
-                          </form>
-                          <h4>{{ item.total_item_price }} $</h4>
+                        <div class="col-md-9">
+                          <div class="d-flex justify-content-between">
+                            <h7>{{ item.item.model|format_string|safe }}</h7>
+                            <a href="{% url 'order:delete_from_cart' pk=item.id %}" class="btn btn-danger" type="submit">del</a>
+                          </div>
+                          <h7>{% if item.item.availability %}Available{% else %}Not available{% endif %}</h7>
+                          <p>{{ item.item.price }} $/ per item </p>
+                          <div class="d-flex justify-content-between">
+                            <form method="POST" action="{% url 'order:change_amount_items' pk=item.id %}">
+                              {% csrf_token %}
+                              <div class="d-flex justify-content-between">
+                                <button class="amount-cart-item btn btn-sm btn-outline-warning p-1" type="submit" name="action" value="decrease">-</button>
+                                <p>{{ item.amount}} </p>
+                                <button class="amount-cart-item btn btn-sm btn-outline-warning p-1" type="submit" name="action" value="increase">+</button>    
+                              </div>
+                            </form>                            
+                            <h4>{{ item.total_item_price }} $</h4>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -79,12 +88,11 @@
                 </div>
               </div>
           {% else %}
-            <h3>Ooops, it seems you haven't added any items in your cart yet! Take your first!</h3>
+            <h3>It seems you haven't added any items in your cart yet. Take your first.</h3>
           {% endif %}
         {% else %}
           <h3>You need to be authenticated in order to make a purchase.</h3>
         {% endif %}
-      </div>
     </div>
   </div>
 </nav>

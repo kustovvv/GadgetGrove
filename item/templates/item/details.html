@@ -14,49 +14,32 @@
           <li class="breadcrumb-item active" aria-current="page">{{ item.model }}</li>
         </ol>
     </nav>
-    <div class="card-body bg-white">
-        <div class="container-fluid py-3">
-            <div class="list-group list-group-flush">
-                <div class="list-group-item">
-                    <h3 id="review-section">{{ item.model }}</h3>
-                    <div class="d-flex justify-content-between">
-                        {% if comments %}
-                            {{ comments.count }} comments
-                        {% else %}
-                            <p>No comments</p>
-                        {% endif %}
-                        <p>Item code: {{ item.id }}</p>
-                    </div>
-                    <div class="d-inline-flex gap-3">
-                        <a href="#review-section" class="h6">Review</a>
-                        <a href="#features-section" class="h6">Features</a>
-                        <h6>Availability</h6>
-                        <a href="#comments-section" class="h6">Comments</a>
-                        <h6>Product photo</h6>
-                    </div>
-                </div>
-                <div class="list-group-item">
-                    <div class="row py-3">
-                        <div class="col-md-7">
-                            <div >
-                                <div class="text-center">
-                                    {% if item.image and item.image.url %}
-                                    <img src="{{ item.image.url }}" style="max-width: 300px; max-height: 100%;">
-                                    {% else %}
-                                        <p>No image available</p>
-                                    {% endif %}
-                                </div>
-                                <div class="text-center">
-                                </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card-body bg-white">
+                <div class="container-fluid py-3">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item">
+                            <div class="d-inline-flex gap-3">
+                                <a href="#review-section" class="h6">Review</a>
+                                <a href="#features-section" class="h6">Features</a>
+                                <h6>Availability</h6>
+                                <a href="#comments-section" class="h6">Comments</a>
+                                <h6>Product photo</h6>
                             </div>
                         </div>
-                        <div class="col-md-5">
-                            <div class="card-body rounded">
-                                <div class="container">
-                                    <div class="d-flex justify-content-between py-3">
-                                        <h3>{{ item.price }} $</h3>
-                                        <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-outline-warning" type="button">Add to cart</a>
-                                    </div>        
+                        <div class="list-group-item">
+                            <div class="card-body bg-white">
+                                <div class="container-fluid">
+                                    <div class="text-center">
+                                        {% if item.image and item.image.url %}
+                                        <img src="{{ item.image.url }}" style="max-width: 300px; max-height: 100%;">
+                                        {% else %}
+                                            <p>No image available</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="text-center">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -64,7 +47,72 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-5">
+            <div class="card-body bg-white py-3" style="margin-left: -15px;">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between">
+                        <h5 id="review-section">{{ item.model }}</h5>
+                        <p>Item code: {{ item.id }}</p>
+                    </div>
+                    {% if item.availability %}
+                        <p>Available</p>
+                    {% endif %}
+
+                    {% if comments %}
+                        <p>{{ comments.count }} comments</p>
+                    {% else %}
+                        <p>No comments</p>
+                    {% endif %}
+                    
+                    <h4>{{ item.price }}$</h4></br>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-warning py-2" type="button">Add to cart</a>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-outline-warning py-2" type="button" style="margin-left: 10px;">Message</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body bg-white py-3 mt-2" style="margin-left: -15px;">
+                <div class="container-fluid">
+                    <h5>Seller</h5>                    
+                    <div class="d-inline-flex gap-3">
+                        {% if seller_info.avatar %}
+                            <div class="text-center">
+                                <img src="{{ seller_info.avatar.url }}" style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
+                            </div>
+                        {% else %}
+                            <p>No avatar image...</p>
+                        {% endif %}
+                        <div>
+                            <h6>{{ seller_info.user.first_name }} {{ seller_info.user.last_name }}</h6>
+                            {% if seller_info.phone_number %}
+                                <p>{{ seller_info.phone_number }}</p>
+                            {% endif %}
+                            {% for name, info in seller_additional_info.items %}
+                                {% if info %}
+                                    <div class="d-inline-flex gap-1">
+                                        <h6>{{ name }}: </h6>
+                                        <p>{{ info }}</p>
+                                    </div>
+                                </br>
+                                {% endif %}
+                            {% endfor %}
+                        </div>                    
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    
     <h3 id="features-section" class="py-3">Features and description</h3>
 
     <div class="card-body bg-white py-3">

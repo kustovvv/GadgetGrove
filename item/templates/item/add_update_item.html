@@ -173,7 +173,6 @@
         return fieldsIds.every(function(fieldId) {
             var field = form.querySelector('#' + fieldId);
             var fieldValue = field.value.trim();
-            // return fieldValue !== '';
             return fieldValue !== '' && fieldValue != '-1';
         });
     }

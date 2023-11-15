@@ -10,7 +10,7 @@ def account_base(request):
                 "item:favorites": ['favorites', 'Favorites'],
                 "account:comments": ['comments', 'My comments'],
                 "account:ads": ['ads', 'My ads'],
-                "account:conversations": ['conversations', 'Conversations'],
+                "conversation:conversations": ['conversations', 'Conversations'],
                 "account:card": ['card', 'My card'],
                 "account:discounts": ['discounts', 'Discounts and bonuses'],
                 "account:settings": ['settings', 'Settings'],

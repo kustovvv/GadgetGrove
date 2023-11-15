@@ -1,0 +1,159 @@
+{% extends 'account/account_base.html' %}
+
+{% load custom_filters %}
+
+{% block extra_content %}
+<div class="card-body bg-white rounded">
+    <div class="list-group list-group-flush">
+        <div class="list-group-item">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="container d-flex align-items-center" style="width: 80px; height: 80px;">
+                        <img {% if request.user != conversation.created_by %}src="{{ conversation.created_by.personal_information_user.get.avatar.url }}"{% else %}src="{{ conversation.item.created_by.personal_information_user.get.avatar.url }}"{% endif %} style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="contaniner" style="margin-top: 30px;">
+                        {% if request.user != conversation.created_by %}
+                        <h6>{{ conversation.created_by.username }}</h6>
+                        {% else %}
+                            <h6>{{ conversation.item.created_by.username }}</h6>
+                        {% endif %}    
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="list-group-item">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="container" style="width: 80px; height: 80px; align-items: center;">
+                        {% if conversation.item.image.url %}
+                            <img src="{{ conversation.item.image.url }}" style="width: 70px; height: 70px;">
+                        {% else %}
+                            <p>No image available</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="container-fluid" style="margin-top: -15px; margin-left: -11px;">
+                        <div class="d-inline-flex gap-3 py-2">
+                            <p>{% if conversation.item.availability %}Available{% else %}Not available{% endif %}</p>
+                            <p>{{ conversation.item.model|truncatechars:50 }} </p>    
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <h6>{{ conversation.item.price }} $</h6>
+                        <p>Code: {{ conversation.item.id }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="list-group-item">
+            <div class="lg:w-2/4 lg:mx-auto py-4 bg-white rounded">
+                <div class="chat-messages space-y-3" id="chat-messages">
+                    {% for message in messages %}
+                        {% if message.created_by == request.user %}
+                        <div class="px-3 py-1 mt-2 bg-light-warning rounded" style="width: 350px; margin-left: auto;">
+                        {% else %}
+                        <div class="px-3 py-1 mt-2 bg-light-gray rounded" style="width: 350px; margin-right: auto;">
+                        {% endif  %}
+                        <div class="d-flex justify-content-between">
+                            <p>{{ message.created_by.username }}</p>
+                            <p>{{ message.created_at }}</p>
+                        </div>
+                        <p>{{ message.content }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <form method="POST" action="." style="display: flex;">
+                {% csrf_token %}
+                <input class="form-control" type="text" name="content" placeholder="Your message..." id="chat-message-input" style="margin-right: 5px;">
+                <button class="btn btn-warning" id="chat-message-submit">Submit{{ messages.count }}</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+{{ conversation.id|json_script:"json-conversationid" }}
+{{ request.user.username|json_script:"json-username" }}
+
+
+<script>
+    const conversationId = JSON.parse(document.getElementById('json-conversationid').textContent);
+    const userName = JSON.parse(document.getElementById('json-username').textContent);
+
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/'
+        + conversationId
+        + '/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        console.log('onmessage')
+
+        const data = JSON.parse(e.data);
+
+        if (data.message) {
+            let html = '<div class="px-3 py-1 mt-2';
+
+            if (data.username === userName) {
+                html += ' bg-light-warning';
+            } else {
+                html += ' bg-light-gray';
+            }
+
+            html += ' rounded"';
+
+            if (data.username === userName) {
+                html += ' style="width: 350px; margin-left: auto;">';
+            } else {
+                html += ' style="width: 350px; margin-right: auto;">';
+            }
+            html += '<div class="d-flex justify-content-between">';
+            html += '<p>' + data.username + '</p>';
+            html += '<p>' + data.created_at + '</p></div>';
+            html += '<p>' + data.message + '</p></div>';
+
+            document.querySelector('#chat-messages').innerHTML += html;
+
+            scrollToBottom();
+        } else {
+            alert('The message was empty!');
+        }
+    }
+
+    chatSocket.onclose = function(e) {
+        console.log('onclose')
+    }
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        e.preventDefault();
+
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': userName,
+            'conversation_id': conversationId
+        }))
+
+        messageInputDom.value = '';
+
+        return false;
+    }
+
+    function scrollToBottom() {
+        const objDiv = document.querySelector('#chat-messages');
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
+
+    scrollToBottom();
+</script>
+{% endblock %}

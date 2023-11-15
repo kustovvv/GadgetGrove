@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.contrib import messages
 
 from .models import CategoryBrand, Category, Brand, FavoriteCompare, Comments, Item
+from account.models import PersonalInformation
 from .forms import CommentForm
 
 def add_update_item(request):
@@ -23,8 +24,6 @@ def add_update_item(request):
             
             selected_category = request.POST.get('category-select-item')
             selected_brand = request.POST.get('brand-select')
-            # return render(request, 'core/checking.html', {'selected_category': selected_category,
-            #                                               'selected_brand': selected_brand,})           
             if selected_category=='-1' or selected_brand=='-1':
                 messages.error(request, 'Category and brand should be selected.')
                 return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
@@ -111,20 +110,29 @@ def delete_items(request):
         return redirect('account:ads')
     
     
-               
-
 def details(request, pk):
     item = Item.objects.get(id=pk)
     related_items = Item.objects.filter(category_brand=item.category_brand).exclude(id=pk)[0:6]
     query = request.GET.get('query', '')
     comments = Comments.objects.filter(item_id=pk)
+    seller_info = PersonalInformation.objects.get(user=item.created_by)
 
+    seller_additional_info = {
+        'Facebook': seller_info.facebook,
+        'Instagram': seller_info.instagram,
+        'Twitter': seller_info.twitter,
+        'Google': seller_info.google,
+        'Pinterest': seller_info.pinterest,
+    }
+    
     if query:
         return search_results(request, query)
 
     context = {'item': item,
                 'related_items': related_items,
-                'comments': comments
+                'comments': comments,
+                'seller_info': seller_info,
+                'seller_additional_info': seller_additional_info,
                 }
 
     return render(request, 'item/details.html', context)

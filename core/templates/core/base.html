@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}{% endblock %}|GadgetGrove</title>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">   
   </head>
   <body style="background-color: rgb(243, 243, 243); overflow-x: hidden;">
@@ -15,6 +15,10 @@
   
   {% block navbar_main %}
     {% include 'core/navbar_main.html' %}
+  {% endblock %}
+
+  {% block conversation_navbar %}
+    {% include 'conversation/conversations_navbar.html' %}
   {% endblock %}
 
   {% block content %}
@@ -29,6 +33,19 @@
       border-radius: 50%;
     }
 
+    .chat-messages{
+      height: 400px;
+      overflow-y: auto;
+    }
+
+    .bg-light-warning {
+    background-color: rgba(255, 241, 178, 0.649)
+    }
+
+    .bg-light-gray {
+      background: rgba(228, 228, 228, 0.649);
+    }
+
   </style>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   {% block script %}
@@ -41,7 +58,7 @@
       document.getElementById('favorites-input-field').addEventListener('change', function () {
           var inputValue = this.value;
           window.location.href = `/items/favorites/?input=${inputValue}`;
-      });
+      });      
     </script>
   {% endblock %}
   </body>

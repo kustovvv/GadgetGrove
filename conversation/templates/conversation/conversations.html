@@ -1,0 +1,68 @@
+{% extends 'account/account_base.html' %}
+
+{% load custom_filters %}
+
+{% block extra_content %}
+    <div class="card-body bg-white rounded py-2">
+        <div class="container">
+            <div class="list-group list-group-flush">
+                <div class="list-group-item">
+                    <h4>Conversations</h4>
+                </div>
+                <div class="list-group-item">
+                    <div class="d-inline-flex gap-3">
+                        <a href="{% url 'conversation:conversations' %}?my_ads=1" {% if my_ads == '1' %}class="btn btn-warning px-5"{% else %}class="btn btn-outline-warning px-5"{% endif %} type="button">I sell</a>
+                        <a href="{% url 'conversation:conversations' %}?my_ads=0" {% if my_ads == '0' %}class="btn btn-warning px-5"{% else %}class="btn btn-outline-warning px-5"{% endif %} type="button">I buy</a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="card-body bg-white rounded mt-3 py-3">
+        <div class="container-fluid">
+            {% if conversations %}
+                {% for conversation in conversations %}
+                <a href="{% url 'conversation:conversation' conversation.id %}" style="text-decoration: none; color: inherit;">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="container" style="width: 80px; height: 80px; align-items: center;">
+                                <img {% if request.user != conversation.created_by %}src="{{ conversation.created_by.personal_information_user.get.avatar.url }}"{% else %}src="{{ conversation.item.created_by.personal_information_user.get.avatar.url }}"{% endif %} style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="d-flex justify-content-between">
+                                {% if request.user != conversation.created_by %}
+                                    <h6>{{ conversation.created_by.username }}</h6>
+                                {% else %}
+                                    <h6>{{ conversation.item.created_by.username }}</h6>
+                                {% endif %}
+                                <p>{{ conversation.modified_at }}</p>    
+                            </div>
+                            <div class="container-fluid" style="margin-top: -15px; margin-left: -11px;">
+                                <div class="d-inline-flex gap-3">
+                                    <p>{% if conversation.item.availability %}Available{% else %}Not available{% endif %}</p>
+                                    <p>{{ conversation.item.model|truncatechars:50 }} </p>    
+                                </div>
+                            </div>
+                            <div class="d-inline-flex gap-1">
+                                {% if conversation.messages.last.created_by == request.user %}
+                                    <p>You: </p>
+                                {% else %}
+                                    <p>{{ conversation.created_by }}: </p>
+                                {% endif %}
+                                <p>{{ conversation.messages.last.content|truncatechars:80 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+            <div class="text-center">
+                <h4>You do not have any conversations. Send someone a message.</h4>
+                <a href="{% url 'frontpage' %}" class="btn btn-warning" type="button">Go shopping</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

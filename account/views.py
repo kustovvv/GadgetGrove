@@ -67,12 +67,6 @@ def card(request):
     return render(request, 'account/account_card.html', context)
 
 
-def conversations(request):
-    option = 'conversations'
-    context = {'option': option}
-    return render(request, 'account/conversations.html', context)
-
-
 def discounts(request):
     option = 'discounts'
     context = {'option': option}

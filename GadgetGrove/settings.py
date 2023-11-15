@@ -29,6 +29,8 @@ LOGOUT_REDIRECT_URL = '/'
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    'daphne', 
     'authentication',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -74,6 +76,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'GadgetGrove.wsgi.application'
+ASGI_APPLICATION = 'GadgetGrove.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
 
 
 # Database

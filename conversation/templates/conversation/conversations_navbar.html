@@ -1,0 +1,17 @@
+<div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <button class="btn btn-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#conversationsNavbar" aria-controls="conversationsNavbar" aria-label="Toggle navigation">Chat</button>
+</div>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="conversationsNavbar" aria-labelledby="conversationsNavbarLabel">
+    <div class="offcanvas-header" style="background-color: rgba(255, 136, 0, 0.905);">
+        <h5 class="offcanvas-title" id="conversationsNavbarLabel">All chats</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        {% if all_conversations %}
+        {% else %}
+            <div class="container">
+                <h4>You do not have any conversations. Send someone a message.</h4>
+            </div>
+        {% endif %}
+    </div>
+</div>
