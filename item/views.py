@@ -150,7 +150,7 @@ def items(request):
     category_id = request.GET.get('category', 0)
 
     if category_id:
-        items = Item.objects.filter(category_brand__category=category_id, availability=True).exclude(created_by=request.user)
+        items = Item.objects.filter(category_brand__category=category_id).exclude(created_by=request.user)
         category = Category.objects.get(id=category_id)
 
     brand_id = request.GET.get('brand')
@@ -258,20 +258,36 @@ def favorites(request):
         user_items = FavoriteCompare.objects.get_or_create(user=request.user)[0]
         items = user_items.favorite_items.all()
         all_categories = set(item.category_brand.category for item in items)
+        all_sellers = set(item.created_by for item in items)
         selected_category = request.GET.get('category', '-1')
+        selected_seller = request.GET.get('seller', '-1')
+        is_available = request.GET.get('is_available', '')
         input = request.GET.get('input', '')
 
         if input:
             items = items.filter(model__icontains=input)
         
-        if selected_category:
+        if selected_category and selected_category != 'null':
             if selected_category != '-1':
                 items = items.filter(category_brand__category = selected_category)
+        elif selected_category == 'null':
+            selected_category = '-1'
+            items = items.filter(category_brand__category = selected_category)
+
+        if selected_seller:
+            if selected_seller != '-1':
+                items = items.filter(created_by__username = selected_seller)
+
+        if is_available == "true":
+            items = items.filter(availability = True)
 
         context = {'option': option,
                    'items': items,
                    'all_categories': all_categories,
                    'selected_category': int(selected_category),
+                   'selected_seller': selected_seller,
+                   'all_sellers': all_sellers,
+                   'is_available': is_available,
                    }
 
         return render(request, 'account/account_favorites.html', context)

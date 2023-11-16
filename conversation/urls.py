@@ -5,5 +5,5 @@ app_name = 'conversation'
 
 urlpatterns = [
     path('conversations/', views.conversations, name='conversations'),
-    path('conversations/<str:pk>/', views.conversation, name='conversation'),
+    path('conversations/<str:item_id>/', views.conversation, name='conversation'),
 ]

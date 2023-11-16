@@ -18,12 +18,12 @@
             </div>
             
         </div>
-    </div>
-    <div class="card-body bg-white rounded mt-3 py-3">
-        <div class="container-fluid">
-            {% if conversations %}
-                {% for conversation in conversations %}
-                <a href="{% url 'conversation:conversation' conversation.id %}" style="text-decoration: none; color: inherit;">
+    </div>            
+    {% if conversations %}
+        {% for conversation in conversations %}
+        <div class="card-body bg-white rounded mt-1 py-3">
+            <div class="container-fluid">
+                <a href="{% url 'conversation:conversation' conversation.item.id %}" style="text-decoration: none; color: inherit;">
                     <div class="row">
                         <div class="col-md-2">
                             <div class="container" style="width: 80px; height: 80px; align-items: center;">
@@ -56,13 +56,17 @@
                         </div>
                     </div>
                 </a>
-                {% endfor %}
-            {% else %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="card-body bg-white rounded mt-1 py-3">
+        <div class="container-fluid">
             <div class="text-center">
                 <h4>You do not have any conversations. Send someone a message.</h4>
                 <a href="{% url 'frontpage' %}" class="btn btn-warning" type="button">Go shopping</a>
             </div>
-            {% endif %}
         </div>
     </div>
+    {% endif %}
 {% endblock %}

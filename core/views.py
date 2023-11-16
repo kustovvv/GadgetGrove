@@ -6,9 +6,9 @@ from item.views import search_results
 
 def frontpage(request):
     if request.user.is_authenticated:
-        items = Item.objects.filter(availability=True).exclude(created_by=request.user)
+        items = Item.objects.all().exclude(created_by=request.user)
     else:
-        items = Item.objects.filter(availability=True)
+        items = Item.objects.all()
 
     query = request.GET.get('query', '')
     categories = Category.objects.all()

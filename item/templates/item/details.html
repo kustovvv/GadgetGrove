@@ -74,7 +74,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="row">
-                                    <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-outline-warning py-2" type="button" style="margin-left: 10px;">Message</a>
+                                    <a href="{% url 'conversation:conversation' item_id=item.id %}" class="btn btn-outline-warning py-2" type="button" style="margin-left: 10px;">Message</a>
                                 </div>
                             </div>
                         </div>

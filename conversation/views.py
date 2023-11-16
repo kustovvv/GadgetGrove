@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Conversation, ConversationMessage
+from item.models import Item
 
 
 def conversations(request):
@@ -7,7 +8,6 @@ def conversations(request):
         option = 'conversations'
         conversations = Conversation.objects.filter(members=request.user)
         my_ads = request.GET.get('my_ads', '1')
-        last_message = ''
         if conversations:
             if my_ads == '1':
                 conversations = conversations.exclude(created_by=request.user)
@@ -24,14 +24,33 @@ def conversations(request):
         return redirect('login')
 
 
-def conversation(request, pk):
+def conversation(request, item_id):
     if request.user.is_authenticated:
-        conversation = get_object_or_404(Conversation, id=pk)
-        messages = ConversationMessage.objects.filter(conversation=conversation)
-        if len(messages) < 100:
-            messages = messages[:100]
-        else:
-            messages = messages[len(messages)-100:]
+        item = Item.objects.get(id=item_id)
+        try:
+            conversation = Conversation.objects.get(item=item, members=request.user)
+        
+        except:
+            conversation = Conversation()
+            conversation.item = item
+            conversation.created_by = request.user
+            conversation.save()
+
+            conversation.members.add(request.user)
+            conversation.members.add(item.created_by)
+            conversation.save()
+
+        try:
+            messages = ConversationMessage.objects.filter(conversation=conversation)
+            if len(messages) < 100:
+                messages = messages[:100]
+            else:
+                messages = messages[len(messages)-100:]
+        except:
+            messages = ''
+        
+        # return render(request, 'core/checking.html', {'item_id': conversation.messages.get})
+
         context = {'conversation': conversation,
                    'messages': messages,
                    }

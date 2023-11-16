@@ -16,7 +16,7 @@
                     <div class="row">
                         <div class="col-md-4 text-center">
                             <h5>Item category</h5>
-                            <select class="form-select" id="category-select" aria-label="Default select example">
+                            <select class="filter-field form-select" id="category-select" aria-label="Default select example">
                                 <option value="-1">All categories</option>
                                 {% if all_categories %}
                                     {% for category in all_categories %}
@@ -27,11 +27,11 @@
                         </div>
                         <div class="col-md-4 text-center">
                             <h5>Seller</h5>
-                            <select class="form-select" id="category-select" aria-label="Default select example">
+                            <select class="filter-field form-select" id="seller-select" aria-label="Default select example">
                                 <option value="-1">All sellers</option>
                                 {% if all_sellers %}
-                                    {% for category in all_categories %}
-                                        <option value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>{{ category.name }}</option>
+                                    {% for seller in all_sellers %}
+                                        <option value="{{ seller.username }}" {% if selected_seller == seller.username %}selected{% endif %}>{{ seller.username }}</option>
                                     {% endfor %}
                                 {% endif %}
                             </select>
@@ -40,7 +40,7 @@
                         <div class="col-md-4 text-center">
                             <div class="d-inline-flex gap-1" style="margin-top: 30px;">
                                 <a class="btn btn-outline-secondary" type="button">Discount</a>
-                                <a class="btn btn-outline-secondary" type="button">Availability</a>        
+                                <button class="btn {% if is_available == 'true' %}btn-secondary{% else %}btn-outline-secondary{% endif %}" id="is_available" type="button">Availability</button>        
                             </div>
                         </div>
                         <div class="mt-3">
@@ -71,6 +71,7 @@
                                 </div>
                                 <div class="col-md-3 text-center">
                                     <h6>Seller</h6>
+                                    <p>{{ item.created_by }}</p>
                                 </div>
                                 <div class="col-md-3 text-end">
                                     <div class="d-inline-flex gap-3">
@@ -96,4 +97,57 @@
         </div>
     </li>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function availability() {
+        var is_available = localStorage.getItem('is_available');
+        if (is_available == null) {
+            is_available = true;
+        } else {
+            if (is_available === 'false') {
+                is_available = true;
+                console.log(`true_is_available: ${is_available}`);
+            } else {
+                is_available = false;
+                console.log(`false_is_available: ${is_available}`);
+            }
+        }
+
+        localStorage.setItem('is_available', is_available);
+    };
+
+    document.getElementById('category-select').addEventListener('change', function () {
+        var selectedCategory = this.value;
+        var is_available = localStorage.getItem('is_available');
+        var selectedSeller = document.getElementById('seller-select');
+        var seller_username = selectedSeller.value;
+        window.location.href = `/items/favorites/?seller=${seller_username}&category=${selectedCategory}&is_available=${is_available}`;
+    });
+
+    document.getElementById('seller-select').addEventListener('change', function () {
+        var is_available = localStorage.getItem('is_available');
+        var selectedSeller = this.value;
+        var selectedCategory = document.getElementById('category-select');
+        var category_name = selectedCategory.value;
+        window.location.href = `/items/favorites/?seller=${selectedSeller}&category=${category_name}&is_available=${is_available}`;
+    });
+
+    document.getElementById('is_available').addEventListener('click', function () {
+        availability();
+        var is_available = localStorage.getItem('is_available');
+        var selectedSeller = document.getElementById('seller-select');
+        var selectedCategory = document.getElementById('category-select');
+        var category_name = selectedCategory.value;
+        var seller_username = selectedSeller.value;
+        window.location.href = `/items/favorites/?seller=${seller_username}&category=${category_name}&is_available=${is_available}`;
+    }); 
+
+    document.getElementById('favorites-input-field').addEventListener('change', function () {
+        var searchValue = this.value;
+        localStorage.removeItem('is_available')
+        window.location.href = `/items/favorites/?input=${searchValue}`;
+    });      
+</script>
 {% endblock %}
