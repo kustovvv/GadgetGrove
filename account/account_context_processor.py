@@ -24,7 +24,6 @@ def account_base(request):
         except:
             user_info = None
         
-
         return {'orders': orders, 
                 'user_phone': user_phone,
                 'profile_image': profile_image,

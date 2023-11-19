@@ -3,6 +3,14 @@
 {% load custom_filters %}
 
 {% block extra_content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>    
+    {% endfor %}
+{% endif %}
 <div class="card-body bg-white rounded">
     <div class="row">
         <div class="col-md-1">
@@ -51,21 +59,22 @@
                     </div>
                 </li>
                 <li class="list-group-item">
-                    <div class="container">
+                    <div class="container-fluid">
                         <div class="row mt-3">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-7 mb-3">
                                 <div class="row">
-                                    <a href="#" class="btn btn-outline-warning" type="button">Owner's number</a>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="text-center">
-                                    <a href="#" class="btn btn-outline-warning" type="button">additional</a>
+                                    <button class="btn btn-outline-warning" type="button">
+                                        {% if seller_info.phone_number %}
+                                            {{ seller_info.phone_number }}
+                                        {% else %}
+                                            {{ seller_info.user.email }}
+                                        {% endif %}
+                                    </button>
                                 </div>
                             </div>
                             <div class="col-md-5 mb-3">
-                                <div class="row">
-                                    <a href="#" class="btn btn-warning" type="button">Add an order comment</a>
+                                <div class="row" style="margin-left: 10px;">
+                                    <a href="{% url 'order:order_review' order.id %}" class="btn btn-warning" type="button">Add an order comment</a>
                                 </div>
                             </div>
                         </div>    
@@ -76,7 +85,7 @@
 
         <div class="mt-3">
             <h3>Delivery</h3>
-            <div class="card-body bg-white mt-3 rounded">
+            <div class="card-body py-1 bg-white mt-3 rounded">
                 <div class="container">
                     <p>{{ order.shipping_address.country }}</p>
                     <p>{{ order.shipping_address.state }}</p>
@@ -90,17 +99,46 @@
         <h5>Order status</h5>
         <div class="card-body bg-white rounded">
             <div class="container">
-                <p>1. {{ order.status }}</p>
+                <p>{{ order.status }}</p>
             </div>
         </div>
 
         <h5 class="mt-3">Seller</h5>
-        <div class="card-body bg-white rounded">
-            <p>Some information about the seller...</p>
+        <div class="card-body py-1 bg-white rounded">
+            <div class="container">
+                <div class="d-inline-flex gap-3">
+                    {% if seller_info %}
+                        {% if seller_info.avatar %}
+                            <div class="text-center">
+                                <img src="{{ seller_info.avatar.url }}" style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h6>{{ seller_info.user.username }}</h6>
+                            {% if seller_info.phone_number %}
+                                <p>{{ seller_info.phone_number }}</p>
+                            {% else %}
+                                <p>{{ seller_info.user.email }}</p>
+                            {% endif %}
+                            {% for name, info in seller_additional_info.items %}
+                                {% if info %}
+                                    <div class="d-inline-flex gap-1">
+                                        <h6>{{ name }}: </h6>
+                                        <p>{{ info }}</p>
+                                    </div>
+                                </br>
+                                {% endif %}
+                            {% endfor %}
+                        </div> 
+                    {% else %}
+                        <h6>{{ item.created_by.username }}</h6>
+                    {% endif %}                   
+                </div>
+            </div>
         </div>
         
         <h5 class="mt-3">Recipient contacts</h5>
-        <div class="card-body bg-white rounded">
+        <div class="card-body py-1 bg-white rounded">
             <div class="container">
                 <p class="mt-3">{{ order.contact_info.first_name }} {{ order.contact_info.last_name }}</p>
                 <p>{{ order.contact_info.phone_number }}</p>

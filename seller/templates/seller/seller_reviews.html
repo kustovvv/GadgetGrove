@@ -1,0 +1,11 @@
+{% extends 'seller/seller_base.html' %}
+
+{% load custom_filters %}
+
+{% block content_extra %}
+    {% if reviews %}
+        {% render_comments reviews %}
+    {% else %}
+        <p>No reviews</p>
+    {% endif %}
+{% endblock %}

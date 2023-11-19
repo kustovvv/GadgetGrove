@@ -1,0 +1,15 @@
+{% extends 'seller/seller_base.html' %}
+
+{% block content_extra %}
+    <div class="card-body bg-white mt-3 py-2 rounded">
+        <div class="container-fluid">
+            {% if schedule %}
+                <p>Seller schedule...</p>
+            {% else %}
+                <div class=text-center>
+                    <h5>This seller has not provided any schedule information</h5>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

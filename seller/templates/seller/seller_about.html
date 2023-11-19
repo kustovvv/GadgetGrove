@@ -1,0 +1,15 @@
+{% extends 'seller/seller_base.html' %}
+
+{% block content_extra %}
+    <div class="card-body bg-white mt-3 py-2 rounded">
+        <div class="container-fluid">
+            {% if about %}
+                <p>Information about seller</p>
+            {% else %}
+                <div class=text-center>
+                    <h5>This seller did not indicate anything about himself</h5>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

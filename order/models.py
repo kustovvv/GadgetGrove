@@ -2,6 +2,7 @@ from django.db import models
 
 from item.models import Item
 from authentication.models import User as CustomUser
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class ShippingAddress(models.Model):
     user = models.ForeignKey(CustomUser, related_name='shippingAddresses', on_delete=models.CASCADE)
@@ -52,6 +53,7 @@ class PaymentMethod(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(CustomUser, related_name='orders', on_delete=models.CASCADE)
+    seller = models.ForeignKey(CustomUser, related_name='order_seller', on_delete=models.CASCADE)
     contact_info = models.ForeignKey(ContactInfo, related_name='orders', on_delete=models.CASCADE)
     status = models.ForeignKey(OrderStatus, related_name='orders', on_delete=models.CASCADE)
     payment_method = models.ForeignKey(PaymentMethod, related_name='orders', on_delete=models.CASCADE)
@@ -84,3 +86,16 @@ class ShoppingCartItem(models.Model):
     user = models.ForeignKey(CustomUser, related_name='cartItems', on_delete=models.CASCADE)
     item = models.ForeignKey(Item, related_name='cartItems', on_delete=models.CASCADE)
     amount = models.IntegerField()
+
+class OrderReview(models.Model):
+    seller = models.ForeignKey(CustomUser, related_name='seller_reveiws', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='user_reveiws', on_delete=models.CASCADE)
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    comment_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-comment_date',)
+
+    def __str__(self):
+        return f'From {self.user.username} to {self.seller.username}'

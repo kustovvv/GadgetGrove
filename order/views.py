@@ -1,8 +1,57 @@
 from django.shortcuts import redirect, render
+from django.contrib import messages
 
-from .models import  ContactInfo,  PaymentMethod, OrderStatus, ShippingAddress, Order, ShoppingCartItem, OrderItem
+from .models import ContactInfo, PaymentMethod, OrderStatus, ShippingAddress, Order, ShoppingCartItem, OrderItem, OrderReview
 from item.models import Item
 from .forms import ShippingAddressForm, ContactInfoForm
+from account.models import CustomUser
+from item.views import get_seller_info
+
+
+def order_review(request, pk):
+    if request.user.is_authenticated:
+        initial_page_url = request.META.get('HTTP_REFERER', 'frontpage')
+        
+        order = Order.objects.get(id=pk)
+        seller = order.seller
+        info = get_seller_info(seller)
+        seller_info = info[0]
+        orders = Order.objects.filter(seller=seller)
+        amount_orders = orders.count()
+
+        if request.method == 'POST':
+            review = OrderReview(
+                seller = seller,
+                user = request.user
+            )
+            selected_rate = request.POST.getlist('inlineRadioOptions', '')
+            comment = request.POST.get('order_comment', '')
+            if selected_rate:
+                review.rating = int(selected_rate[0])
+                review.comment = comment
+                review.save()
+                messages.success(request, 'Your comment was saved successfully')
+                return redirect('account:history')
+            else:
+                messages.error(request, 'Please rate your order')
+                context = {'order': order,
+                        'seller': seller,
+                        'amount_orders': amount_orders,
+                        'seller_info': seller_info,
+                        'input_text': comment,
+                        'initial_page_url': initial_page_url,
+                        }
+        else:
+            context = {'order': order,
+                    'seller': seller,
+                    'amount_orders': amount_orders,
+                    'seller_info': seller_info,
+                    'initial_page_url': initial_page_url,
+                    }
+    else:
+        return redirect('login')
+
+    return render(request, 'order/order_review.html', context)
 
 
 def add_to_cart(request, pk, amount):
@@ -55,8 +104,10 @@ def change_amount_items(request, pk):
     return redirect('login')
 
 
-def order(request):
+def order(request, seller_id, total_price, total_amount):
     if request.user.is_authenticated:
+        seller = CustomUser.objects.get(id=seller_id)
+        items = ShoppingCartItem.objects.filter(user_id = request.user, item__created_by=seller)
         payment_methods = PaymentMethod.objects.all()
         selected_payment_method = request.POST.get('selected_payment_method', 1)
         payment_method = PaymentMethod.objects.get(id=int(selected_payment_method))
@@ -95,17 +146,16 @@ def order(request):
 
                 new_all_orders = Order(
                     user = request.user,
+                    seller = seller,
                     contact_info = new_contact_info,
                     shipping_address = new_shipping_address,
                     status = status,
                     payment_method = payment_method,
-                    total_price = request.POST.get('total_price', 0),
+                    total_price = total_price,
                     comment = order_comment,
                 )
 
                 new_all_orders.save()
-
-                items = ShoppingCartItem.objects.filter(user_id = request.user)
                 
                 for item in items:
                     new_customer_order = OrderItem(
@@ -117,7 +167,7 @@ def order(request):
 
                     new_customer_order.save()
 
-                cart = ShoppingCartItem.objects.filter(user=request.user)
+                cart = ShoppingCartItem.objects.filter(user=request.user, item__created_by=seller)
 
                 cart.delete()
 
@@ -131,6 +181,8 @@ def order(request):
                     'contact_form': contact_form,
                     'payment_methods': payment_methods,
                     'payment_method': payment_method,
+                    'total_amount': total_amount,
+                    'total_price': total_price,
                     }
 
         return render(request, 'order/order.html', context)

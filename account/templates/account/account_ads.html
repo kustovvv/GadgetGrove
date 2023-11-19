@@ -23,23 +23,37 @@
             <div class="list-group list-group-flush">
                 <div class="list-group-item">
                     <div class="d-inline-flex gap-5">
-                        <p>Active</p>
+                        <a href="{% url 'account:ads' %}?extra_option=active" 
+                        {% if extra_option == 'active' %}style="font-weight: bold; color: inherit;"
+                        {% else %}style="text-decoration: none; color: inherit;"{% endif %}>
+                        Active</a>
+
+                        <a href="{% url 'account:ads' %}?extra_option=inactive" 
+                        {% if extra_option == 'inactive' %}style="font-weight: bold; color: inherit;"
+                        {% else %}style="text-decoration: none; color: inherit;"{% endif %}>
+                        Inactive</a>
+
+                        <input type="hidden" id="extra_option" value="{{ extra_option }}">
+                        
                         <p>Pending</p>
                         <p>Unpaid</p>
-                        <p>Inactive</p>
                         <p>Rejected</p>
                     </div>
                 </div>
                 <div class="list-group-item">
                     <div class="row">
-                        <div class="col-md-4">
-                            <input class="form-control" placeholder="Search by title">
+                        <div class="col-md-6">
+                            <input class="form-control" id="ads-input-field" placeholder="Search by title">
                         </div>
-                        <div class="col-md-4">
-                            <input class="form-control" placeholder="Category">
-                        </div>
-                        <div class="col-md-4">
-                            <input class="form-control" placeholder="Sort">
+                        <div class="col-md-6">
+                            <select class="filter-field form-select" id="category-select" aria-label="Default select example">
+                                <option value="-1">All categories</option>
+                                {% if all_categories %}
+                                    {% for category in all_categories %}
+                                        <option value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>{{ category.name }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
                         </div>
                     </div>
                     {% if items %}
@@ -107,7 +121,7 @@
                 <div class="card-body bg-white rounded py-5">
                     <div class="container">
                         <div class="text-center">
-                            <h4>It looks like you haven't put up a single item for sale. But you can do this at any time!</h4>
+                            <h4>It looks like you haven't put up a single item for sale. But you can do this at any time.</h4>
                             <a href="{% url 'frontpage' %}" class="btn btn-warning" type="button">Go shopping</a>
                         </div>        
                     </div>
@@ -119,6 +133,20 @@
 
 {% block script %}
 <script>
+    document.getElementById('ads-input-field').addEventListener('change', function () {
+        var searchValue = this.value;
+        var extra_option = document.getElementById('extra_option');
+        var extra_option_value = extra_option.value;
+        window.location.href = `/account/ads/?extra_option=${extra_option_value}&input=${searchValue}`;
+    }); 
+
+    document.getElementById('category-select').addEventListener('change', function () {
+        var selectedCategory = this.value;
+        var extra_option = document.getElementById('extra_option');
+        var extra_option_value = extra_option.value;
+        window.location.href = `/account/ads/?extra_option=${extra_option_value}&category=${selectedCategory}`;
+    });
+
     document.getElementById('select_all').addEventListener('change', function () {
         var trigger = document.getElementById('select_all').checked;
         localStorage.setItem('trigger', JSON.stringify(trigger))

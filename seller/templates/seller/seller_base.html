@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="list-group list-group-flush">
+        <div class="list-group-item">
+            <div class="card-body mt-3 bg-white py-2 rounded">
+                <div class="container-fluid">
+                    <div class="d-inline-flex gap-3">
+                        {% if seller_info %}
+                            {% if seller_info.avatar %}
+                                <div class="text-center">
+                                    <img src="{{ seller_info.avatar.url }}" style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
+                                </div>
+                            {% endif %}
+                            <div>
+                                <h6>{{ seller_info.user.username }}</h6>
+                                {% if seller_info.phone_number %}
+                                    <p>{{ seller_info.phone_number }}</p>
+                                {% else %}
+                                    <p>{{ seller_info.user.email }}</p>
+                                {% endif %}
+        
+                                {% if amount_orders %}
+                                    <p>{{ amount_orders }} orders</p>
+                                {% endif %}
+                            </div> 
+                        {% else %}
+                            <h6>{{ item.created_by.username }}</h6>
+                        {% endif %}                   
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="list-group-item">
+            <div class="gallery-container overflow-auto">
+                <div class="d-inline-flex gap-3">
+                    {% for page, url in page_urls.items %}
+                        <a href="{% url url seller_info.user.id %}" {% if option == page %}class="btn btn-secondary"{% else %}class="btn btn-outline-secondary"{% endif %} type="button">{{ page }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% block content_extra %}
+    {% endblock %}
+</div>
+{% endblock %}

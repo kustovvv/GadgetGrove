@@ -3,8 +3,9 @@ from django.db.models import Q
 from django.contrib import messages
 
 from .models import CategoryBrand, Category, Brand, FavoriteCompare, Comments, Item
-from account.models import PersonalInformation
 from .forms import CommentForm
+from seller.views import get_seller_info
+
 
 def add_update_item(request):
     if request.user.is_authenticated:
@@ -108,22 +109,17 @@ def delete_items(request):
                 return redirect('account:ads')
         messages.success(request, 'The items was removed successfully')
         return redirect('account:ads')
-    
-    
+
+
 def details(request, pk):
     item = Item.objects.get(id=pk)
     related_items = Item.objects.filter(category_brand=item.category_brand).exclude(id=pk)[0:6]
     query = request.GET.get('query', '')
     comments = Comments.objects.filter(item_id=pk)
-    seller_info = PersonalInformation.objects.get(user=item.created_by)
-
-    seller_additional_info = {
-        'Facebook': seller_info.facebook,
-        'Instagram': seller_info.instagram,
-        'Twitter': seller_info.twitter,
-        'Google': seller_info.google,
-        'Pinterest': seller_info.pinterest,
-    }
+    info = get_seller_info(item.created_by.id)
+    seller_info = info[0]
+    seller_additional_info = info[1]
+    amount_orders = info[2]
     
     if query:
         return search_results(request, query)
@@ -133,6 +129,7 @@ def details(request, pk):
                 'comments': comments,
                 'seller_info': seller_info,
                 'seller_additional_info': seller_additional_info,
+                'amount_orders': amount_orders,
                 }
 
     return render(request, 'item/details.html', context)

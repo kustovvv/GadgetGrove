@@ -1,4 +1,4 @@
-from item.models import Comments, Item, Category
+from item.models import Comments, Item
 from django import forms
 
 class CommentForm(forms.ModelForm):

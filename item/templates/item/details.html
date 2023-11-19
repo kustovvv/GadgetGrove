@@ -82,33 +82,30 @@
                 </div>
             </div>
             <div class="card-body bg-white py-3 mt-2" style="margin-left: -15px;">
-                <div class="container-fluid">
-                    <h5>Seller</h5>                    
-                    <div class="d-inline-flex gap-3">
-                        {% if seller_info.avatar %}
-                            <div class="text-center">
-                                <img src="{{ seller_info.avatar.url }}" style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
-                            </div>
-                        {% else %}
-                            <p>No avatar image...</p>
-                        {% endif %}
-                        <div>
-                            <h6>{{ seller_info.user.first_name }} {{ seller_info.user.last_name }}</h6>
-                            {% if seller_info.phone_number %}
-                                <p>{{ seller_info.phone_number }}</p>
-                            {% endif %}
-                            {% for name, info in seller_additional_info.items %}
-                                {% if info %}
-                                    <div class="d-inline-flex gap-1">
-                                        <h6>{{ name }}: </h6>
-                                        <p>{{ info }}</p>
+                <a href="{% url 'seller:seller_catalog' seller_info.user.id %}" style="text-decoration: none; color: inherit;">
+                    <div class="container-fluid">
+                        <h5>Seller</h5>                    
+                        <div class="d-inline-flex gap-3">
+                            {% if seller_info %}
+                                {% if seller_info.avatar %}
+                                    <div class="text-center">
+                                        <img src="{{ seller_info.avatar.url }}" style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
                                     </div>
-                                </br>
                                 {% endif %}
-                            {% endfor %}
-                        </div>                    
+                                <div>
+                                    <h6>{{ seller_info.user.username }}</h6>
+                                    {% if seller_info.phone_number %}
+                                        <p>{{ seller_info.phone_number }}</p>
+                                    {% else %}
+                                        <p>{{ seller_info.user.email }}</p>
+                                    {% endif %}
+                                </div> 
+                            {% else %}
+                                <h6>{{ item.created_by.username }}</h6>
+                            {% endif %}                   
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>

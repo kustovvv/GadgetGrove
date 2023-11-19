@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'core',
     'item',
     'order',
+    'seller',
     'account',
     'conversation',
 ]
@@ -70,6 +71,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'order.context_processors.navbar_data',
                 'account.account_context_processor.account_base',
+                'seller.seller_context_processor.seller_base',
             ],
         },
     },

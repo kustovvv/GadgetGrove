@@ -6,7 +6,13 @@ from item.models import Item
 def conversations(request):
     if request.user.is_authenticated:
         option = 'conversations'
+        have_messages = False
         conversations = Conversation.objects.filter(members=request.user)
+        if conversations:
+            for conversation in conversations:
+                if conversation.messages.all():
+                    have_messages = True
+                    break
         my_ads = request.GET.get('my_ads', '1')
         if conversations:
             if my_ads == '1':
@@ -17,6 +23,7 @@ def conversations(request):
         context = {'option': option, 
                    'my_ads': my_ads,
                    'conversations': conversations,
+                   'have_messages': have_messages
                    }
 
         return render(request, 'conversation/conversations.html', context)
@@ -49,8 +56,6 @@ def conversation(request, item_id):
         except:
             messages = ''
         
-        # return render(request, 'core/checking.html', {'item_id': conversation.messages.get})
-
         context = {'conversation': conversation,
                    'messages': messages,
                    }

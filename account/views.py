@@ -6,10 +6,10 @@ from item.models import Item
 from .models import PersonalInformation
 from .forms import FullInfoForm, SettingsDateOfBirthForms
 from item.views import search_results
-from item.models import CategoryBrand, Category, Comments
+from item.models import Comments
+from item.views import get_seller_info
 
 from datetime import date, datetime
-
 
 def history(request):
     if request.user.is_authenticated:
@@ -30,11 +30,20 @@ def history(request):
 def order_details(request, pk):
     if request.user.is_authenticated:
         order = Order.objects.get(id=pk)
+        info = get_seller_info(order.seller)
+        seller_info = info[0]
+        seller_additional_info = info[1]
+
         query = request.GET.get('query', '')
         if query:
             return search_results(request, query)
 
-        return render(request, 'account/order_details.html', {'order': order})
+        context = {'order': order,
+                   'seller_info': seller_info,
+                   'seller_additional_info': seller_additional_info,
+                   }
+
+        return render(request, 'account/order_details.html', context)
     return redirect('login')
 
 
@@ -73,10 +82,32 @@ def discounts(request):
     return render(request, 'account/account_discounts.html', context)
 
 def ads(request):
-    option = 'ads'        
+    option = 'ads'
+    extra_option = request.GET.get('extra_option', 'active')
     items = Item.objects.filter(created_by=request.user)
+    input_value = request.GET.get('input', '')
+    if extra_option == 'active':
+        items = items.filter(availability=True)
+    elif extra_option == 'inactive':
+        items = items.filter(availability=False)
+    
+    if input_value:
+        items = items.filter(model__icontains=input_value)
+
+    all_categories = set(item.category_brand.category for item in items)
+    selected_category = request.GET.get('category', '-1')
+
+    if selected_category:
+        if selected_category != '-1':
+            items = items.filter(category_brand__category = selected_category)
+
     context = {'items': items,
-               'option': option,}
+               'option': option,
+               'extra_option': extra_option,
+               'all_categories': all_categories,
+               'selected_category': int(selected_category),
+               }
+    
     return render(request, 'account/account_ads.html', context)
 
 

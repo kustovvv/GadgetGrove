@@ -1,0 +1,22 @@
+{% extends 'seller/seller_base.html' %}
+
+{% load custom_filters %}
+
+{% block content_extra %}
+    <div class="row">
+        <div class="col-md-2">
+            <div class="card-body mt-3 bg-white">
+                <div class="container">
+                    <div class="list-group list-group-flush">
+                        {% for category in categories %} 
+                            <a href="{% url 'seller:seller_catalog' seller_info.user.id %}?category={{ category.id }}" class="list-group-item list-group-item-action py-3 h6" href="#list-item-1">{{ category.name }}</a>
+                        {% endfor %}
+                    </div>  
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            {% render_items items request %}
+        </div>
+    </div>
+{% endblock %}

@@ -14,8 +14,8 @@
                 {% if comments %}
                     {% render_comments comments 'my_comments' %}
                 {% else %}
-                    <h4>You haven't left a comment yet. If you want, you can leave one for any product you like.</h4>
                     <div class="text-center">
+                        <h4>You haven't left a comment yet. If you want, you can leave one for any product you like.</h4>
                         <a href="{% url 'frontpage' %}" class="btn btn-warning" type="button">Leave a message</a>
                     </div>
                 {% endif %}

@@ -33,8 +33,10 @@
                         {% for link, names in menu.items %}
                         <li class="list-group-item py-3">
                             <a {% if link %}href='{% url link %}'{% else %}href='#'{% endif %} 
-                                {% if names.0 == "ads" %}id="ads_link"{% endif %} 
-                                style="{% if option == names.0 %}font-weight: bold;{% else %}text-decoration: none;{% endif %} color: inherit;">
+                                {% if names.0 == "ads" %}id="ads_link"
+                                {% else %}{% if names.0 == "favorites" %}id="favorites_link"{% endif %}{% endif %} 
+                                {% if option == names.0 %}style="font-weight: bold; color: inherit;"
+                                {% else %}style="text-decoration: none; color: inherit;"{% endif %}>
                                 {{ names.1 }}
                             </a> 
                         </li>
@@ -57,7 +59,6 @@
         event.preventDefault();
         localStorage.setItem('trigger', false);
         window.location.href = `/account/ads/`;
-    })
-
+    });
 </script>
 {% endblock %}
