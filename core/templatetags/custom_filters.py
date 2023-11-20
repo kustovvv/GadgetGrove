@@ -31,6 +31,10 @@ def render_items_2(items, order_id=''):
 
 @register.inclusion_tag('core/all_comments.html')
 def render_comments(comments, your_comments=''):
+    for comment in comments:
+        if comment.rating:
+            comment.stars = range(comment.rating)
+            comment.hollow_stars = range(5-comment.rating)
     return {'comments': comments,
             'your_comments': your_comments,
             }
@@ -44,3 +48,9 @@ def is_in_favorites(item, user):
 @register.filter
 def is_in_compare(item, user):
     return FavoriteCompare.objects.filter(user=user, compare_items=item).exists()
+
+
+@register.inclusion_tag('conversation/conversation_template.html')
+def render_conversation(conversation, request):
+    return {'conversation': conversation,
+            'request': request}

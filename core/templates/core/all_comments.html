@@ -15,12 +15,19 @@
                         {% endif %}
                     {% endif %}
                     {% if comment.rating %}
-                        <p>{{ comment.rating }} stars</p>
+                        <div class="d-inline-flex gap-1">
+                            {% for _ in comment.stars %}
+                                <i class="fas fa-star" style="color: rgb(196, 111, 0);;"></i>
+                            {% endfor %}
+                            {% for _ in comment.hollow_stars %}
+                                <i class="far fa-star" style="color: rgb(196, 111, 0);;"></i>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>   
-                <p>{{ comment.comment_date.date }}</p>
+                <small>{{ comment.comment_date }}</small>
 
-                <p>{{ comment.comment }}</p>
+                <p class="mt-2">{{ comment.comment }}</p>
 
                 {% if comment.advantages %}
                     <p>Advantages: {{ comment.advantages }}</p>

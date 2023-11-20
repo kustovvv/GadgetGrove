@@ -21,47 +21,7 @@
     {% if have_messages %}
         {% for conversation in conversations %}
             {% if conversation.messages.all %}
-                <div class="card-body bg-white rounded mt-1 py-3">
-                    <div class="container-fluid">
-                        <a href="{% url 'conversation:conversation' conversation.item.id %}" style="text-decoration: none; color: inherit;">
-                            <div class="row">
-                                {% if conversation.created_by.personal_information_user.avatar %}
-                                    <div class="col-md-2">
-                                        <div class="container" style="width: 80px; height: 80px; align-items: center;">
-                                            <img {% if request.user != conversation.created_by %}src="{{ conversation.created_by.personal_information_user.get.avatar.url }}"{% else %}src="{{ conversation.item.created_by.personal_information_user.get.avatar.url }}"{% endif %} style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
-                                        </div>
-                                    </div>
-                                <div class="col-md-9">
-                                {% else %}
-                                <div class="col-md-12">
-                                {% endif %}
-                                    <div class="d-flex justify-content-between">
-                                        {% if request.user != conversation.created_by %}
-                                            <h6>{{ conversation.created_by.username }}</h6>
-                                        {% else %}
-                                            <h6>{{ conversation.item.created_by.username }}</h6>
-                                        {% endif %}
-                                        <p>{{ conversation.modified_at }}</p>    
-                                    </div>
-                                    <div class="container-fluid" style="margin-top: -15px; margin-left: -11px;">
-                                        <div class="d-inline-flex gap-3">
-                                            <p>{% if conversation.item.availability %}Available{% else %}Not available{% endif %}</p>
-                                            <p>{{ conversation.item.model|truncatechars:50 }} </p>    
-                                        </div>
-                                    </div>
-                                    <div class="d-inline-flex gap-1">
-                                        {% if conversation.messages.last.created_by == request.user %}
-                                            <p>You: </p>
-                                        {% else %}
-                                            <p>{{ conversation.created_by }}: </p>
-                                        {% endif %}
-                                        <p>{{ conversation.messages.last.content|truncatechars:80 }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                {% render_conversation conversation request %}
             {% endif %}
         {% endfor %}
     {% else %}

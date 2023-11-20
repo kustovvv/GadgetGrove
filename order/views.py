@@ -5,7 +5,7 @@ from .models import ContactInfo, PaymentMethod, OrderStatus, ShippingAddress, Or
 from item.models import Item
 from .forms import ShippingAddressForm, ContactInfoForm
 from account.models import CustomUser
-from item.views import get_seller_info
+from core.custom_functions import get_seller_info
 
 
 def order_review(request, pk):
@@ -183,6 +183,7 @@ def order(request, seller_id, total_price, total_amount):
                     'payment_method': payment_method,
                     'total_amount': total_amount,
                     'total_price': total_price,
+                    'items': items,
                     }
 
         return render(request, 'order/order.html', context)

@@ -72,6 +72,7 @@ TEMPLATES = [
                 'order.context_processors.navbar_data',
                 'account.account_context_processor.account_base',
                 'seller.seller_context_processor.seller_base',
+                'conversation.conversation_context_processor.conversations_data',
             ],
         },
     },

@@ -36,7 +36,7 @@
             <div class="gallery-container overflow-auto">
                 <div class="d-inline-flex gap-3">
                     {% for page, url in page_urls.items %}
-                        <a href="{% url url seller_info.user.id %}" {% if option == page %}class="btn btn-secondary"{% else %}class="btn btn-outline-secondary"{% endif %} type="button">{{ page }}</a>
+                        <a href="{% url url seller_info.user.id %}" {% if option == page %}class="btn btn-secondary"{% else %}class="btn btn-outline-secondary"{% endif %} type="button">{{ page|capfirst }}</a>
                     {% endfor %}
                 </div>
             </div>

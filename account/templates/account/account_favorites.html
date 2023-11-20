@@ -64,7 +64,7 @@
 
                                 <div class="col-md-2">
                                     <a href="{% url 'item:details' item.id %}" style="text-decoration: none; color: inherit;">
-                                        <h6>{{ item.model }}</h6>
+                                        <h6>{{ item.model|truncatechars:30 }}</h6>
                                         <p>{% if item.availability %}Available{% else %}Not available{% endif %}</p>
                                         <h6>{{ item.price }} $/per item</h6>
                                     </a>

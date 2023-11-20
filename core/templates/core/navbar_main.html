@@ -1,6 +1,6 @@
 {% load custom_filters %}
 
-<nav class="nav" style="background-color: rgb(196, 111, 0);">
+<nav class="nav" id="mainNavbar" style="background-color: rgb(196, 111, 0);">
   <div class="container-fluid py-2">
     <div class="row">
       <div class="col-md-1" style="width: 200px;">
@@ -24,7 +24,7 @@
           <a href="{% url 'item:add_update_item' %}" class="fas fa-plus" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
           <a href="{% url 'item:favorites' %}" class="far fa-heart" id="favorites_heart_link" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
           <a href="{% url 'item:compare' %}" class="fas fa-balance-scale-right" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
-          <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation"  style="border: none;">
+          <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" id="navbar-toggler" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation"  style="border: none;">
             <span class="fas fa-shopping-cart fa-lg"></span>
           </button>      
         </div>
@@ -50,15 +50,14 @@
                             <div class="container d-flex align-items-center" style="width: 50px; height: 50px;">
                                 <img src="{{ seller_data.seller.personal_information_user.get.avatar.url }}" style="width: 40px; height: 40px;" alt="User Avatar" class="avatar-image">
                             </div>
-                          
                         </div>
                         <div class="col-md-9">
                         {% else %}
                         <div class="col-md-12">
                         {% endif %}
-                            <div class="contaniner" style="margin-top: 10px;">
-                              <h6>{{ seller_data.seller.username }}</h6>
-                            </div>
+                          <div class="contaniner" style="margin-top: 10px;">
+                            <h6>{{ seller_data.seller.username }}</h6>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -69,34 +68,33 @@
                         {% for cart_item in seller_data.items %}
                         <div class="list-group-item">
                           <div class="py-2">
-                            <div class="row">
-                              <div class="col-md-3 mt-3">
-                                {% if cart_item.item.image and cart_item.item.image.url %}
-                                <img src="{{ cart_item.item.image.url }}" style="max-width: 80px; max-height: 100%; margin-left: -10px;">
-                                {% else %}
-                                    <p>No image available</p>
-                                {% endif %}
-                              </div>
-                              <div class="col-md-9">
-                                <div class="d-flex justify-content-between">
-                                  <h7>{{ cart_item.item.model|format_string|safe }}</h7>
-                                  <a href="{% url 'order:delete_from_cart' pk=cart_item.id %}" class="btn btn-danger" type="submit">del</a>
+                              <div class="d-flex">
+                                <div class="card-body" style="width: 100px;">
+                                  {% if cart_item.item.image and cart_item.item.image.url %}
+                                  <img src="{{ cart_item.item.image.url }}" style="max-width: 80px; max-height: 100%; margin-left: -30px;">
+                                  {% else %}
+                                      <p>No image available</p>
+                                  {% endif %}  
                                 </div>
-                                <h7>{% if cart_item.item.availability %}Available{% else %}Not available{% endif %}</h7>
-                                <p>{{ cart_item.item.price }} $/ per item </p>
-                                <div class="d-flex justify-content-between">
-                                  <form method="POST" action="{% url 'order:change_amount_items' pk=cart_item.id %}">
-                                    {% csrf_token %}
-                                    <div class="d-flex justify-content-between">
-                                      <button class="amount-cart-item btn btn-sm btn-outline-warning p-1" type="submit" name="action" value="decrease">-</button>
-                                      <p>{{ cart_item.amount}} </p>
-                                      <button class="amount-cart-item btn btn-sm btn-outline-warning p-1" type="submit" name="action" value="increase">+</button>    
-                                    </div>
-                                  </form>                            
-                                  <h4>{{ cart_item.total_item_price }} $</h4>
+                                <div class="card-body" style="width: 350px; height: 140px;">
+                                  <div class="d-flex justify-content-between align-items-center">
+                                    <h7>{{ cart_item.item.model|format_string|safe }}</h7>
+                                    <a href="{% url 'order:delete_from_cart' pk=cart_item.id %}" class="btn btn-danger" type="submit" style="margin-right: -20px;">del</a>
+                                  </div>
+                                  <h7>{% if cart_item.item.availability %}Available{% else %}Not available{% endif %}</h7>
+                                  <p>{{ cart_item.item.price }} $/ per item </p>
+                                  <div class="d-flex justify-content-between">
+                                    <form method="POST" action="{% url 'order:change_amount_items' pk=cart_item.id %}">
+                                      {% csrf_token %}
+                                      <button class="value-button" id="decrease" name="action" value="decrease" type="submit">-</button>
+                                      <input type="number" value="{{ cart_item.amount }}" class="input_field">
+                                      <button class="value-button" id="increase" name="action" value="increase" type="submit">+</button>
+                                    </form>                            
+                                    <h4>{{ cart_item.total_item_price }} $</h4>
+                                  </div>
                                 </div>
+                                
                               </div>
-                            </div>
                           </div>
                         </div>
                         {% endfor %}
@@ -110,8 +108,8 @@
                         <h4>{{ seller_data.total_price }} $</h4>
                       </div>
                       <div class="row">
-                        <a href="{% url 'order:order' seller_id=seller_data.seller.id total_price=seller_data.total_price total_amount=seller_data.total_amount %}" class="btn btn-warning" type="button">Purchase</a>
-                        <a href="#" class="btn btn-outline-warning mt-1" type="button">Add another items</a>
+                        <a href="{% url 'order:order' seller_id=seller_data.seller.id total_price=seller_data.total_price total_amount=seller_data.total_amount %}" class="close_offcanvas_link btn btn-warning" type="button">Purchase</a>
+                        <a href="{% url 'seller:seller_catalog' seller_data.seller.id %}" class="close_offcanvas_link btn btn-outline-warning mt-1" type="button">Other author suggestions</a>
                       </div>
                     </div>
                   </div>
@@ -128,8 +126,99 @@
   </div>
 </nav>
 
+<style>
+  .fixed-navbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgb(196, 111, 0);
+  }
+
+  .value-button {
+    display: inline-block;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
+    background: #eee;
+  }
+
+  form #decrease {
+    margin-right: -4px;
+    border-radius: 8px 0 0 8px;
+  }
+
+  form #increase {
+    margin-left: -4px;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .value-button:hover {
+    cursor: pointer;
+  }
+
+
+  .input_field {
+    text-align: center;
+    border: none;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    width: 30px;
+    height: 30px;
+  }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+  }
+</style>
+
+
 <script>
   document.getElementById('favorites_heart_link').addEventListener('click', function () {
     localStorage.removeItem('is_available');
-  }); 
+  });
+
+  document.addEventListener('scroll', function() {
+      scrollPosition = window.scrollY
+      if (scrollPosition > 56) {
+        const navbar = document.getElementById('mainNavbar')
+        navbar.classList.add('fixed-navbar');
+      } else {
+        const navbar = document.getElementById('mainNavbar')
+        navbar.classList.remove('fixed-navbar');
+      }
+  });
+
+  window.addEventListener('DOMContentLoaded', function() {
+    const navbar_state = localStorage.getItem('is_open') === 'true';
+    const navbar = document.getElementById('offcanvasNavbar');
+    if (navbar_state) {
+      const navbar = document.getElementById('offcanvasNavbar');
+      navbar.classList.add('show');
+    }
+  });
+
+  document.getElementById('offcanvasNavbar').addEventListener('show.bs.offcanvas', function () {
+    localStorage.setItem('is_open', 'true');
+  });
+
+  document.getElementById('offcanvasNavbar').addEventListener('hidden.bs.offcanvas', function () {
+    localStorage.setItem('is_open', 'false');
+  });
+
+  document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('close_offcanvas_link')) {
+      localStorage.removeItem('is_open');
+    }
+  });
+
+
+  
 </script>

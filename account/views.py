@@ -5,9 +5,8 @@ from order.models import Order
 from item.models import Item
 from .models import PersonalInformation
 from .forms import FullInfoForm, SettingsDateOfBirthForms
-from item.views import search_results
 from item.models import Comments
-from item.views import get_seller_info
+from core.custom_functions import get_seller_info, search_results
 
 from datetime import date, datetime
 
@@ -30,7 +29,7 @@ def history(request):
 def order_details(request, pk):
     if request.user.is_authenticated:
         order = Order.objects.get(id=pk)
-        info = get_seller_info(order.seller)
+        info = get_seller_info(order.seller.id)
         seller_info = info[0]
         seller_additional_info = info[1]
 
@@ -71,49 +70,70 @@ def account_comments(request):
 
 
 def card(request):
-    option = 'card'
-    context = {'option': option}
-    return render(request, 'account/account_card.html', context)
-
+    if request.user.is_authenticated:
+        query = request.GET.get('query', '')
+        if query:
+            return search_results(request, query)
+         
+        option = 'card'
+        context = {'option': option}
+        return render(request, 'account/account_card.html', context)
+    else:
+        return redirect('login')
+    
 
 def discounts(request):
-    option = 'discounts'
-    context = {'option': option}
-    return render(request, 'account/account_discounts.html', context)
+    if request.user.is_authenticated:
+        query = request.GET.get('query', '')
+        if query:
+            return search_results(request, query)
+         
+        option = 'discounts'
+        context = {'option': option}
+        return render(request, 'account/account_discounts.html', context)
+    else:
+        return redirect('login')
+    
 
 def ads(request):
-    option = 'ads'
-    extra_option = request.GET.get('extra_option', 'active')
-    items = Item.objects.filter(created_by=request.user)
-    input_value = request.GET.get('input', '')
-    if extra_option == 'active':
-        items = items.filter(availability=True)
-    elif extra_option == 'inactive':
-        items = items.filter(availability=False)
-    
-    if input_value:
-        items = items.filter(model__icontains=input_value)
+    if request.user.is_authenticated:
+        query = request.GET.get('query', '')
+        if query:
+            return search_results(request, query)
+            
+        option = 'ads'
+        extra_option = request.GET.get('extra_option', 'active')
+        items = Item.objects.filter(created_by=request.user)
+        input_value = request.GET.get('input', '')
+        if extra_option == 'active':
+            items = items.filter(availability=True)
+        elif extra_option == 'inactive':
+            items = items.filter(availability=False)
+        
+        if input_value:
+            items = items.filter(model__icontains=input_value)
 
-    all_categories = set(item.category_brand.category for item in items)
-    selected_category = request.GET.get('category', '-1')
+        all_categories = set(item.category_brand.category for item in items)
+        selected_category = request.GET.get('category', '-1')
 
-    if selected_category:
-        if selected_category != '-1':
-            items = items.filter(category_brand__category = selected_category)
+        if selected_category:
+            if selected_category != '-1':
+                items = items.filter(category_brand__category = selected_category)
 
-    context = {'items': items,
-               'option': option,
-               'extra_option': extra_option,
-               'all_categories': all_categories,
-               'selected_category': int(selected_category),
-               }
-    
-    return render(request, 'account/account_ads.html', context)
-
+        context = {'items': items,
+                'option': option,
+                'extra_option': extra_option,
+                'all_categories': all_categories,
+                'selected_category': int(selected_category),
+                }
+        
+        return render(request, 'account/account_ads.html', context)
+    else:
+        return redirect('login')
 
 def settings(request):
     if request.user.is_authenticated:
-        option = 'settings'
+        option = 'settings'         
         if request.method == 'POST':
             full_info_form = FullInfoForm(request.POST, request.FILES)
             date_of_birth_forms = SettingsDateOfBirthForms(request.POST)            

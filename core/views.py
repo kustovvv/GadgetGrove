@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from item.models import Category, Item
-from item.views import search_results
+from core.custom_functions import search_results
 
 
 def frontpage(request):

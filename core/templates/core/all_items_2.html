@@ -14,7 +14,12 @@
                     </div>
                 </div>
                 <div class="col-md-7">
-                    <h6>{{ item.item.model|format_string|safe }}</h6>
+                    <h6>{{ item.item.model|truncatechars:30 }}</h6>
+                    {% if item.item.availability %}
+                        <p>Available</p>
+                    {% else %}
+                        <p>Not available</p>
+                    {% endif %}
                     <p>{{ item.amount }} items</p>
                     <h6>{{ item.item.price }} $/per item</h6>
                 </div>

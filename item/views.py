@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Q
 from django.contrib import messages
 
 from .models import CategoryBrand, Category, Brand, FavoriteCompare, Comments, Item
 from .forms import CommentForm
-from seller.views import get_seller_info
+from core.custom_functions import get_seller_info, search_results
 
 
 def add_update_item(request):
     if request.user.is_authenticated:
+        query = request.GET.get('query', '')
+        if query:
+            return search_results(request, query)
+         
         item_id = request.GET.get('item_id', '')
         if request.method == 'POST':
             item_id = request.POST.get('item_id', '')
@@ -181,25 +184,6 @@ def items(request):
                 }
 
     return render(request, 'item/items.html', context)
-
-
-def search_results(request, query):
-    items = Item.objects.filter(Q(model__icontains=query) | Q(description__icontains=query) | Q(category_brand__brand__name__icontains=query)).exclude(created_by=request.user)
-
-    if items:
-        category_id = items[0].category_brand.category.id
-        brands = Brand.objects.filter(category_brands__category=category_id)
-    
-    else:
-        brands = ''
-        category_id = '0'   
-    
-    context = {'items': items, 
-                'brands': brands,
-                'query': query,
-                'category_id': int(category_id)}
-    
-    return render(request, 'item/items.html', context)   
 
 
 def comments(request, pk):

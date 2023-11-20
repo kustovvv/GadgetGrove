@@ -1,11 +1,16 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from .models import Conversation, ConversationMessage
 from item.models import Item
+from core.custom_functions import search_results
+
 
 
 def conversations(request):
     if request.user.is_authenticated:
         option = 'conversations'
+        query = request.GET.get('query', '')
+        if query:
+            return search_results(request, query)
         have_messages = False
         conversations = Conversation.objects.filter(members=request.user)
         if conversations:
@@ -34,6 +39,9 @@ def conversations(request):
 def conversation(request, item_id):
     if request.user.is_authenticated:
         item = Item.objects.get(id=item_id)
+        query = request.GET.get('query', '')
+        if query:
+            return search_results(request, query)
         try:
             conversation = Conversation.objects.get(item=item, members=request.user)
         
