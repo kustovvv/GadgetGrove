@@ -171,7 +171,7 @@ def order(request, seller_id, total_price, total_amount):
 
                 cart.delete()
 
-                return render(request, 'order/success.html', {'payment_check': payment_check})
+                return redirect('order:success')
 
         else:
             shipping_form = ShippingAddressForm()
@@ -189,3 +189,7 @@ def order(request, seller_id, total_price, total_amount):
         return render(request, 'order/order.html', context)
 
     return redirect('login')
+
+
+def success(request):
+    return render(request, 'order/success.html')

@@ -4,7 +4,7 @@
     {% if items %}
         {% for item in items %}
             <div class="col-xl-2 col-md-4 col-lg-3 col-sm-6 mt-4">
-                <div class="card-body bg-white py-3 px-2" style="margin: -10px;">
+                <div class="card-body bg-white py-3 px-2" style="margin: -10px; height: 330px;">
                     <div class="row">
                         <div class="col-md-10">
                             <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
@@ -26,12 +26,35 @@
                     <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
                         <small>Code: {{ item.id }}</small>
                         <h6 class="card-title">{{ item.model|format_string|safe }}</h6>
-                        <small>{{ item.comments.count }} comments</small>
+                        
+                        {% if item.availability %}
+                            <span style="color: green;">Available</span>
+                        {% else %}
+                            <span style="color: red;">Not available</span>
+                        {% endif %}
+                        
+                        <p>{{ item.avg_rating }}</p>
+                        
+                        <div class="d-inline-flex gap-2">
+                            {% render_item_stars item %}
+                            <div class="container">
+                                <a href="{% url 'item:comments' item.id %}" style="text-decoration: none; color: inherit">
+                                    <div class="d-inline-flex gap-1">
+                                        <i class="fas fa-comment" style="color: rgb(196, 111, 0);"></i> 
+                                        {% if item.comments.count %} 
+                                        <span style="margin-top: -5px;">{{ item.comments.count }}</span>
+                                        {% endif %}   
+                                    </div> 
+                                </a>
+                            </div>
+                        </div>
                     </a>
 
                     <div class="d-flex justify-content-between mt-2">
                         <h6>{{ item.price }}$</h6>
-                        <a href='{% url "order:add_to_cart" pk=item.id amount=1 %}' class="shadow-sm btn btn-outline-warning btn-sm" type="button">Add to cart</a>       
+                        {% if item.availability %}
+                            <a href='{% url "order:add_to_cart" pk=item.id amount=1 %}' class="shadow-sm btn btn-outline-warning btn-sm" type="button">Add to cart</a>       
+                        {% endif %}
                     </div>
                 </div>
             </div>

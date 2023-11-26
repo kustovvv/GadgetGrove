@@ -116,7 +116,7 @@ def delete_items(request):
 
 def details(request, pk):
     item = Item.objects.get(id=pk)
-    related_items = Item.objects.filter(category_brand=item.category_brand).exclude(id=pk)[0:6]
+    related_items = Item.objects.filter(category_brand__category=item.category_brand.category).exclude(id=pk)[0:6]
     query = request.GET.get('query', '')
     comments = Comments.objects.filter(item_id=pk)
     info = get_seller_info(item.created_by.id)
@@ -150,7 +150,10 @@ def items(request):
     category_id = request.GET.get('category', 0)
 
     if category_id:
-        items = Item.objects.filter(category_brand__category=category_id).exclude(created_by=request.user)
+        if request.user.is_authenticated:
+            items = Item.objects.filter(category_brand__category=category_id).exclude(created_by=request.user)
+        else:
+            items = Item.objects.filter(category_brand__category=category_id)
         category = Category.objects.get(id=category_id)
 
     brand_id = request.GET.get('brand')

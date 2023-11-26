@@ -1,0 +1,10 @@
+{% if item.stars %}
+    <div class="d-inline-flex gap-1">
+        {% for _ in item.stars %}
+            <i class="fas fa-star" style="color: rgb(196, 111, 0);"></i>
+        {% endfor %}
+        {% for _ in item.hollow_stars %}
+            <i class="far fa-star" style="color: rgb(196, 111, 0);"></i>
+        {% endfor %}
+    </div>
+{% endif %}

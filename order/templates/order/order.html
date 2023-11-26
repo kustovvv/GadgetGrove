@@ -25,7 +25,7 @@
         </nav>
 
         {% block content %}
-        <form method='POST' action='.'>
+        <form method='POST' action='.'>   
             {% csrf_token %}
             <div class="container-fluid">
                 <div class="row">
@@ -114,7 +114,6 @@
         
                 {{ form.non_field_errors }}
             {% endif %}
-        
         </form>
         {% endblock %}
 

@@ -30,7 +30,10 @@ def get_seller_info(seller):
 
 
 def search_results(request, query):
-    items = Item.objects.filter(Q(model__icontains=query) | Q(description__icontains=query) | Q(category_brand__brand__name__icontains=query)).exclude(created_by=request.user)
+    if request.user.is_authenticated:
+        items = Item.objects.filter(Q(model__icontains=query) | Q(description__icontains=query) | Q(category_brand__brand__name__icontains=query)).exclude(created_by=request.user)
+    else:
+        items = Item.objects.filter(Q(model__icontains=query) | Q(description__icontains=query) | Q(category_brand__brand__name__icontains=query))
 
     if items:
         category_id = items[0].category_brand.category.id

@@ -3,7 +3,7 @@
 <nav class="nav" id="mainNavbar" style="background-color: rgb(196, 111, 0);">
   <div class="container-fluid py-2">
     <div class="row">
-      <div class="col-md-1" style="width: 200px;">
+      <div class="col-md-1" style="width: 170px;">
         <a class="navbar-brand" href="{% url 'frontpage' %}"><h4 style="margin-top: 5px;">Catalog</h4></a>
       </div>
       <div class="col-md-8 content-end">
@@ -18,14 +18,14 @@
             {% if profile_image %}
               <img src="{{ profile_image.url }}" style="width: 45px; height: 45px;" alt="User Avatar" class="avatar-image">
             {% else %}
-              <button class="btn rounded" type="button" style="background-color: rgb(254,146,23 );">Account</button>
+              <button class="btn rounded" type="button" style="background-color: rgb(254,146,23 ); margin-top: 5px;">Account</button>
             {% endif %}        
           </a>
           <a href="{% url 'item:add_update_item' %}" class="fas fa-plus" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
           <a href="{% url 'item:favorites' %}" class="far fa-heart" id="favorites_heart_link" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
           <a href="{% url 'item:compare' %}" class="fas fa-balance-scale-right" style="text-decoration: none; color: inherit; font-size: 2rem; line-height: 1; margin-top: 7px; margin-left: 11px;"></a>
           <button class="navbar-toggler" type="submit" data-bs-toggle="offcanvas" id="navbar-toggler" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation"  style="border: none;">
-            <span class="fas fa-shopping-cart fa-lg"></span>
+            <span class="fas fa-shopping-cart fa-2x"></span>
           </button>      
         </div>
       </div>
@@ -45,21 +45,23 @@
                   <div class="list-group-item">
                     <div class="container-fluid py-1">
                       <div class="row">
-                        {% if seller_data.seller.personal_information_user.get.avatar %}
-                        <div class="col-md-2">
-                            <div class="container d-flex align-items-center" style="width: 50px; height: 50px;">
-                                <img src="{{ seller_data.seller.personal_information_user.get.avatar.url }}" style="width: 40px; height: 40px;" alt="User Avatar" class="avatar-image">
+                        <a href="{% url 'seller:seller_catalog' seller_data.seller.id %}" class="close_offcanvas_link" style="text-decoration: none; color: inherit;">
+                            {% if seller_data.seller.personal_information_user.get.avatar %}
+                            <div class="col-md-2">
+                                <div class="container d-flex align-items-center" style="width: 50px; height: 50px;">
+                                    <img src="{{ seller_data.seller.personal_information_user.get.avatar.url }}" style="width: 40px; height: 40px;" alt="User Avatar" class="avatar-image">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-9">
-                        {% else %}
-                        <div class="col-md-12">
-                        {% endif %}
-                          <div class="contaniner" style="margin-top: 10px;">
-                            <h6>{{ seller_data.seller.username }}</h6>
+                            <div class="col-md-9">
+                            {% else %}
+                            <div class="col-md-12">
+                            {% endif %}
+                              <div class="contaniner" style="margin-top: 10px;">
+                                <h6>{{ seller_data.seller.username }}</h6>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
+                        </a>
                     </div>
                   </div>
                   <div class="list-group-item">

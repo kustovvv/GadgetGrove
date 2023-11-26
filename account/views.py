@@ -154,7 +154,7 @@ def settings(request):
 
                     setattr(user_personal_info, 'avatar', full_info_form.cleaned_data['avatar'])
                     
-                    user_personal_info.married = request.POST.get('is_married', '')
+                    user_personal_info.married = True if request.POST.get('is_married', '') else False
                     
                     user_personal_info.have_children = request.POST.get('have_children', '')
 
@@ -166,7 +166,6 @@ def settings(request):
                         first_name = full_info_form.cleaned_data.get('first_name', None),
                         last_name = full_info_form.cleaned_data.get('last_name', None),
                         avatar = full_info_form.cleaned_data.get('avatar', None),
-                        married = request.POST.get('is_married', ''),
                         have_children = request.POST.get('have_children', ''),
                         phone_number = full_info_form.cleaned_data.get('phone_number', None),
                         facebook = full_info_form.cleaned_data.get('facebook', None),
@@ -178,7 +177,7 @@ def settings(request):
                         hobby = full_info_form.cleaned_data.get('hobby', None),
                         interests = full_info_form.cleaned_data.get('interests', None)
                     )
-                
+                    user_personal_info.married = True if request.POST.get('is_married', '') else False
                     selected_genders = request.POST.getlist('selected_gender')
                     gender = selected_genders[0] if selected_genders else ""
                     user_personal_info.gender = gender

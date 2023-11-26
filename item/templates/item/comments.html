@@ -29,7 +29,14 @@
 
     <div class="d-inline-flex gap-3">
         <div style="position: relative;">
-            <p style="position: absolute; top: -10px; right: -95px;">{{ comments.count }} comments</p>
+            {% if item.comments.count %} 
+                <p style="position: absolute; top: -10px; right: -45px;">
+                    <i class="fas fa-comment" style="color: rgb(196, 111, 0);"></i> 
+                    {% if item.comments.count %} 
+                    <span style="margin-top: -5px;">{{ item.comments.count }}</span>
+                    {% endif %}   
+                </p>
+            {% endif %}
             <h4>Comments about {{ item.model }}</h4>
         </div>
     </div>
@@ -43,7 +50,9 @@
                                 {% if comments %}
                                     {% render_comments comments %}
                                 {% else %}
-                                    No comments yet...
+                                    <div class="text-center">
+                                        <h5 class="mt-2">This product has no reviews. You can be the first.</h5>
+                                    </div>
                                 {% endif %}
                             </div>
                         </div>
@@ -61,27 +70,36 @@
                         <h4 id="comment-form">Leave comment</h4>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="d-inline-flex gap-3 mt-3">
-                                    <h5>My rate: </h5>
-                                    <div class="form-check form-check-inline">
+                                <div class="d-inline-flex gap-2 mt-3">
+                                    <div class="form-check form-check-inline d-inline-flex gap-1">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio1" value="1">
-                                        <label class="form-check-label" for="radio1">1</label>
+                                        <label class="form-check-label" for="radio1">
+                                            1 <i class="fas fa-star" style="color: rgb(196, 111, 0);"></i>
+                                        </label>
                                     </div>
-                                    <div class="form-check form-check-inline">
+                                    <div class="form-check form-check-inline d-inline-flex gap-1">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio2" value="2">
-                                        <label class="form-check-label" for="radio2">2</label>
+                                        <label class="form-check-label" for="radio2">
+                                            2 <i class="fas fa-star" style="color: rgb(196, 111, 0);"></i>
+                                        </label>                                    
                                     </div>
-                                    <div class="form-check form-check-inline">
+                                    <div class="form-check form-check-inline d-inline-flex gap-1">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio3" value="3">
-                                        <label class="form-check-label" for="radio3">3</label>
+                                        <label class="form-check-label" for="radio3">
+                                            3 <i class="fas fa-star" style="color: rgb(196, 111, 0);"></i>
+                                        </label>                                    
                                     </div>
-                                    <div class="form-check form-check-inline">
+                                    <div class="form-check form-check-inline d-inline-flex gap-1">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio4" value="4">
-                                        <label class="form-check-label" for="radio4">4</label>
+                                        <label class="form-check-label" for="radio4">
+                                            4 <i class="fas fa-star" style="color: rgb(196, 111, 0);"></i>
+                                        </label>                                    
                                     </div>
-                                    <div class="form-check form-check-inline">
+                                    <div class="form-check form-check-inline d-inline-flex gap-1">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio5" value="5">
-                                        <label class="form-check-label" for="radio5">5</label>
+                                        <label class="form-check-label" for="radio5">
+                                            5 <i class="fas fa-star" style="color: rgb(196, 111, 0);"></i>
+                                        </label>                                    
                                     </div>
                                 </div>
                                 <div class="mt-3">
@@ -136,15 +154,25 @@
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <h6 class="mt-3">{{ item.model }}</h6>
+                                <h6>{{ item.model }}</h6>
+                                {% if item.availability %}
+                                    <span style="color: green;">Available</span>
+                                {% else %}
+                                    <span style="color: red;">Not available</span>
+                                {% endif %}</br>
+
+                                {% render_item_stars item %}
+
+                                <h4 class="mt-3">{{ item.price }}$</h4>
                             </div>
                         </div>
-                        <h4 class="mt-3">{{ item.price }}$</h4>
-                        <div class="container">
-                            <div class="row">
-                                <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-warning mt-3" type="button">Add to cart</a>
+                        {% if item.availability %}
+                            <div class="container">
+                                <div class="row">
+                                    <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-warning mt-3" type="button">Add to cart</a>
+                                </div>    
                             </div>    
-                        </div>    
+                        {% endif %}
                     </a>
                 </div>
             </div>

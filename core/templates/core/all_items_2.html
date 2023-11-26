@@ -16,9 +16,9 @@
                 <div class="col-md-7">
                     <h6>{{ item.item.model|truncatechars:30 }}</h6>
                     {% if item.item.availability %}
-                        <p>Available</p>
+                        <span style="color: green;">Available</span>
                     {% else %}
-                        <p>Not available</p>
+                        <span style="color: red;">Not available</span>
                     {% endif %}
                     <p>{{ item.amount }} items</p>
                     <h6>{{ item.item.price }} $/per item</h6>

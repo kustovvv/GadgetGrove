@@ -10,15 +10,17 @@
     </div>
     <div class="offcanvas-body" style="background-color: rgb(243, 243, 243);">
         {% if conversations %}
-            <div class="list-group list-group-flush">
-                {% for conversation in conversations %}
-                    {% if conversation.messages.all %}
-                        <div class="list-group-item">
+            {% if conversations == '0' %}
+                <h4>To start communicating, please register.</h4>
+            {% else %}
+                <div class="list-group list-group-flush">
+                    {% for conversation in conversations %}
+                        {% if conversation.messages.all %}
                             {% render_conversation conversation request %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
         {% else %}
             <div class="container">
                 <h4>You do not have any conversations. Send someone a message.</h4>

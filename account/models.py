@@ -9,7 +9,7 @@ class PersonalInformation(models.Model):
     last_name = models.CharField(max_length=255, null=True, blank=True)
     avatar = models.ImageField(upload_to='personal_information_avatar', blank=True, null=True)
     gender = models.CharField(max_length=255, null=True, blank=True)
-    married = models.CharField(max_length=255, null=True, blank=True)
+    married = models.BooleanField(default=False)
     have_children = models.CharField(max_length=255, null=True, blank=True)
     birthday = models.DateField(null=True, blank=True)
     phone_number = models.CharField(max_length=10, null=True, blank=True)

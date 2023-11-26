@@ -18,8 +18,9 @@ def format_string(value, max_length=33, min_length=20):
 
 @register.inclusion_tag('core/all_items.html')
 def render_items(items, request):
-    return {'items': items, 
-            'request': request}
+    return {'items': items,
+            'request': request
+            }
 
 
 @register.inclusion_tag('core/all_items_2.html')
@@ -54,3 +55,21 @@ def is_in_compare(item, user):
 def render_conversation(conversation, request):
     return {'conversation': conversation,
             'request': request}
+
+
+@register.inclusion_tag('item/item_stars.html')
+def render_item_stars(item):
+    sum = 0
+    avg_rating = 4
+    count = 0
+    comments = item.comments.all()
+    for comment in comments:
+        if comment.rating:
+            sum+=comment.rating
+            count+=1
+    if count:
+        avg_rating = round(sum/count)
+    item.stars = range(avg_rating)
+    item.hollow_stars = range(5-avg_rating)
+
+    return {'item': item}

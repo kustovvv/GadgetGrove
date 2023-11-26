@@ -10,4 +10,5 @@ urlpatterns = [
     path('change/<int:pk>/', views.change_amount_items, name='change_amount_items'),
     path('order/<int:seller_id>/<int:total_price>/<int:total_amount>/', views.order, name='order'),
     path('order_review/<int:pk>/', views.order_review, name='order_review'),
+    path('success/', views.success, name='success'),
     ]

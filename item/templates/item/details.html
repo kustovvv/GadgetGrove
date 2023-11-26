@@ -58,8 +58,11 @@
                         <p>Available</p>
                     {% endif %}
 
+                    {% render_item_stars item %}
+                    
                     {% if comments %}
-                        <p>{{ comments.count }} comments</p>
+                        <i class="fas fa-comment" style="color: rgb(196, 111, 0);"></i> 
+                        <span style="margin-top: -5px;">{{ comments.count }}</span>
                     {% else %}
                         <p>No comments</p>
                     {% endif %}
@@ -67,14 +70,18 @@
                     <h4>{{ item.price }}$</h4></br>
                     <div class="container-fluid">
                         <div class="row">
+                            {% if item.availability %}
                             <div class="col-md-6">
                                 <div class="row">
                                     <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-warning py-2" type="button">Add to cart</a>
                                 </div>
                             </div>
                             <div class="col-md-6">
+                            {% else %}
+                            <div class="col">
+                            {% endif %}
                                 <div class="row">
-                                    <a href="{% url 'conversation:conversation' item_id=item.id %}" class="btn btn-outline-warning py-2" type="button" style="margin-left: 10px;">Message</a>
+                                    <a href="{% url 'conversation:conversation' item_id=item.id %}" class="btn btn-outline-warning py-2" type="button" style="margin-left: 5px;">Message</a>
                                 </div>
                             </div>
                         </div>
@@ -137,14 +144,15 @@
             </div>    
         </div>
     </div>
-        
-    <h3 class="mt-3">Related items</h3>
+    {% if related_items %}
+        <h3 class="mt-3">Related items</h3>
 
-    <div class="container-fluid mb-5">
-        <div class="col-md-12">
-            {% render_items related_items request %}
+        <div class="container-fluid mb-5">
+            <div class="col-md-12">
+                {% render_items related_items request %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 </div>
     
 {% endblock %}

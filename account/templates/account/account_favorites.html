@@ -65,7 +65,11 @@
                                 <div class="col-md-2">
                                     <a href="{% url 'item:details' item.id %}" style="text-decoration: none; color: inherit;">
                                         <h6>{{ item.model|truncatechars:30 }}</h6>
-                                        <p>{% if item.availability %}Available{% else %}Not available{% endif %}</p>
+                                        {% if item.availability %}
+                                            <span style="color: green;">Available</span>
+                                        {% else %}
+                                            <span style="color: red;">Not available</span>
+                                        {% endif %}
                                         <h6>{{ item.price }} $/per item</h6>
                                     </a>
                                 </div>
@@ -75,7 +79,9 @@
                                 </div>
                                 <div class="col-md-3 text-end">
                                     <div class="d-inline-flex gap-3">
-                                        <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-warning btn-sm">Add to cart</a>
+                                        {% if item.availability %}
+                                            <a href="{% url 'order:add_to_cart' pk=item.id amount=1 %}" class="btn btn-warning btn-sm">Add to cart</a>
+                                        {% endif %}
                                         <a href="#" class="btn btn-outline-warning btn-sm" type="button"><h3>...</h3></a>
                                     </div>
                                 </div>
