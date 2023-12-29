@@ -7,22 +7,6 @@ from item.models import Item, Category, Brand, CategoryBrand, Comments, Favorite
 from authentication.models import User
 
 
-@pytest.fixture
-def client(db):
-    client = Client()
-    user = User.objects.create_user(username='test_user', password='password')
-    client.force_login(user)
-    return client
-
-@pytest.fixture
-def client_user(db):
-    client = Client()
-    user = User.objects.create(username='test_user', password='password')
-    client.force_login(user)
-    return client, user
-
-
-
 @pytest.mark.test_item_view
 def test_item_view_add_update_item(db):
     client = Client()

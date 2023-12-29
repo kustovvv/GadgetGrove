@@ -65,7 +65,7 @@
                             {% for method in payment_methods %}
                                 <div class="card-body bg-white rounded mt-2 py-2" style="margin-left: -24px;">
                                     <div class="d-inline-flex gap-3">
-                                        <input class="form-check-input" style="margin-left: 15px" type="radio" value="{{ method.id }}" name="selected_payment_method" id="method_{{ method.id }}" {% if method.id == payment_method %}checked{% endif %}>
+                                        <input class="form-check-input" style="margin-left: 15px" type="radio" value="{{ method.method }}" name="selected_payment_method" id="method_{{ method.id }}" {% if method.id == payment_method %}checked{% endif %}>
                                         <label class="form-check-label" for="method_{{ method.id }}">
                                         {{ method.method }}
                                         </label>

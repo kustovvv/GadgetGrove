@@ -1,4 +1,8 @@
+import pytest
+from django.test import Client
 from pytest_factoryboy import register
+
+from authentication.models import User
 
 from tests.factories import CategoryFactory, BrandFactory, CategoryBrandFactory, CustomUserFactory, ItemFactory, CommentFactory, FavoriteCompareFactory,\
     ShippingAddressFactory, ContactInfoFactory, OrderStatusFactory, PaymentMethodFactory, OrderFactory, OrderItemFactory, ShoppingCartItemFactory, OrderReviewFactory,\
@@ -38,3 +42,17 @@ register(OrderReviewFactory)
 #Conversation factories
 register(ConversationFactory)
 register(ConversationMessageFactory)
+
+@pytest.fixture
+def client(db):
+    client = Client()
+    user = User.objects.create_user(username='test_user', password='password')
+    client.force_login(user)
+    return client
+
+@pytest.fixture
+def client_user(db):
+    client = Client()
+    user = User.objects.create(username='test_user', password='password')
+    client.force_login(user)
+    return client, user

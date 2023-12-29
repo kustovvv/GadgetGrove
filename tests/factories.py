@@ -125,6 +125,15 @@ class PaymentMethodFactory(factory.django.DjangoModelFactory):
     method = "card"
 
 
+class ShoppingCartItemFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ShoppingCartItem
+
+    user = factory.SubFactory(CustomUserFactory)
+    item = factory.SubFactory(ItemFactory)
+    amount = fake.random_int(min=1, max=100)
+
+
 class OrderFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Order
@@ -148,15 +157,6 @@ class OrderItemFactory(factory.django.DjangoModelFactory):
     item = factory.SubFactory(ItemFactory)
     amount = fake.random_int(min=1, max=5)
     item_price = fake.pyfloat(right_digits=2, min_value=0.01, max_value=5000.00)
-
-
-class ShoppingCartItemFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = ShoppingCartItem
-
-    user = factory.SubFactory(CustomUserFactory)
-    item = factory.SubFactory(ItemFactory)
-    amount = fake.random_int(min=1, max=100)
 
 
 class OrderReviewFactory(factory.django.DjangoModelFactory):
@@ -208,7 +208,7 @@ class PersonalInformationFactory(factory.django.DjangoModelFactory):
     married = False
     have_children = False
     birthday = "2023-12-20"
-    phone_number = fake.phone_number()
+    phone_number = '0123456789'
     facebook_url = f"facebook.com/{fake.first_name}_{fake.last_name}"
     instagram_url = f"instagram.com/{fake.first_name}_{fake.last_name}"
     twitter_url = f"twitter.com/{fake.first_name}_{fake.last_name}"

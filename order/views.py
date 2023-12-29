@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 
 from .models import ContactInfo, PaymentMethod, OrderStatus, ShippingAddress, Order, ShoppingCartItem, OrderItem, OrderReview
@@ -17,7 +17,7 @@ def order_review(request, pk):
         info = get_seller_info(seller)
         seller_info = info[0]
         orders = Order.objects.filter(seller=seller)
-        amount_orders = orders.count()
+        seller_amount_orders = orders.count()
 
         if request.method == 'POST':
             review = OrderReview.objects.create(order=order)
@@ -33,7 +33,7 @@ def order_review(request, pk):
                 messages.error(request, 'Please rate your order')
                 context = {'order': order,
                         'seller': seller,
-                        'amount_orders': amount_orders,
+                        'amount_orders': seller_amount_orders,
                         'seller_info': seller_info,
                         'input_text': comment,
                         'initial_page_url': initial_page_url,
@@ -41,7 +41,7 @@ def order_review(request, pk):
         else:
             context = {'order': order,
                     'seller': seller,
-                    'amount_orders': amount_orders,
+                    'amount_orders': seller_amount_orders,
                     'seller_info': seller_info,
                     'initial_page_url': initial_page_url,
                     }
@@ -106,19 +106,20 @@ def order(request, seller_id, total_price, total_amount):
         seller = CustomUser.objects.get(id=seller_id)
         items = ShoppingCartItem.objects.filter(user_id = request.user, item__created_by=seller)
         payment_methods = PaymentMethod.objects.all()
-        selected_payment_method = request.POST.get('selected_payment_method', 1)
-        payment_method = PaymentMethod.objects.get(id=int(selected_payment_method))
-        order_comment = request.POST.get('order_comment', '')
-        status = OrderStatus.objects.get(status='In progress')
-
-        if selected_payment_method == '1':
-            payment_check = True
-        else:
-            payment_check = False
 
         if request.method == 'POST':
             shipping_form = ShippingAddressForm(request.POST)
             contact_form = ContactInfoForm(request.POST)
+            selected_payment_method = request.POST.get('selected_payment_method', 'Card')
+            payment_method = get_object_or_404(PaymentMethod, method=selected_payment_method)
+            order_comment = request.POST.get('order_comment', '')
+            status = OrderStatus.objects.get(status='In progress')
+
+            if selected_payment_method == '1':
+                payment_check = True
+            else:
+                payment_check = False
+
 
             if shipping_form.is_valid() and contact_form.is_valid():
                 new_shipping_address = ShippingAddress.objects.get_or_create(
@@ -173,7 +174,6 @@ def order(request, seller_id, total_price, total_amount):
         context = {'shipping_form': shipping_form,
                     'contact_form': contact_form,
                     'payment_methods': payment_methods,
-                    'payment_method': payment_method,
                     'total_amount': total_amount,
                     'total_price': total_price,
                     'items': items,
