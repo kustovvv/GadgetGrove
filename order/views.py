@@ -20,10 +20,7 @@ def order_review(request, pk):
         amount_orders = orders.count()
 
         if request.method == 'POST':
-            review = OrderReview(
-                seller = seller,
-                user = request.user
-            )
+            review = OrderReview.objects.create(order=order)
             selected_rate = request.POST.getlist('inlineRadioOptions', '')
             comment = request.POST.get('order_comment', '')
             if selected_rate:
@@ -125,36 +122,32 @@ def order(request, seller_id, total_price, total_amount):
 
             if shipping_form.is_valid() and contact_form.is_valid():
                 new_shipping_address = ShippingAddress.objects.get_or_create(
-                    user = request.user,
                     street_address = shipping_form.cleaned_data['street_address'],
                     city = shipping_form.cleaned_data['city'],
                     state = shipping_form.cleaned_data['state'],
                     postal_code = shipping_form.cleaned_data['postal_code'],
                     country = shipping_form.cleaned_data['country'],
                 )[0]
+                new_shipping_address.save()
 
                 new_contact_info = ContactInfo.objects.get_or_create(
-                    user = request.user,
                     phone_number = contact_form.cleaned_data['phone_number'],
                     first_name = contact_form.cleaned_data['first_name'],
                     last_name = contact_form.cleaned_data['last_name'],
                     email = contact_form.cleaned_data['email'],
                 )[0]
-
                 new_contact_info.save()
-                new_shipping_address.save()
 
                 new_all_orders = Order(
                     user = request.user,
                     seller = seller,
-                    contact_info = new_contact_info,
                     shipping_address = new_shipping_address,
+                    contact_info = new_contact_info,
                     status = status,
                     payment_method = payment_method,
                     total_price = total_price,
                     comment = order_comment,
                 )
-
                 new_all_orders.save()
                 
                 for item in items:

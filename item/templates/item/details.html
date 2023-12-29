@@ -32,8 +32,8 @@
                             <div class="card-body bg-white">
                                 <div class="container-fluid">
                                     <div class="text-center">
-                                        {% if item.image and item.image.url %}
-                                        <img src="{{ item.image.url }}" style="max-width: 300px; max-height: 100%;">
+                                        {% if item.image_url and item.image_url.url %}
+                                        <img src="{{ item.image_url.url }}" style="max-width: 300px; max-height: 100%;">
                                         {% else %}
                                             <p>No image available</p>
                                         {% endif %}
@@ -89,14 +89,14 @@
                 </div>
             </div>
             <div class="card-body bg-white py-3 mt-2" style="margin-left: -15px;">
-                <a href="{% url 'seller:seller_catalog' seller_info.user.id %}" style="text-decoration: none; color: inherit;">
-                    <div class="container-fluid">
-                        <h5>Seller</h5>                    
-                        <div class="d-inline-flex gap-3">
-                            {% if seller_info %}
-                                {% if seller_info.avatar %}
+                <div class="container-fluid">
+                    {% if seller_info %}
+                        <a href="{% url 'seller:seller_catalog' seller_info.user.id %}" style="text-decoration: none; color: inherit;">
+                            <h5>Seller</h5>                    
+                            <div class="d-inline-flex gap-3">
+                                {% if seller_info.avatar_url %}
                                     <div class="text-center">
-                                        <img src="{{ seller_info.avatar.url }}" style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
+                                        <img src="{{ seller_info.avatar_url.url }}" style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
                                     </div>
                                 {% endif %}
                                 <div>
@@ -106,13 +106,13 @@
                                     {% else %}
                                         <p>{{ seller_info.user.email }}</p>
                                     {% endif %}
-                                </div> 
-                            {% else %}
-                                <h6>{{ item.created_by.username }}</h6>
-                            {% endif %}                   
-                        </div>
-                    </div>
-                </a>
+                                </div>                 
+                            </div>
+                        </a>
+                    {% else %}
+                        <h6>{{ item.created_by.username }}</h6>
+                    {% endif %}  
+                </div> 
             </div>
         </div>
     </div>

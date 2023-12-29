@@ -1,37 +1,47 @@
 from django import forms
 
 from .models import PersonalInformation
+from authentication.models import User
 
 import calendar
+
+class InfoForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 
+                  'first_name', 
+                  'last_name',
+                  ]
+        
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            }
+
 
 class FullInfoForm(forms.ModelForm):
     class Meta:
         model = PersonalInformation
-        fields = ['nickname', 
-                  'first_name', 
-                  'last_name', 
-                  'avatar', 
+        fields = ['avatar_url', 
                   'phone_number', 
-                  'facebook', 
-                  'instagram', 
-                  'twitter', 
-                  'google', 
-                  'pinterest', 
+                  'facebook_url', 
+                  'instagram_url', 
+                  'twitter_url', 
+                  'google_url', 
+                  'pinterest_url', 
                   'about', 
                   'hobby', 
                   'interests']
 
         widgets = {
-            'nickname': forms.TextInput(attrs={'class': 'form-control'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'avatar': forms.ClearableFileInput(),
+            'avatar_url': forms.ClearableFileInput(),
             'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'facebook': forms.TextInput(attrs={'class': 'form-control'}),
-            'instagram': forms.TextInput(attrs={'class': 'form-control'}),
-            'twitter': forms.TextInput(attrs={'class': 'form-control'}),
-            'google': forms.TextInput(attrs={'class': 'form-control'}),
-            'pinterest': forms.TextInput(attrs={'class': 'form-control'}),
+            'facebook_url': forms.TextInput(attrs={'class': 'form-control'}),
+            'instagram_url': forms.TextInput(attrs={'class': 'form-control'}),
+            'twitter_url': forms.TextInput(attrs={'class': 'form-control'}),
+            'google_url': forms.TextInput(attrs={'class': 'form-control'}),
+            'pinterest_url': forms.TextInput(attrs={'class': 'form-control'}),
             'about': forms.Textarea(attrs={'class': 'form-control'}),
             'hobby': forms.Textarea(attrs={'class': 'form-control'}),
             'interests': forms.Textarea(attrs={'class': 'form-control'}),

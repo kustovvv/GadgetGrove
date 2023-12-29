@@ -46,10 +46,10 @@
                     <div class="container-fluid py-1">
                       <div class="row">
                         <a href="{% url 'seller:seller_catalog' seller_data.seller.id %}" class="close_offcanvas_link" style="text-decoration: none; color: inherit;">
-                            {% if seller_data.seller.personal_information_user.get.avatar %}
+                            {% if seller_data.seller.personal_information_user.get.avatar_url %}
                             <div class="col-md-2">
                                 <div class="container d-flex align-items-center" style="width: 50px; height: 50px;">
-                                    <img src="{{ seller_data.seller.personal_information_user.get.avatar.url }}" style="width: 40px; height: 40px;" alt="User Avatar" class="avatar-image">
+                                    <img src="{{ seller_data.seller.personal_information_user.get.avatar_url.url }}" style="width: 40px; height: 40px;" alt="User Avatar" class="avatar-image">
                                 </div>
                             </div>
                             <div class="col-md-9">
@@ -72,8 +72,8 @@
                           <div class="py-2">
                               <div class="d-flex">
                                 <div class="card-body" style="width: 100px;">
-                                  {% if cart_item.item.image and cart_item.item.image.url %}
-                                  <img src="{{ cart_item.item.image.url }}" style="max-width: 80px; max-height: 100%; margin-left: -30px;">
+                                  {% if cart_item.item.image_url and cart_item.item.image_url.url %}
+                                  <img src="{{ cart_item.item.image_url.url }}" style="max-width: 80px; max-height: 100%; margin-left: -30px;">
                                   {% else %}
                                       <p>No image available</p>
                                   {% endif %}  

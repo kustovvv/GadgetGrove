@@ -88,8 +88,8 @@
                                     <div class="col-md-3">
                                         <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
                                             <div class="text-center">
-                                                {% if item.image and item.image.url %}
-                                                    <img src="{{ item.image.url }}" alt="Phone Image" style="max-height: 140px; max-width: 100%;">
+                                                {% if item.image_url and item.image_url.url %}
+                                                    <img src="{{ item.image_url.url }}" alt="Phone Image" style="max-height: 140px; max-width: 100%;">
                                                 {% else %}
                                                     <p>No image available</p>
                                                 {% endif %}

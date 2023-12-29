@@ -11,11 +11,11 @@ def get_seller_info(seller):
         seller_info = PersonalInformation.objects.get(user=seller)
 
         seller_additional_info = {
-            'Facebook': seller_info.facebook,
-            'Instagram': seller_info.instagram,
-            'Twitter': seller_info.twitter,
-            'Google': seller_info.google,
-            'Pinterest': seller_info.pinterest,
+            'Facebook_url': seller_info.facebook_url,
+            'Instagram_url': seller_info.instagram_url,
+            'Twitter_url': seller_info.twitter_url,
+            'Google_url': seller_info.google_url,
+            'Pinterest_url': seller_info.pinterest_url,
         }
         orders = Order.objects.filter(seller__id=seller)
         if orders:

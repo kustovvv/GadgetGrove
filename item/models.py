@@ -1,6 +1,12 @@
 from django.db import models
+from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
-from account.models import CustomUser
+from authentication.models import User as CustomUser
+
+class TimeStampTZField(models.DateTimeField):
+    def db_type(self, connection):
+        return 'TIMESTAMPTZ'
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -39,8 +45,8 @@ class Item(models.Model):
     model = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     price = models.FloatField()
-    availability = models.BooleanField(default=True)
-    image = models.ImageField(upload_to='item_images', blank=True, null=True)
+    availability = models.BooleanField(default=False)
+    image_url = models.ImageField(upload_to='item_images', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

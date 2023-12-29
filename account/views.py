@@ -3,8 +3,9 @@ from django.contrib.auth import logout
 
 from order.models import Order
 from item.models import Item
+from authentication.models import User
 from .models import PersonalInformation
-from .forms import FullInfoForm, SettingsDateOfBirthForms
+from .forms import InfoForm, FullInfoForm, SettingsDateOfBirthForms
 from item.models import Comments
 from core.custom_functions import get_seller_info, search_results
 
@@ -135,13 +136,15 @@ def settings(request):
     if request.user.is_authenticated:
         option = 'settings'         
         if request.method == 'POST':
+            info_form = InfoForm(request.POST)
             full_info_form = FullInfoForm(request.POST, request.FILES)
-            date_of_birth_forms = SettingsDateOfBirthForms(request.POST)            
+            date_of_birth_forms = SettingsDateOfBirthForms(request.POST) 
 
+            
             if full_info_form.is_valid() and date_of_birth_forms.is_valid():
                 try:
-                    user_personal_info = PersonalInformation.objects.filter(user_id=request.user)[0]
-                    
+                    user_personal_info = PersonalInformation.objects.get(user_id=request.user.id)
+
                     for field_name, field_value in full_info_form.cleaned_data.items():
                         setattr(user_personal_info, field_name, field_value)
 
@@ -152,27 +155,24 @@ def settings(request):
                     except:
                         user_personal_info.gender = ''
 
-                    setattr(user_personal_info, 'avatar', full_info_form.cleaned_data['avatar'])
+                    setattr(user_personal_info, 'avatar_url', full_info_form.cleaned_data['avatar_url'])
                     
                     user_personal_info.married = True if request.POST.get('is_married', '') else False
                     
-                    user_personal_info.have_children = request.POST.get('have_children', '')
+                    user_personal_info.have_children = request.POST.get('have_children', None)
 
                     
                 except:
                     user_personal_info = PersonalInformation(
                         user = request.user,
-                        nickname = full_info_form.cleaned_data.get('nickname', None),
-                        first_name = full_info_form.cleaned_data.get('first_name', None),
-                        last_name = full_info_form.cleaned_data.get('last_name', None),
-                        avatar = full_info_form.cleaned_data.get('avatar', None),
-                        have_children = request.POST.get('have_children', ''),
+                        avatar_url = full_info_form.cleaned_data.get('avatar_url', None),
+                        have_children = request.POST.get('have_children', None),
                         phone_number = full_info_form.cleaned_data.get('phone_number', None),
-                        facebook = full_info_form.cleaned_data.get('facebook', None),
-                        instagram = full_info_form.cleaned_data.get('instagram', None),
-                        twitter = full_info_form.cleaned_data.get('twitter', None),
-                        google = full_info_form.cleaned_data.get('google', None),
-                        pinterest = full_info_form.cleaned_data.get('pinterest', None),
+                        facebook_url = full_info_form.cleaned_data.get('facebook_url', None),
+                        instagram_url = full_info_form.cleaned_data.get('instagram_url', None),
+                        twitter_url = full_info_form.cleaned_data.get('twitter_url', None),
+                        google_url = full_info_form.cleaned_data.get('google_url', None),
+                        pinterest_url = full_info_form.cleaned_data.get('pinterest_url', None),
                         about = full_info_form.cleaned_data.get('about', None),
                         hobby = full_info_form.cleaned_data.get('hobby', None),
                         interests = full_info_form.cleaned_data.get('interests', None)
@@ -181,6 +181,19 @@ def settings(request):
                     selected_genders = request.POST.getlist('selected_gender')
                     gender = selected_genders[0] if selected_genders else ""
                     user_personal_info.gender = gender
+
+                user = User.objects.get(id=request.user.id)
+                username = request.POST.get('username')
+                first_name = request.POST.get('first_name')
+                last_name = request.POST.get('last_name')
+                if username:
+                    user.username = username
+                if first_name:
+                    user.first_name = first_name
+                if last_name:
+                    user.last_name = last_name
+
+                user.save()
 
                 birthday = date_of_birth_forms.cleaned_data.get('selected_day')
                 birthmonth = date_of_birth_forms.cleaned_data.get('selected_month')
@@ -208,6 +221,12 @@ def settings(request):
             return redirect('frontpage')
 
         else:
+            user = User.objects.get(id=request.user.id)
+            initial_info = {
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+            }
             initial = dict()
             initial_birhday = dict()
             gender = ''
@@ -215,7 +234,7 @@ def settings(request):
             have_children = ''
 
             try:
-                user_personal_info = PersonalInformation.objects.filter(user=request.user)[0]
+                user_personal_info = PersonalInformation.objects.get(user=request.user.id)
                 
                 for field_name in [field.name for field in user_personal_info._meta.get_fields() if not field.is_relation]:
                     initial[field_name] = getattr(user_personal_info, field_name)
@@ -235,11 +254,9 @@ def settings(request):
                 }
 
             except:
-                initial = {'nickname': request.user.username,
-                        'first_name': request.user.first_name,
-                        'last_name': request.user.last_name,
-                        }
+                initial = {}
 
+            info_form = InfoForm(initial=initial_info)
             full_info_form = FullInfoForm(initial=initial)
             date_of_birth_forms = SettingsDateOfBirthForms(initial=initial_birhday)
         
@@ -248,6 +265,7 @@ def settings(request):
             return search_results(request, query)
         
         context = {'option': option,
+                    'info_form': info_form,
                     'full_info_form': full_info_form,
                     'date_of_birth_forms': date_of_birth_forms,
                     'gender': gender,

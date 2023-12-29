@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from item.models import Item
-from order.models import OrderReview
+from order.models import OrderReview, Order
 from core.custom_functions import get_seller_info, search_results
 
 def seller_catalog(request, seller_id):
@@ -34,7 +34,8 @@ def seller_reviews(request, seller_id):
     query = request.GET.get('query', '')
     if query:
         return search_results(request, query)
-    reviews = OrderReview.objects.filter(seller=seller_id)
+    orders = Order.objects.filter(seller=seller_id)
+    reviews = OrderReview.objects.filter(order_id__in=orders)
     info = get_seller_info(seller_id)
     seller_info = info[0]
     amount_orders = info[2]

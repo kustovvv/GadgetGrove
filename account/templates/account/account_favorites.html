@@ -54,8 +54,8 @@
                             <div class="row py-3">
                                 <div class="col-md-3 text-center">
                                     <a href="{% url 'item:details' item.id %}" style="text-decoration: none; color: inherit;">
-                                        {% if item.image and item.image.url %}
-                                        <img src="{{ item.image.url }}" width="80">
+                                        {% if item.image_url and item.image_url.url %}
+                                        <img src="{{ item.image_url.url }}" width="80">
                                         {% else %}
                                             <p>No image available</p>
                                         {% endif %}

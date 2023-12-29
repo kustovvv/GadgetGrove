@@ -2,10 +2,10 @@
     <div class="container-fluid">
         <a href="{% url 'conversation:conversation' conversation.item.id %}" style="text-decoration: none; color: inherit;">
             <div class="row">
-                {% if conversation.created_by.personal_information_user.avatar %}
+                {% if conversation.created_by.personal_information_user.avatar_url %}
                     <div class="col-md-2">
                         <div class="container" style="width: 80px; height: 80px; align-items: center;">
-                            <img {% if request.user != conversation.created_by %}src="{{ conversation.created_by.personal_information_user.get.avatar.url }}"{% else %}src="{{ conversation.item.created_by.personal_information_user.get.avatar.url }}"{% endif %} style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
+                            <img {% if request.user != conversation.created_by %}src="{{ conversation.created_by.personal_information_user.get.avatar_url.url }}"{% else %}src="{{ conversation.item.created_by.personal_information_user.get.avatar_url.url }}"{% endif %} style="width: 70px; height: 70px;" alt="User Avatar" class="avatar-image">
                         </div>
                     </div>
                 <div class="col-md-9">

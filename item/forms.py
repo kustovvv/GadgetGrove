@@ -19,8 +19,8 @@ class CommentForm(forms.ModelForm):
 class NewItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ('availability', 'image')
+        fields = ('availability', 'image_url')
 
         widgets = {
-            'image': forms.ClearableFileInput(),
+            'image_url': forms.ClearableFileInput(),
         }

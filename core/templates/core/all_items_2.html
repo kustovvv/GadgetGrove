@@ -6,8 +6,8 @@
             <div class="row mt-3 mb-3">
                 <div class="col-md-5">
                     <div class="text-center ">
-                        {% if item.item.image and item.item.image.url %}
-                        <img src="{{ item.item.image.url }}"  width="80">
+                        {% if item.item.image_url and item.item.image_url.url %}
+                        <img src="{{ item.item.image_url.url }}"  width="80">
                         {% else %}
                             <p>No image available</p>
                         {% endif %}

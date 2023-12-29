@@ -26,30 +26,33 @@ def add_update_item(request):
                     messages.error(request, f'The {field} field must be filled in!')
                     return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
             
+            try:
+                float(fields["price"])
+            except:
+                messages.error(request, f'The price field must be integer or float number!')
+                return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
+            
             selected_category = request.POST.get('category-select-item')
             selected_brand = request.POST.get('brand-select')
-            if selected_category=='-1' or selected_brand=='-1':
+            if selected_category=='-1' or selected_brand=='-1' or not selected_category or not selected_brand:
                 messages.error(request, 'Category and brand should be selected.')
                 return redirect(request.META.get('HTTP_REFERER', 'frontpage'))
             
             category_brand = CategoryBrand.objects.get(category=int(selected_category), brand=int(selected_brand))
 
-            availability = request.POST.get('is_available', False)
-            if availability:
-                availability = True
-
-            image = request.FILES.get('new_image')
+            availability = request.POST.get('is_available', False) == 'True'
+            image_url = request.FILES.get('new_image')
             
-            if not image:
+            if not image_url:
                 if item_id:
-                    image = item.image
+                    image_url = item.image_url
 
             item.created_by = request.user
             item.category_brand = category_brand
             item.model = fields['model']
             item.description = request.POST.get('new_description_input')
             item.price = fields['price']
-            item.image = image
+            item.image_url = image_url
             item.availability = availability
 
             item.save()
@@ -92,11 +95,14 @@ def add_update_item(request):
 
 
 def delete_item(request, pk):
-    item = get_object_or_404(Item, pk=pk)
-    item.delete()
+    if request.user.is_authenticated:
+        item = get_object_or_404(Item, pk=pk)
+        item.delete()
 
-    messages.success(request, 'The item was removed successfully')
-    return redirect('account:ads')
+        messages.success(request, 'The item was removed successfully')
+        return redirect('account:ads')
+    else:
+        return redirect('login')
 
 
 def delete_items(request):
@@ -134,7 +140,6 @@ def details(request, pk):
                 'seller_additional_info': seller_additional_info,
                 'amount_orders': amount_orders,
                 }
-
     return render(request, 'item/details.html', context)
 
 
@@ -247,20 +252,15 @@ def favorites(request):
         selected_seller = request.GET.get('seller', '-1')
         is_available = request.GET.get('is_available', '')
         input = request.GET.get('input', '')
-
+        
         if input:
             items = items.filter(model__icontains=input)
-        
-        if selected_category and selected_category != 'null':
-            if selected_category != '-1':
-                items = items.filter(category_brand__category = selected_category)
-        elif selected_category == 'null':
-            selected_category = '-1'
+                
+        if selected_category != '-1':
             items = items.filter(category_brand__category = selected_category)
-
-        if selected_seller:
-            if selected_seller != '-1':
-                items = items.filter(created_by__username = selected_seller)
+            
+        if selected_seller != '-1':
+            items = items.filter(created_by__username = selected_seller)
 
         if is_available == "true":
             items = items.filter(availability = True)
@@ -309,19 +309,21 @@ def compare(request):
             return search_results(request, query)
         
         all_items = FavoriteCompare.objects.get_or_create(user=request.user)[0]
-        user_items = all_items.compare_items.all()
+        items = all_items.compare_items.all()
         categories = ''
-        selected_category = '0'
-        items = ''
+        selected_category = ''
 
-        if user_items:
-            categories = list(set(item.category_brand.category for item in user_items))
-            selected_category = request.GET.get('selected_category', categories[0].id)
-            items = user_items.filter(category_brand__category=selected_category)
+        if items:
+            categories = list(set(item.category_brand.category for item in items))
+            selected_category = request.GET.get('selected_category', '')
+            if selected_category:
+                selected_category = int(selected_category)
+                items = items.filter(category_brand__category=selected_category)
+
 
         context = {'items': items,
                    'categories': categories,
-                   'selected_category': int(selected_category),
+                   'selected_category': selected_category,
                    }
         
         return render(request, 'item/compare.html', context)

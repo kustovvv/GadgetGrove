@@ -20,7 +20,7 @@ def account_base(request):
         try:
             user_info = PersonalInformation.objects.get(user=request.user)
             user_phone = user_info.phone_number
-            profile_image = user_info.avatar
+            profile_image = user_info.avatar_url
         except:
             user_info = None
         
