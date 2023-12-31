@@ -138,68 +138,35 @@ def settings(request):
         if request.method == 'POST':
             info_form = InfoForm(request.POST)
             full_info_form = FullInfoForm(request.POST, request.FILES)
-            date_of_birth_forms = SettingsDateOfBirthForms(request.POST) 
-
+            date_of_birth_form = SettingsDateOfBirthForms(request.POST)
             
-            if full_info_form.is_valid() and date_of_birth_forms.is_valid():
+            if full_info_form.is_valid() and date_of_birth_form.is_valid():
                 try:
-                    user_personal_info = PersonalInformation.objects.get(user_id=request.user.id)
-
-                    for field_name, field_value in full_info_form.cleaned_data.items():
-                        setattr(user_personal_info, field_name, field_value)
-
-                    try:
-                        gender = request.POST.getlist('selected_gender')[0]
-                        user_personal_info.gender = gender
-                    
-                    except:
-                        user_personal_info.gender = ''
-
-                    setattr(user_personal_info, 'avatar_url', full_info_form.cleaned_data['avatar_url'])
-                    
-                    user_personal_info.married = True if request.POST.get('is_married', '') else False
-                    
-                    user_personal_info.have_children = request.POST.get('have_children', None)
-
-                    
+                    user_personal_info = PersonalInformation.objects.get(user=request.user)
                 except:
-                    user_personal_info = PersonalInformation(
-                        user = request.user,
-                        avatar_url = full_info_form.cleaned_data.get('avatar_url', None),
-                        have_children = request.POST.get('have_children', None),
-                        phone_number = full_info_form.cleaned_data.get('phone_number', None),
-                        facebook_url = full_info_form.cleaned_data.get('facebook_url', None),
-                        instagram_url = full_info_form.cleaned_data.get('instagram_url', None),
-                        twitter_url = full_info_form.cleaned_data.get('twitter_url', None),
-                        google_url = full_info_form.cleaned_data.get('google_url', None),
-                        pinterest_url = full_info_form.cleaned_data.get('pinterest_url', None),
-                        about = full_info_form.cleaned_data.get('about', None),
-                        hobby = full_info_form.cleaned_data.get('hobby', None),
-                        interests = full_info_form.cleaned_data.get('interests', None)
-                    )
-                    user_personal_info.married = True if request.POST.get('is_married', '') else False
-                    selected_genders = request.POST.getlist('selected_gender')
-                    gender = selected_genders[0] if selected_genders else ""
-                    user_personal_info.gender = gender
+                    user_personal_info = PersonalInformation(user=request.user)
+                
+                for field_name, field_value in full_info_form.cleaned_data.items():
+                    setattr(user_personal_info, field_name, field_value)
 
+                try:
+                    user_personal_info.gender = request.POST.getlist('selected_gender')[0]
+                except:
+                    user_personal_info.gender = None
+                user_personal_info.married = True if request.POST.get('is_married', '') else False
+                user_personal_info.have_children = True if request.POST.get('have_children', '') else False
+
+                user_fields = ["username", "first_name", "last_name"]
                 user = User.objects.get(id=request.user.id)
-                username = request.POST.get('username')
-                first_name = request.POST.get('first_name')
-                last_name = request.POST.get('last_name')
-                if username:
-                    user.username = username
-                if first_name:
-                    user.first_name = first_name
-                if last_name:
-                    user.last_name = last_name
-
+                for field in user_fields:
+                    data = request.POST.get(field)
+                    if data:
+                        setattr(user, field, data)
                 user.save()
 
-                birthday = date_of_birth_forms.cleaned_data.get('selected_day')
-                birthmonth = date_of_birth_forms.cleaned_data.get('selected_month')
-                birthyear = date_of_birth_forms.cleaned_data.get('selected_year')
-
-                
+                birthday = date_of_birth_form.cleaned_data.get('selected_day')
+                birthmonth = date_of_birth_form.cleaned_data.get('selected_month')
+                birthyear = date_of_birth_form.cleaned_data.get('selected_year')
                 if birthday and birthmonth and birthyear:
                     try:
                         birthday = int(birthday) + 1
@@ -258,7 +225,7 @@ def settings(request):
 
             info_form = InfoForm(initial=initial_info)
             full_info_form = FullInfoForm(initial=initial)
-            date_of_birth_forms = SettingsDateOfBirthForms(initial=initial_birhday)
+            date_of_birth_form = SettingsDateOfBirthForms(initial=initial_birhday)
         
         query = request.GET.get('query', '')
         if query:
@@ -267,7 +234,7 @@ def settings(request):
         context = {'option': option,
                     'info_form': info_form,
                     'full_info_form': full_info_form,
-                    'date_of_birth_forms': date_of_birth_forms,
+                    'date_of_birth_form': date_of_birth_form,
                     'gender': gender,
                     'married':married,
                     'have_children':have_children,

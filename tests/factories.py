@@ -116,13 +116,13 @@ class OrderStatusFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = OrderStatus
 
-    status = 'checking'
+    status = factory.Sequence(lambda n: 'status_%d' % n)
 
 
 class PaymentMethodFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = PaymentMethod
-    method = "card"
+    method = factory.Sequence(lambda n: 'method_%d' % n)
 
 
 class ShoppingCartItemFactory(factory.django.DjangoModelFactory):
