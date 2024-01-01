@@ -7,6 +7,9 @@ from item.models import Item, Brand
 
 
 def get_seller_info(seller):
+    seller_info = ''
+    seller_additional_info = ''
+    amount_orders = ''
     try:
         seller_info = PersonalInformation.objects.get(user=seller)
 
@@ -22,10 +25,7 @@ def get_seller_info(seller):
             amount_orders = orders.count()
 
     except:
-        seller_info = ''
-        seller_additional_info = ''
-        amount_orders = ''
-
+        pass
     return seller_info, seller_additional_info, amount_orders
 
 

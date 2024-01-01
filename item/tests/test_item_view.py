@@ -30,37 +30,37 @@ def test_item_view_add_update_item_GET(db, client):
 
 @pytest.mark.test_item_view
 @pytest.mark.parametrize(
-    "title, price, category, brand, is_available, image_url, description, validity", 
+    "title, price, category_id, brand_id, is_available, image_url, description, validity", 
     [
         ("Smartphone", 699.99, "1", "1", True, "smartphone_image.jpg", "A powerful smartphone with advanced features.", True),
         ("Wireless Earbuds", 89.99, "1", "2", False, "earbuds_image.jpg", "High-quality wireless earbuds for a seamless audio experience.", True),
         ("Wireless Earbuds", 89.99, "1", "2", False, '', "High-quality wireless earbuds for a seamless audio experience.", True),
         ("Wireless Earbuds", 89.99, "1", "2", False, "earbuds_image.jpg", '', True),
-        ("Laptop", "s", "10", "3", True, "laptop_image.jpg", "A reliable laptop with excellent performance and long battery life.", False),
-        ("Laptop", 29.99, '', "3", True, "laptop_image.jpg", "A reliable laptop with excellent performance and long battery life.", False),
-        ("Laptop", 29.99, "10", '', True, "laptop_image.jpg", "A reliable laptop with excellent performance and long battery life.", False),
+        ("Laptop", "s", "10", "3", True, "laptop_image.jpg", "A reliable laptop with excellent performance and long battery life.", False), # Bad Request (Prise is not float or integer)
+        ("Laptop", 29.99, '', "3", True, "laptop_image.jpg", "A reliable laptop with excellent performance and long battery life.", False), # Bad Request (Category id is required)
+        ("Laptop", 29.99, "10", '', True, "laptop_image.jpg", "A reliable laptop with excellent performance and long battery life.", False), # Bad Request (Brand id is required)
     ]
 )
-def test_item_view_add_update_item_POST(db, client, title, price, category, brand, is_available, image_url, description, validity):
-    if category:
-        category_obj = Category.objects.create(id=category, name='Test Category')
-    if brand:
-        brand_obj = Brand.objects.create(id=brand, name='Test Brand')
-    if category and brand:
+def test_item_view_add_update_item_POST(db, client, title, price, category_id, brand_id, is_available, image_url, description, validity):
+    if category_id:
+        category_obj = Category.objects.create(id=category_id, name='Test Category')
+    if brand_id:
+        brand_obj = Brand.objects.create(id=brand_id, name='Test Brand')
+    if category_id and brand_id:
         category_brand = CategoryBrand.objects.create(category=category_obj, brand=brand_obj)
     if image_url:
         image_url = SimpleUploadedFile(image_url, b'file_content', content_type='image/jpeg')
     data = {
         'new_title_input': title,
         'new_price_input': price,
-        'category-select-item': category,
-        'brand-select': brand,
+        'category-select-item': category_id,
+        'brand-select': brand_id,
         'is_available': is_available,
         'new_image': image_url,
         'new_description_input': description,
     }
-
-    response = client.post(reverse('item:add_update_item'), data=data)
+    url = reverse('item:add_update_item')
+    response = client.post(url, data=data)
     item = Item.objects.last()
 
     assert response.status_code == 302
@@ -88,7 +88,8 @@ def test_item_view_delete_item(db, client, item_factory):
 
 @pytest.mark.test_item_view
 def test_item_view_delete_items(db, client, item_factory, custom_user_factory):
-    items = [item_factory.create() for _ in range(3)]
+    for _ in range(3):
+        item_factory.create()
     assert Item.objects.count() == 3
     selectedValues = ', '.join(list(str(item.id) for item in Item.objects.all()))
 
@@ -110,15 +111,13 @@ def test_item_view_details(db, client, item_factory, comment_factory):
         item_factory.create(category_brand=new_item.category_brand)
         comment_factory.create(item=new_item)
     
-    response = client.get(f"/items/{new_item.id}/")
+    url = reverse("item:details", args=[new_item.id])
+    response = client.get(url)
 
     assert response.status_code == 200
-    assert response.context['item'] == new_item
-    assert response.context['item'].model == new_item.model
-    assert response.context['item'].description == new_item.description
-    assert response.context['item'].price == new_item.price
-    assert response.context['item'].availability == new_item.availability
-    assert response.context['item'].image_url == new_item.image_url
+    fields = ["model", "description", "price", "availability", "image_url"]
+    for field in fields:
+        assert getattr(response.context['item'], field) == getattr(new_item, field)
     assert response.context['item'].category_brand.category.name == new_item.category_brand.category.name
     assert response.context['item'].category_brand.brand.name == new_item.category_brand.brand.name
     assert len(response.context['related_items']) == 3
@@ -173,7 +172,7 @@ def test_item_view_comments(db, client, item_factory, comment_factory):
 @pytest.mark.test_item_view
 def test_item_view_favorites(db, client_user, item_factory, favorite_compare_factory, category_factory, brand_factory, category_brand_factory):
     client, user = client_user
-    user2 = User.objects.create(username='test_user2', password='password', email='test@test.com')
+    user2 = User.objects.create_user(username='test_user2', password='password', email='test@test.com')
 
     category = category_factory(name='Test category')
     brand = brand_factory(name='Test brand')
@@ -194,17 +193,17 @@ def test_item_view_favorites(db, client_user, item_factory, favorite_compare_fac
     assert len(response.context['all_categories']) == 2
     assert len(response.context['all_sellers']) == 3
 
-    datasets = [
+    testcases = [
         {'category': str(category.id), 'seller': user2, 'is_available': 'true', 'item_amount': 4},
         {'category': str(category.id), 'seller': user2, 'item_amount': 5},
         {'is_available': 'true', 'item_amount': 6},
         {'category': str(category.id), 'item_amount': 6},
         {'seller': user2,'item_amount': 5},
     ]    
-    for data in datasets:
-        response = client.get(url, data=data)
+    for case in testcases:
+        response = client.get(url, data=case)
         assert response.status_code == 200
-        assert len(response.context['items']) == data['item_amount']
+        assert len(response.context['items']) == case['item_amount']
         
 
 @pytest.mark.test_item_view

@@ -15,6 +15,7 @@ class CustomUserFactory(factory.django.DjangoModelFactory):
 
     username = factory.Faker('user_name')
     email = factory.Faker('email')
+    is_email_verified = True
     password = factory.PostGenerationMethodCall('set_password', 'password')
     
 

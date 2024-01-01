@@ -5,11 +5,9 @@ from django.db import IntegrityError
 def test_conversation_db_conversation_insert_data(db, conversation_factory):
     new_conversation = conversation_factory.create()
 
-    assert new_conversation.item is not None
-    assert new_conversation.members is not None
-    assert new_conversation.created_by is not None
-    assert new_conversation.created_at is not None
-    assert new_conversation.modified_at is not None
+    fields = ["item", "members", "created_by", "created_at", "modified_at"]
+    for field in fields:
+        assert getattr(new_conversation, field) is not None
 
 
 @pytest.mark.test_conversation_db

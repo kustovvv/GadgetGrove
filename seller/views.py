@@ -23,7 +23,6 @@ def seller_catalog(request, seller_id):
                'items': items,
                'categories': categories,
                'seller_info': seller_info,
-               'amount_orders': amount_orders,
                'option': option,
                }
     return render(request, 'seller/seller_catalog.html', context)

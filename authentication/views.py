@@ -54,7 +54,6 @@ def signup(request):
 
             messages.info(request, 'We sent you an email to verify your account')
             return redirect('login')
-
     else:
         form = SignUpForm()
 
@@ -91,7 +90,6 @@ def user_login(request):
 
 
 def activate_user(request, uidb64, token):
-
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(id=uid)

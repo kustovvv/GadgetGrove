@@ -138,7 +138,7 @@ def test_account_view_settins_GET(db, client_user, personal_information_factory)
     numbers = list()
     for birth_field in date_of_birth_info:
         numbers.append(response.context['date_of_birth_form'].initial[birth_field])
-    date = datetime(2023-numbers[2], numbers[1]+1, numbers[0]+1)
+    date = datetime(datetime.now().year-numbers[2], numbers[1]+1, numbers[0]+1)
     assert date.date().strftime('%Y-%m-%d') == personal_information.birthday
 
 
@@ -214,7 +214,7 @@ def test_account_view_settings_POST(db,
     assert user.last_name == last_name
 
     personal_info = PersonalInformation.objects.get(user=user)
-    full_info_fields = ["phone_number", "facebook_url", "instagram_url", "twitter_url", "google_url", "pi1nterest_url"]
+    full_info_fields = ["phone_number", "facebook_url", "instagram_url", "twitter_url", "google_url", "pinterest_url"]
     for field in full_info_fields:
         if full_info_form_data[field]:
             assert getattr(personal_info, field) == full_info_form_data[field]

@@ -52,7 +52,7 @@ def test_create_user2(db, custom_user_factory):
     """
     Test creating a User instance
     """
-    user = custom_user_factory.create()
+    user = custom_user_factory.create(is_email_verified=False)
     count = CustomUser.objects.all().count()
 
     assert user.username is not None
@@ -106,17 +106,6 @@ def test_account_db_personal_information_insert_data(db,
                                                             interests=interests)
     
     assert new_personal_info.user is not None 
-    assert new_personal_info.avatar_url == avatar_url
-    assert new_personal_info.gender == gender
-    assert new_personal_info.married == married
-    assert new_personal_info.have_children == have_children
-    assert new_personal_info.birthday == birthday
-    assert new_personal_info.phone_number == phone_number
-    assert new_personal_info.facebook_url == facebook_url
-    assert new_personal_info.instagram_url == instagram_url
-    assert new_personal_info.twitter_url == twitter_url
-    assert new_personal_info.google_url == google_url
-    assert new_personal_info.pinterest_url == pinterest_url
-    assert new_personal_info.about == about
-    assert new_personal_info.hobby == hobby
-    assert new_personal_info.interests == interests
+    fields = ["avatar_url", "gender", "married", "have_children", "birthday", "phone_number", "facebook_url", "instagram_url", "twitter_url", "google_url", "pinterest_url", "about", "hobby", "interests"]
+    for field in fields:
+        assert getattr(new_personal_info, field) == locals()[field]

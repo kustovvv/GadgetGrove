@@ -148,15 +148,15 @@ def test_order_view_order(db, client_user, item_factory, payment_method_factory,
     [
         ("123 Test St", "Test City", "Test State", "12345", "Test Country", "0123456789", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 302),
         ("123 Test St", "Test City", "Test State", "12345", "Test Country", "0123456789", "TestFirstName", "TestLastName", "test@test.com", "", 302),
-        ("", "Test City", "Test State", "12345", "Test Country", "0123456789", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 200),
-        ("123 Test St", "", "Test State", "12345", "Test Country", "0123456789", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 200),
-        ("123 Test St", "Test City", "", "12345", "Test Country", "0123456789", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 200),
-        ("123 Test St", "Test City", "Test State", "", "Test Country", "0123456789", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 200),
-        ("123 Test St", "Test City", "Test State", "12345", "", "0123456789", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 200),
-        ("123 Test St", "Test City", "Test State", "12345", "Test Country", "", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 200),
-        ("123 Test St", "Test City", "Test State", "12345", "Test Country", "0123456789", "", "TestLastName", "test@test.com", "Test comment", 200),
-        ("123 Test St", "Test City", "Test State", "12345", "Test Country", "0123456789", "TestFirstName", "", "test@test.com", "Test comment", 200),
-        ("123 Test St", "Test City", "Test State", "12345", "Test Country", "0123456789", "TestFirstName", "TestLastName", "", "Test comment", 200),
+        ("", "Test City", "Test State", "12345", "Test Country", "0123456789", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 200), # Bad Request (Street address is required)
+        ("123 Test St", "", "Test State", "12345", "Test Country", "0123456789", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 200), # Bad Request (City is required)
+        ("123 Test St", "Test City", "", "12345", "Test Country", "0123456789", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 200), # Bad Request (State is required)
+        ("123 Test St", "Test City", "Test State", "", "Test Country", "0123456789", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 200), # Bad Request (Postal code is required)
+        ("123 Test St", "Test City", "Test State", "12345", "", "0123456789", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 200), # Bad Request (Country is required)
+        ("123 Test St", "Test City", "Test State", "12345", "Test Country", "", "TestFirstName", "TestLastName", "test@test.com", "Test comment", 200), # Bad Request (Phone number is required)
+        ("123 Test St", "Test City", "Test State", "12345", "Test Country", "0123456789", "", "TestLastName", "test@test.com", "Test comment", 200), # Bad Request (First name is required)
+        ("123 Test St", "Test City", "Test State", "12345", "Test Country", "0123456789", "TestFirstName", "", "test@test.com", "Test comment", 200), # Bad Request (Last name is required)
+        ("123 Test St", "Test City", "Test State", "12345", "Test Country", "0123456789", "TestFirstName", "TestLastName", "", "Test comment", 200), # Bad Request (Email is required)
     ]
 )
 def test_order_view_order_POST(db, 
