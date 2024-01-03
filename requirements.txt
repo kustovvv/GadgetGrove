@@ -15,6 +15,8 @@ daphne==4.0.0
 Django==4.2.5
 django-pytest==0.2.0
 django-redis==5.4.0
+djangorestframework==3.14.0
+drf-spectacular==0.27.0
 exceptiongroup==1.2.0
 factory-boy==3.3.0
 Faker==21.0.0
@@ -24,6 +26,8 @@ idna==3.4
 incremental==22.10.0
 inflection==0.5.1
 iniconfig==2.0.0
+jsonschema==4.20.0
+jsonschema-specifications==2023.12.1
 msgpack==1.0.7
 mysql==0.0.3
 mysql-connector-python==8.1.0
@@ -44,7 +48,11 @@ pytest-django==4.7.0
 pytest-factoryboy==2.6.0
 python-dateutil==2.8.2
 python-decouple==3.8
+pytz==2023.3.post1
+PyYAML==6.0.1
 redis==5.0.1
+referencing==0.32.0
+rpds-py==0.16.2
 selenium==4.16.0
 service-identity==23.1.0
 six==1.16.0
@@ -59,6 +67,7 @@ twisted-iocpsupport==1.0.4
 txaio==23.1.1
 typing_extensions==4.8.0
 tzdata==2023.3
+uritemplate==4.1.1
 urllib3==2.1.0
 wsproto==1.2.0
 zope.interface==6.1

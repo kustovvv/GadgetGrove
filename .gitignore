@@ -2,3 +2,4 @@
 /.idea/
 .env
 secret_key.txt
+mydb.py
