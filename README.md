@@ -71,3 +71,27 @@
 - **Payment page:** Users can add their cards and convenient payment methods.
 - **Discounts:** Users can see a list of all their personal discounts that they can apply when purchasing products.
 
+
+## Local Deployment
+1. Clone the repository using the following command in your terminal:
+```https://github.com/kustovvv/GadgetGrove.git```
+2. Set up the MySQL database locally.
+3. Create `mydb.py` file in the root directory and set this code:
+```
+import mysql.connector
+dataBase = mysql.connector.connect(
+    host = 'your_host_name',
+    user = 'your_db_username',
+    password = 'your_db_password',
+)
+cursorObject = dataBase.cursor()
+cursorObject.execute('CREATE DATABASE gadgetgrove')
+```
+4. Set up Gmail SMTP Server for email sender. Here's a quick tutorial on [how to do that](https://www.youtube.com/watch?v=1YXVdyVuFGA&ab_channel=Sombex).
+5. Create `.env` file in the root directory and insert the generated password and email:
+```
+EMAIL_HOST_USER = 'your_email'
+EMAIL_HOST_PASSWORD = 'your_password'
+```
+
+> That's it, now you should be able to run your GitHub project locally with the correct database and email configurations.
