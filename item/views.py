@@ -39,7 +39,7 @@ def add_update_item(request):
             
             category_brand = CategoryBrand.objects.get(category=int(selected_category), brand=int(selected_brand))
 
-            availability = request.POST.get('is_available', False) == 'True'
+            availability = request.POST.get('is_available', False) == 'on'
             image_url = request.FILES.get('new_image')
             
             if not image_url:

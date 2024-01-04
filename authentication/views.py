@@ -51,13 +51,21 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             send_activation_email(user, request)
-
-            messages.info(request, 'We sent you an email to verify your account')
             return redirect('login')
+            # return render(request, 'core/checking.html', {'user_password': user.password})
+
+            # return render(request, 'authentication/activate_checking.html', {'user': user})
     else:
         form = SignUpForm()
 
     return render(request, 'authentication/signup.html', {'form': form})
+
+
+def activate_checking(request):
+    user = request.GET.get('user')
+    send_activation_email(user, request)
+    return render(request, 'authentication/activate_checking.html', {'user': user})
+
 
 def user_login(request):
     if request.method == 'POST':

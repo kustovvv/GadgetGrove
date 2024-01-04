@@ -45,7 +45,7 @@ class Item(models.Model):
     model = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     price = models.FloatField()
-    availability = models.BooleanField(default=False)
+    availability = models.BooleanField(default=True)
     image_url = models.ImageField(upload_to='item_images', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

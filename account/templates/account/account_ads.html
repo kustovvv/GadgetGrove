@@ -63,60 +63,60 @@
             </div>
         </div>
     </div>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             {% if items %}
-            <div class="d-flex justify-content-between">
-                <div class="form-check mt-3" style="margin-left: -13px;">
-                    <input class="form-check-input" type="checkbox" value="-1" id="select_all">
-                    <label class="h5" for="check_1">
-                        Select all
-                    </label>
+                <div class="d-flex justify-content-between">
+                    <div class="form-check mt-3" style="margin-left: -13px;">
+                        <input class="form-check-input" type="checkbox" value="-1" id="select_all">
+                        <label class="h5" for="check_1">
+                            Select all
+                        </label>
+                    </div>
+                    <div class="d-inline-flex" style="margin-top: 15px;">
+                        <a href="#" style="color: inherit;" id="delete_items_link">Delete</a>
+                    </div>   
                 </div>
-                <div class="d-inline-flex" style="margin-top: 15px;">
-                    <a href="#" style="color: inherit;" id="delete_items_link">Delete</a>
-                </div>   
-            </div>
-            {% for item in items %}
-            <div class="form-check">
-                <div class="container" style="align-items: center; display: flex; margin-left: -12px;">
-                    <input class="form-check-input" type="checkbox" name="selected_my_item" value="{{ item.id }}" id="check_{{ item.id }}" style="margin-right: 15px;">
-                    <label class="form-check-label" for="check_1">
-                        <div class="card-body bg-white rounded py-3 mt-3" style="width: 960px;">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
-                                            <div class="text-center">
-                                                {% if item.image_url and item.image_url.url %}
-                                                    <img src="{{ item.image_url.url }}" alt="Phone Image" style="max-height: 140px; max-width: 100%;">
-                                                {% else %}
-                                                    <p>No image available</p>
-                                                {% endif %}
+                {% for item in items %}
+                <div class="form-check">
+                    <div class="container" style="align-items: center; display: flex; margin-left: -12px;">
+                        <input class="form-check-input" type="checkbox" name="selected_my_item" value="{{ item.id }}" id="check_{{ item.id }}" style="margin-right: 15px;">
+                        <label class="form-check-label" for="check_1">
+                            <div class="card-body bg-white rounded py-3 mt-3" style="width: 960px;">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
+                                                <div class="text-center">
+                                                    {% if item.image_url and item.image_url.url %}
+                                                        <img src="{{ item.image_url.url }}" alt="Phone Image" style="max-height: 140px; max-width: 100%;">
+                                                    {% else %}
+                                                        <p>No image available</p>
+                                                    {% endif %}
+                                                </div>
+                                            </a>    
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
+                                                <small>Code: {{ item.id }}</small>
+                                                <h6 class="card-title">{{ item.model }}</h6>
+                                                <small>{{ item.comments.count }} comments</small>
+                                                <h6>{{ item.price }} $</h6>
+                                            </a>    
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="d-inline-flex gap-3">
+                                                <button class="update-link btn btn-outline-secondary" type="button" data-item-id="{{ item.id }}">Update</button>
+                                                <a href="{% url 'item:delete_item' item.id %}" class="btn btn-outline-secondary" type="button" >Delete</a>    
                                             </div>
-                                        </a>    
-                                    </div>
-                                    <div class="col-md-6">
-                                        <a href="{% url 'item:details' item.id %} " style="text-decoration: none; color: inherit; ">
-                                            <small>Code: {{ item.id }}</small>
-                                            <h6 class="card-title">{{ item.model }}</h6>
-                                            <small>{{ item.comments.count }} comments</small>
-                                            <h6>{{ item.price }} $</h6>
-                                        </a>    
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="d-inline-flex gap-3">
-                                            <button class="update-link btn btn-outline-secondary" type="button" data-item-id="{{ item.id }}">Update</button>
-                                            <a href="{% url 'item:delete_item' item.id %}" class="btn btn-outline-secondary" type="button" >Delete</a>    
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </label>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            {% endfor %}
+                {% endfor %}
             {% else %}
                 <div class="card-body bg-white rounded py-5">
                     <div class="container">

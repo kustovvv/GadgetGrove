@@ -50,12 +50,15 @@ def test_item_view_add_update_item_POST(db, client, title, price, category_id, b
         category_brand = CategoryBrand.objects.create(category=category_obj, brand=brand_obj)
     if image_url:
         image_url = SimpleUploadedFile(image_url, b'file_content', content_type='image/jpeg')
+    availability = is_available
+    if is_available:
+        availability = 'on'
     data = {
         'new_title_input': title,
         'new_price_input': price,
         'category-select-item': category_id,
         'brand-select': brand_id,
-        'is_available': is_available,
+        'is_available': availability,
         'new_image': image_url,
         'new_description_input': description,
     }

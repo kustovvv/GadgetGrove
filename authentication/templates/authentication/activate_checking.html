@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Sign Up Check{% endblock %}
+
+{% block navbar_main %}
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-6 offset-md-4" style="margin-top: 80px;">
+        <h4>We sent you an email to verify your account.</h4>
+        <p>Didn't receive the letter?</p>
+        <div class="d-inline-flex">
+            <form method="GET" action=".">
+                <button class="btn btn-success" type="submit">Send it again</a>
+            </form>
+        </div>    
+    </div>
+    <a href="{% url 'activate_checking' pk=user_id %}" class="btn btn-success" type="button">Send it again</a>
+    <a href="{% url 'login' %}" class="btn btn-secondary" type="button" style="margin-left: 260px;">Back to login</a>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
