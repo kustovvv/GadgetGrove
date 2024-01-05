@@ -75,7 +75,7 @@
 ## Local Deployment
 1. Clone the repository using the following command in your terminal:
 ```https://github.com/kustovvv/GadgetGrove.git```
-2. Set up the MySQL database locally.
+2. Set up the MySQL database locally, [SQL script provided](https://github.com/kustovvv/GadgetGrove/blob/main/sql-script/schema_and_data.sql)
 3. Create `mydb.py` file in the root directory and set this code:
 ```
 import mysql.connector
