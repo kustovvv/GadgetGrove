@@ -16,6 +16,8 @@ import threading
 from .forms import SignUpForm, LoginForm
 
 
+from django.http import JsonResponse
+
 class EmailThread(threading.Thread):
 
     def __init__(self, email):
@@ -52,6 +54,8 @@ def signup(request):
             user = form.save()
             send_activation_email(user, request)
             return render(request, 'authentication/activate_checking.html', {'user_id': user.id})
+        else:
+            return JsonResponse({'errors': form.errors}, status=400)
     else:
         form = SignUpForm()
 

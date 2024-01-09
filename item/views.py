@@ -5,6 +5,7 @@ from .models import CategoryBrand, Category, Brand, FavoriteCompare, Comments, I
 from .forms import CommentForm
 from core.custom_functions import get_seller_info, search_results
 
+
 def add_update_item(request):
     if request.user.is_authenticated:
         query = request.GET.get('query', '')

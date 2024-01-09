@@ -46,7 +46,22 @@ INSTALLED_APPS = [
     'seller',
     'account',
     'conversation',
+    'drf_spectacular',
+    'drf_yasg',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'GadgetGrove API',
+    'DESCRIPTION': 'Webapplication',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
 
 
 MIDDLEWARE = [
