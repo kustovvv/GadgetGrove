@@ -3,12 +3,20 @@
 > Users can seamlessly interact with each other through a real-time chat, customize their profiles, provide additional external information, rate, comment, and review items, create and manage orders, and much more.
 
 
+## Table of Contents
+* [Overview](#overview)
+* [Technology Stack](#technology-stack)
+* [Additional Components](#additional-components)
+* [Local Deployment](#local-deployment)
+* [SQL Schema](#sql-schema)
+* [Contact](#contact)
+
 ## Overview
 > GadgetGrove represents a significant milestone in my journey to master Python, the Django framework, and database development.
 > This project was designed to enhance my skills by applying the most up-to-date practices in designing an application from scratch, creating a well-structured database, and ultimately implementing the application using the knowledge I have acquired.
 
 
-## Technology
+## Technology Stack
  ### Key Components:
 - Python 3.9+
 - Django 4.2+
@@ -32,7 +40,7 @@
 - **`Django's built-in email functionality:`**  Django provides a convenient send_mail function for sending emails.
 
 
-## Want to implement in the future
+### Want to implement in the future
 - **`Docker Compose:`** Configure a setup to create isolated environments for integration tests.
 - **`Django Simple History:`**  Third-party package that tracks changes to models, providing functionality.
 - **`Swagger:`** DRF has built-in support for generating Swagger documentation.
@@ -67,7 +75,7 @@
 - **Admin page:** An admin interface with tools and functionalities for platform admins to manage users, products and overall system settings.
 
 
-## Want to implement in the future
+### Want to implement in the future
 - **Payment page:** Users can add their cards and convenient payment methods.
 - **Discounts:** Users can see a list of all their personal discounts that they can apply when purchasing products.
 
@@ -95,3 +103,11 @@ EMAIL_HOST_PASSWORD = 'your_password'
 ```
 
 > That's it, now you should be able to run your GitHub project locally with the correct database and email configurations.
+
+
+## SQL Schema
+![](https://github.com/kustovvv/GadgetGrove/blob/main/media/GadgetGrove%20diagram.jpg)
+
+
+## Contact
+Created by [@zefir309](https://t.me/zefir309) - feel free to conact me!
